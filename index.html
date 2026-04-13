@@ -383,15 +383,17 @@
 
   // ── FILTER ───────────────────────────────────────────────
   function applyFilter() {
-    const term = $('searchInput').value.toLowerCase().trim();
-    filteredRecords = term
-      ? allRecords.filter(r =>
-          (r.productName || '').toLowerCase().includes(term) ||
-          (r.productId   || '').toLowerCase().includes(term))
-      : [...allRecords];
-    currentPage = 1;
-    renderPage();
-  }
+  const term = $('searchInput').value.toLowerCase().trim();
+  filteredRecords = term
+    ? allRecords.filter(r => {
+        const name = (r.productName || '').toString().toLowerCase();
+        const id   = (r.productId   || '').toString().toLowerCase();
+        return name.includes(term) || id.includes(term);
+      })
+    : [...allRecords];
+  currentPage = 1;
+  renderPage();
+}
 
   // ── RENDER PAGE ──────────────────────────────────────────
   function renderPage() {
