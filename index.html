@@ -14,12 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', sans-serif;
       background: #f5f7fb;
@@ -29,293 +24,86 @@
       flex-direction: column;
       color: #1e293b;
     }
-
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      width: 100%;
-    }
+    .container { max-width: 600px; margin: 0 auto; width: 100%; }
 
     /* Header */
-    .app-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
+    .app-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
     .app-header h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
+      font-size: 1.8rem; font-weight: 700;
       background: linear-gradient(135deg, #4a86e8, #6c5ce7);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
-    .connection-status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.8rem;
-      color: #64748b;
-    }
-    .status-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #10b981;
-      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
-    }
-    .status-dot.offline {
-      background: #ef4444;
-      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
-    }
+    .connection-status { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #64748b; }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 2px rgba(16,185,129,0.2); }
+    .status-dot.offline { background: #ef4444; box-shadow: 0 0 0 2px rgba(239,68,68,0.2); }
+    .status-dot.checking { background: #f59e0b; box-shadow: 0 0 0 2px rgba(245,158,11,0.2); animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
 
     /* Cards */
-    .card {
-      background: white;
-      border-radius: 24px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 10px 15px -3px rgba(0,0,0,0.05);
-      border: 1px solid rgba(226, 232, 240, 0.6);
-    }
-
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #334155;
-    }
+    .card { background: white; border-radius: 24px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 10px 15px -3px rgba(0,0,0,0.05); border: 1px solid rgba(226,232,240,0.6); }
+    .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; color: #334155; }
 
     /* Form */
-    .form-group {
-      margin-bottom: 16px;
-    }
-    label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #64748b;
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-    }
-    input {
-      width: 100%;
-      padding: 14px 16px;
-      font-size: 1rem;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 16px;
-      background: #fafcff;
-      transition: all 0.2s;
-      font-family: 'Inter', sans-serif;
-    }
-    input:focus {
-      outline: none;
-      border-color: #4a86e8;
-      background: white;
-      box-shadow: 0 0 0 4px rgba(74, 134, 232, 0.1);
-    }
-    input[type="number"] {
-      -moz-appearance: textfield;
-    }
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 0.85rem; font-weight: 500; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.3px; }
+    input { width: 100%; padding: 14px 16px; font-size: 1rem; border: 1.5px solid #e2e8f0; border-radius: 16px; background: #fafcff; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+    input:focus { outline: none; border-color: #4a86e8; background: white; box-shadow: 0 0 0 4px rgba(74,134,232,0.1); }
+    input[type="number"] { -moz-appearance: textfield; }
+    input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
     /* Button Grid */
-    .button-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 8px;
-    }
-    .btn {
-      padding: 14px 10px;
-      border: none;
-      border-radius: 16px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: white;
-      border: 1.5px solid #e2e8f0;
-      color: #334155;
-    }
-    .btn-primary {
-      background: #4a86e8;
-      border-color: #4a86e8;
-      color: white;
-      box-shadow: 0 4px 8px rgba(74, 134, 232, 0.25);
-    }
-    .btn-primary:hover, .btn-primary:active {
-      background: #3b74d0;
-      transform: scale(0.98);
-    }
-    .btn-danger {
-      background: #fee2e2;
-      border-color: #fecaca;
-      color: #b91c1c;
-    }
-    .btn-danger:hover, .btn-danger:active {
-      background: #fecaca;
-    }
-    .btn-success {
-      background: #d1fae5;
-      border-color: #a7f3d0;
-      color: #065f46;
-    }
-    .btn-warning {
-      background: #fef3c7;
-      border-color: #fde68a;
-      color: #92400e;
-    }
-    .btn-outline {
-      background: white;
-    }
+    .button-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; }
+    .btn { padding: 14px 10px; border: none; border-radius: 16px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; background: white; border: 1.5px solid #e2e8f0; color: #334155; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-primary { background: #4a86e8; border-color: #4a86e8; color: white; box-shadow: 0 4px 8px rgba(74,134,232,0.25); }
+    .btn-primary:hover, .btn-primary:active { background: #3b74d0; transform: scale(0.98); }
+    .btn-danger { background: #fee2e2; border-color: #fecaca; color: #b91c1c; }
+    .btn-danger:hover, .btn-danger:active { background: #fecaca; }
+    .btn-success { background: #d1fae5; border-color: #a7f3d0; color: #065f46; }
+    .btn-warning { background: #fef3c7; border-color: #fde68a; color: #92400e; }
+    .btn-outline { background: white; }
 
     /* Dashboard Stats */
-    .stats-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 8px;
-    }
-    .stat-card {
-      background: #f8fafc;
-      border-radius: 18px;
-      padding: 16px;
-      border: 1px solid #e2e8f0;
-    }
-    .stat-label {
-      font-size: 0.8rem;
-      color: #64748b;
-      margin-bottom: 6px;
-      font-weight: 500;
-    }
-    .stat-value {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #0f172a;
-    }
-    .stat-value small {
-      font-size: 0.9rem;
-      font-weight: 400;
-      color: #94a3b8;
-    }
-    .revenue-card {
-      grid-column: span 2;
-      background: linear-gradient(135deg, #4a86e8, #6c5ce7);
-      color: white;
-      border: none;
-    }
-    .revenue-card .stat-label,
-    .revenue-card .stat-value {
-      color: white;
-    }
+    .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+    .stat-card { background: #f8fafc; border-radius: 18px; padding: 16px; border: 1px solid #e2e8f0; }
+    .stat-label { font-size: 0.8rem; color: #64748b; margin-bottom: 6px; font-weight: 500; }
+    .stat-value { font-size: 1.8rem; font-weight: 700; color: #0f172a; }
+    .stat-value small { font-size: 0.9rem; font-weight: 400; color: #94a3b8; }
+    .revenue-card { grid-column: span 2; background: linear-gradient(135deg, #4a86e8, #6c5ce7); color: white; border: none; }
+    .revenue-card .stat-label, .revenue-card .stat-value { color: white; }
 
     /* Table */
-    .table-wrapper {
-      overflow-x: auto;
-      border-radius: 18px;
-      margin-top: 10px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.85rem;
-    }
-    th {
-      text-align: left;
-      padding: 12px 8px;
-      background: #f1f5f9;
-      font-weight: 600;
-      color: #475569;
-    }
-    td {
-      padding: 10px 8px;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    .action-icon {
-      background: none;
-      border: none;
-      font-size: 1rem;
-      cursor: pointer;
-      margin: 0 4px;
-      color: #64748b;
-      padding: 6px;
-      border-radius: 50%;
-      transition: background 0.2s;
-    }
-    .action-icon:hover {
-      background: #e2e8f0;
-    }
+    .table-wrapper { overflow-x: auto; border-radius: 18px; margin-top: 10px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th { text-align: left; padding: 12px 8px; background: #f1f5f9; font-weight: 600; color: #475569; }
+    td { padding: 10px 8px; border-bottom: 1px solid #e2e8f0; }
+    .action-icon { background: none; border: none; font-size: 1rem; cursor: pointer; margin: 0 4px; color: #64748b; padding: 6px; border-radius: 50%; transition: background 0.2s; }
+    .action-icon:hover { background: #e2e8f0; }
 
     /* Search bar */
-    .search-section {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 15px;
-    }
-    .search-section input {
-      flex: 1;
-    }
+    .search-section { display: flex; gap: 8px; margin-bottom: 15px; }
+    .search-section input { flex: 1; }
 
     /* Loader */
-    .loader {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      border-top-color: white;
-      animation: spin 0.8s linear infinite;
-    }
+    .loader { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* Toast */
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      right: 20px;
-      background: #1e293b;
-      color: white;
-      padding: 14px 20px;
-      border-radius: 40px;
-      font-weight: 500;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      opacity: 0;
-      transition: opacity 0.3s;
-      pointer-events: none;
-      text-align: center;
-      max-width: 600px;
-      margin: 0 auto;
-    }
+    .toast { position: fixed; bottom: 20px; left: 20px; right: 20px; background: #1e293b; color: white; padding: 14px 20px; border-radius: 40px; font-weight: 500; box-shadow: 0 10px 25px rgba(0,0,0,0.2); opacity: 0; transition: opacity 0.3s; pointer-events: none; text-align: center; max-width: 600px; margin: 0 auto; }
     .toast.show { opacity: 1; }
     .toast.error { background: #b91c1c; }
     .toast.success { background: #065f46; }
 
-    /* Hidden row tracker */
     #currentRow { display: none; }
   </style>
 </head>
 <body>
 <div class="container">
   <div class="app-header">
-    <h1>📦 InventoryForBabi (IFB) </h1>
+    <h1>📦 InventoryForBabi (IFB)</h1>
     <div class="connection-status">
-      <span class="status-dot" id="statusDot"></span>
-      <span id="statusText">Connected</span>
+      <span class="status-dot checking" id="statusDot"></span>
+      <span id="statusText">Checking...</span>
     </div>
   </div>
 
@@ -343,7 +131,6 @@
       <input type="number" id="soldQty" placeholder="0" value="0">
     </div>
     
-    <!-- Hidden row tracker -->
     <input type="hidden" id="currentRow" value="">
 
     <div class="button-grid">
@@ -377,7 +164,8 @@
 
   <!-- INVENTORY LIST CARD -->
   <div class="card">
-    <div class="card-title"><i class="fas fa-list-ul" style="color:#4a86e8"></i> Current Inventory 
+    <div class="card-title">
+      <i class="fas fa-list-ul" style="color:#4a86e8"></i> Current Inventory
       <button class="btn-outline" id="refreshTableBtn" style="margin-left:auto; padding:6px 12px; border-radius:30px"><i class="fas fa-sync-alt"></i> Refresh</button>
     </div>
     <div class="search-section">
@@ -397,65 +185,118 @@
   </div>
 </div>
 
-<!-- TOAST -->
 <div id="toast" class="toast">Message</div>
 
 <script>
   // ==================== CONFIGURATION ====================
   const API_URL = 'https://script.google.com/macros/s/AKfycbzVbavjjnub6sxb52TuJn2xrt58bMcAGOWOiA2WUgrGb6FRtUS6n7QYe-Pl9xsLpnoo/exec';
 
-  // DOM Elements
-  const productName = document.getElementById('productName');
-  const productId = document.getElementById('productId');
-  const stockQty = document.getElementById('stockQty');
-  const unitPrice = document.getElementById('unitPrice');
-  const soldQty = document.getElementById('soldQty');
-  const currentRow = document.getElementById('currentRow');
-  const tableBody = document.getElementById('tableBody');
-  const totalStockEl = document.getElementById('totalStock');
-  const totalSoldEl = document.getElementById('totalSold');
-  const totalRevenueEl = document.getElementById('totalRevenue');
-  const toast = document.getElementById('toast');
-  const statusDot = document.getElementById('statusDot');
-  const statusText = document.getElementById('statusText');
+  // FIX 1: Retry + timeout constants
+  const FETCH_TIMEOUT_MS = 10000;   // 10s per attempt
+  const MAX_RETRIES = 3;
+  const HEARTBEAT_INTERVAL_MS = 30000; // check connection every 30s
 
-  // Helper: Show toast message
-  function showToast(message, type = 'info') {
-    toast.textContent = message;
-    toast.className = 'toast show ' + type;
-    setTimeout(() => toast.classList.remove('show'), 3000);
+  // DOM
+  const productName   = document.getElementById('productName');
+  const productId     = document.getElementById('productId');
+  const stockQty      = document.getElementById('stockQty');
+  const unitPrice     = document.getElementById('unitPrice');
+  const soldQty       = document.getElementById('soldQty');
+  const currentRow    = document.getElementById('currentRow');
+  const tableBody     = document.getElementById('tableBody');
+  const totalStockEl  = document.getElementById('totalStock');
+  const totalSoldEl   = document.getElementById('totalSold');
+  const totalRevenueEl = document.getElementById('totalRevenue');
+  const toast         = document.getElementById('toast');
+  const statusDot     = document.getElementById('statusDot');
+  const statusText    = document.getElementById('statusText');
+
+  // ==================== STATUS MANAGEMENT ====================
+  // FIX 2: Separate network status from data/validation errors
+  // Only setOnlineStatus() touches the dot; never called from form validation.
+  function setOnlineStatus(state) {
+    // state: 'online' | 'offline' | 'checking'
+    statusDot.className = 'status-dot' + (state === 'offline' ? ' offline' : state === 'checking' ? ' checking' : '');
+    statusText.textContent = state === 'online' ? 'Connected' : state === 'checking' ? 'Checking...' : 'Offline';
   }
 
-  // Helper: API call
-  async function callApi(params) {
+  // ==================== TOAST ====================
+  let toastTimer;
+  function showToast(message, type = 'info') {
+    clearTimeout(toastTimer);
+    toast.textContent = message;
+    toast.className = 'toast show ' + type;
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  // ==================== CORE API CALL ====================
+  // FIX 3: All requests use GET with URL params (correct for GAS doGet).
+  //         Added AbortController for timeout, redirect:'follow' for GAS redirects,
+  //         and retry logic with exponential backoff.
+  async function fetchWithTimeout(url, timeoutMs) {
+    const controller = new AbortController();
+    const tid = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      const url = new URL(API_URL);
-      Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-      const response = await fetch(url, { method: params.action === 'getAll' ? 'GET' : 'POST' });
-      const data = await response.json();
-      if (!data.success) throw new Error(data.error || 'Request failed');
-      return data;
-    } catch (error) {
-      showToast(error.message, 'error');
-      throw error;
+      // FIX 4: redirect:'follow' ensures GAS 302 redirects are handled properly
+      const res = await fetch(url, { method: 'GET', redirect: 'follow', signal: controller.signal });
+      clearTimeout(tid);
+      return res;
+    } catch (err) {
+      clearTimeout(tid);
+      throw err;
     }
   }
 
-  // Load all records and update dashboard/table
+  async function callApi(params, retries = MAX_RETRIES) {
+    const url = new URL(API_URL);
+    Object.keys(params).forEach(k => url.searchParams.append(k, params[k]));
+
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        const res = await fetchWithTimeout(url.toString(), FETCH_TIMEOUT_MS);
+
+        // FIX 5: Catch non-JSON responses (GAS sometimes returns HTML error pages)
+        const text = await res.text();
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch {
+          throw new Error('Server returned an unexpected response. Check Apps Script logs.');
+        }
+
+        if (!data.success) throw new Error(data.error || 'Request failed');
+        return data;
+
+      } catch (err) {
+        const isLast = attempt === retries;
+        if (isLast) {
+          // Only mark offline on a genuine network/timeout failure, not a GAS logic error
+          const isNetworkErr = err.name === 'AbortError' || err.message === 'Failed to fetch' || err.message.includes('NetworkError');
+          if (isNetworkErr) setOnlineStatus('offline');
+          showToast(err.message, 'error');
+          throw err;
+        }
+        // Exponential backoff: 500ms, 1000ms, 2000ms…
+        await new Promise(r => setTimeout(r, 500 * attempt));
+      }
+    }
+  }
+
+  // ==================== INVENTORY LOAD ====================
   async function loadInventory() {
     try {
       const data = await callApi({ action: 'getAll' });
       const records = data.data || [];
       renderTable(records);
       updateDashboard(records);
-      setOnlineStatus(true);
+      setOnlineStatus('online');
     } catch (e) {
-      setOnlineStatus(false);
+      // error already shown; status already set inside callApi
     }
   }
 
   function renderTable(records) {
-    if (records.length === 0) {
+    if (!records.length) {
       tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:#94a3b8">No products found. Add your first item!</td></tr>';
       return;
     }
@@ -465,10 +306,10 @@
         <td>${escapeHtml(r.productId || '')}</td>
         <td>${r.stockQty || 0}</td>
         <td>${r.soldQty || 0}</td>
-        <td>₱${(r.unitPrice || 0).toFixed(2)}</td>
+        <td>₱${(Number(r.unitPrice) || 0).toFixed(2)}</td>
         <td>
-          <button class="action-icon" onclick="editRecord('${r.productId}')"><i class="fas fa-edit"></i></button>
-          <button class="action-icon" onclick="deleteRecordById('${r.productId}')"><i class="fas fa-trash"></i></button>
+          <button class="action-icon" onclick="editRecord('${escapeAttr(r.productId)}')"><i class="fas fa-edit"></i></button>
+          <button class="action-icon" onclick="deleteRecordById('${escapeAttr(r.productId)}')"><i class="fas fa-trash"></i></button>
         </td>
       </tr>
     `).join('');
@@ -477,75 +318,62 @@
   function updateDashboard(records) {
     let totalStock = 0, totalSold = 0, totalRevenue = 0;
     records.forEach(r => {
-      totalStock += Number(r.stockQty) || 0;
-      totalSold += Number(r.soldQty) || 0;
+      totalStock  += Number(r.stockQty)  || 0;
+      totalSold   += Number(r.soldQty)   || 0;
       totalRevenue += (Number(r.soldQty) || 0) * (Number(r.unitPrice) || 0);
     });
-    totalStockEl.textContent = totalStock;
-    totalSoldEl.textContent = totalSold;
+    totalStockEl.textContent   = totalStock;
+    totalSoldEl.textContent    = totalSold;
     totalRevenueEl.textContent = `₱${totalRevenue.toFixed(2)}`;
   }
 
   function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    const d = document.createElement('div');
+    d.textContent = text;
+    return d.innerHTML;
   }
 
-  function setOnlineStatus(online) {
-    if (online) {
-      statusDot.className = 'status-dot';
-      statusText.textContent = 'Connected';
-    } else {
-      statusDot.className = 'status-dot offline';
-      statusText.textContent = 'Offline';
-    }
+  // FIX 6: Separate attr-safe escaping for onclick values
+  function escapeAttr(text) {
+    return String(text).replace(/'/g, "\\'").replace(/"/g, '&quot;');
   }
 
-  // Clear form
   function clearForm() {
     productName.value = '';
-    productId.value = '';
-    stockQty.value = '0';
-    unitPrice.value = '';
-    soldQty.value = '0';
-    currentRow.value = '';
+    productId.value   = '';
+    stockQty.value    = '0';
+    unitPrice.value   = '';
+    soldQty.value     = '0';
+    currentRow.value  = '';
   }
 
-  // Save new record
+  // ==================== CRUD ====================
   async function saveRecord() {
     if (!productId.value || !productName.value) {
       showToast('Product ID and Name are required', 'error');
-      return;
+      return; // FIX 7: validation errors never touch the status dot
     }
     try {
-      await callApi({
-        action: 'save',
-        productName: productName.value,
-        productId: productId.value,
-        stockQty: stockQty.value,
-        unitPrice: unitPrice.value
-      });
+      await callApi({ action: 'save', productName: productName.value, productId: productId.value, stockQty: stockQty.value, unitPrice: unitPrice.value });
       showToast('Item saved successfully!', 'success');
       clearForm();
       loadInventory();
     } catch (e) {}
   }
 
-  // Search and load into form
   async function searchRecord() {
     const sku = prompt('Enter Product ID to search:');
     if (!sku) return;
     try {
-      const data = await callApi({ action: 'search', sku: sku });
+      const data = await callApi({ action: 'search', sku });
       if (data.found) {
         const r = data.record;
         productName.value = r.productName;
-        productId.value = r.productId;
-        stockQty.value = r.stockQty;
-        unitPrice.value = r.unitPrice;
-        soldQty.value = '0';
-        currentRow.value = data.row;
+        productId.value   = r.productId;
+        stockQty.value    = r.stockQty;
+        unitPrice.value   = r.unitPrice;
+        soldQty.value     = '0';
+        currentRow.value  = data.row;
         showToast('Record loaded. You may now update or delete.', 'success');
       } else {
         showToast('Product ID not found.', 'error');
@@ -553,34 +381,18 @@
     } catch (e) {}
   }
 
-  // Update record
   async function updateRecord() {
-    if (!currentRow.value) {
-      showToast('Load a record first using Search.', 'error');
-      return;
-    }
+    if (!currentRow.value) { showToast('Load a record first using Search.', 'error'); return; }
     try {
-      await callApi({
-        action: 'update',
-        row: currentRow.value,
-        productName: productName.value,
-        productId: productId.value,
-        stockQty: stockQty.value,
-        unitPrice: unitPrice.value,
-        soldQty: soldQty.value
-      });
+      await callApi({ action: 'update', row: currentRow.value, productName: productName.value, productId: productId.value, stockQty: stockQty.value, unitPrice: unitPrice.value, soldQty: soldQty.value });
       showToast('Record updated!', 'success');
       clearForm();
       loadInventory();
     } catch (e) {}
   }
 
-  // Delete current loaded record
   async function deleteRecord() {
-    if (!currentRow.value) {
-      showToast('Load a record first using Search.', 'error');
-      return;
-    }
+    if (!currentRow.value) { showToast('Load a record first using Search.', 'error'); return; }
     if (!confirm('Permanently delete this item?')) return;
     try {
       await callApi({ action: 'delete', row: currentRow.value });
@@ -590,12 +402,10 @@
     } catch (e) {}
   }
 
-  // Delete by product ID (from table)
   async function deleteRecordById(sku) {
     if (!confirm(`Delete product ${sku}?`)) return;
     try {
-      // First find the row
-      const data = await callApi({ action: 'search', sku: sku });
+      const data = await callApi({ action: 'search', sku });
       if (data.found) {
         await callApi({ action: 'delete', row: data.row });
         showToast('Deleted.', 'success');
@@ -604,24 +414,22 @@
     } catch (e) {}
   }
 
-  // Edit from table
   async function editRecord(sku) {
     try {
-      const data = await callApi({ action: 'search', sku: sku });
+      const data = await callApi({ action: 'search', sku });
       if (data.found) {
         const r = data.record;
         productName.value = r.productName;
-        productId.value = r.productId;
-        stockQty.value = r.stockQty;
-        unitPrice.value = r.unitPrice;
-        soldQty.value = '0';
-        currentRow.value = data.row;
+        productId.value   = r.productId;
+        stockQty.value    = r.stockQty;
+        unitPrice.value   = r.unitPrice;
+        soldQty.value     = '0';
+        currentRow.value  = data.row;
         showToast('Record loaded for editing.', 'success');
       }
     } catch (e) {}
   }
 
-  // Clear all records
   async function clearAllRecords() {
     if (!confirm('DELETE ALL INVENTORY RECORDS? This cannot be undone!')) return;
     try {
@@ -631,17 +439,14 @@
     } catch (e) {}
   }
 
-  // Filter table
   function filterTable() {
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    const rows = tableBody.querySelectorAll('tr');
-    rows.forEach(row => {
-      const text = row.textContent.toLowerCase();
-      row.style.display = text.includes(searchTerm) ? '' : 'none';
+    const term = document.getElementById('searchInput').value.toLowerCase();
+    tableBody.querySelectorAll('tr').forEach(row => {
+      row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
     });
   }
 
-  // Event listeners
+  // ==================== EVENT LISTENERS ====================
   document.getElementById('saveBtn').addEventListener('click', saveRecord);
   document.getElementById('searchBtn').addEventListener('click', searchRecord);
   document.getElementById('updateBtn').addEventListener('click', updateRecord);
@@ -652,10 +457,17 @@
   document.getElementById('searchTableBtn').addEventListener('click', filterTable);
   document.getElementById('searchInput').addEventListener('keyup', filterTable);
 
+  // FIX 8: Periodic heartbeat — re-checks connection every 30 seconds
+  // and auto-recovers without user needing to click Refresh.
+  setInterval(async () => {
+    setOnlineStatus('checking');
+    await loadInventory();
+  }, HEARTBEAT_INTERVAL_MS);
+
   // Initial load
   loadInventory();
 
-  // Make functions global for table buttons
+  // Expose for table onclick handlers
   window.editRecord = editRecord;
   window.deleteRecordById = deleteRecordById;
 </script>
