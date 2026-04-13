@@ -10,178 +10,641 @@
   <link rel="manifest" href="/site.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --obsidian:      #0d0d0f;
+      --obsidian-2:    #131316;
+      --obsidian-3:    #1a1a1f;
+      --obsidian-4:    #222228;
+      --obsidian-5:    #2c2c35;
+      --gold:          #c9a84c;
+      --gold-light:    #e4c97a;
+      --gold-dim:      #b89540;  
+      --gold-glow:     rgba(201,168,76,0.15);
+      --gold-glow-md:  rgba(201,168,76,0.25);
+      --text-primary:  #f0ede6;
+      --text-secondary:#b8b2a8; 
+      --text-muted:    #8c8680;  
+      --border:        rgba(201,168,76,0.22);
+      --border-hover:  rgba(201,168,76,0.35);
+      --border-strong: rgba(201,168,76,0.55);
+      --success:       #3d9970;
+      --success-bg:    rgba(61,153,112,0.12);
+      --danger:        #c0392b;
+      --danger-bg:     rgba(192,57,43,0.12);
+      --warning-bg:    rgba(201,168,76,0.12);
+      --radius-sm:     10px;
+      --radius-md:     16px;
+      --radius-lg:     22px;
+      --radius-xl:     28px;
+    }
+
+    /* ── RESET & BASE ──────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      font-family: 'Inter', sans-serif;
-      background: #f5f7fb;
-      padding: 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      background-color: var(--obsidian);
+      background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
       min-height: 100vh;
+      color: var(--text-primary);
+      padding: 20px 16px 40px;
       display: flex;
       flex-direction: column;
-      color: #1e293b;
     }
-    .container { max-width: 600px; margin: 0 auto; width: 100%; }
 
-    .app-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .container {
+      max-width: 580px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ── TYPOGRAPHY ────────────────────────────────────── */
+    .display { font-family: 'Cormorant Garamond', serif; }
+
+    /* ── HEADER ────────────────────────────────────────── */
+    .app-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      animation: fadeDown 0.6s ease both;
+    }
+
+    .header-left { display: flex; flex-direction: column; gap: 4px; }
+
     .app-header h1 {
-      font-size: 1.8rem; font-weight: 700;
-      background: linear-gradient(135deg, #4a86e8, #6c5ce7);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--text-primary);
+      line-height: 1;
     }
-    .connection-status { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #64748b; }
-    .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 2px rgba(16,185,129,0.2); transition: background 0.3s; }
-    .status-dot.offline  { background: #ef4444; box-shadow: 0 0 0 2px rgba(239,68,68,0.2); }
-    .status-dot.checking { background: #f59e0b; box-shadow: 0 0 0 2px rgba(245,158,11,0.2); animation: pulse 1s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
 
-    .card { background: white; border-radius: 24px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,.05),0 10px 15px -3px rgba(0,0,0,.05); border: 1px solid rgba(226,232,240,.6); }
-    .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; color: #334155; }
+    .app-header h1 span {
+      color: var(--gold);
+    }
 
-    .form-group { margin-bottom: 16px; }
-    label { display: block; font-size: .85rem; font-weight: 500; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .3px; }
-    input, select { width: 100%; padding: 14px 16px; font-size: 1rem; border: 1.5px solid #e2e8f0; border-radius: 16px; background: #fafcff; transition: all .2s; font-family: 'Inter',sans-serif; color: #1e293b; }
-    input:focus, select:focus { outline: none; border-color: #4a86e8; background: white; box-shadow: 0 0 0 4px rgba(74,134,232,.1); }
+    .app-tagline {
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .connection-status {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    .status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 6px var(--success);
+      flex-shrink: 0;
+    }
+    .status-dot.offline  { background: var(--danger); box-shadow: 0 0 6px var(--danger); }
+    .status-dot.checking { background: var(--gold); box-shadow: 0 0 6px var(--gold); animation: pulse 1.2s ease infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    /* ── CARDS ─────────────────────────────────────────── */
+    .card {
+      background: var(--obsidian-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      margin-bottom: 18px;
+      position: relative;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 20px; right: 20px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+      opacity: 0.6;
+    }
+
+    .card:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 0 30px var(--gold-glow);
+    }
+
+    /* Staggered card entrance */
+    .card:nth-child(1) { animation: fadeUp 0.5s 0.1s ease both; }
+    .card:nth-child(2) { animation: fadeUp 0.5s 0.2s ease both; }
+    .card:nth-child(3) { animation: fadeUp 0.5s 0.3s ease both; }
+    .card:nth-child(4) { animation: fadeUp 0.5s 0.4s ease both; }
+    .card:nth-child(5) { animation: fadeUp 0.5s 0.5s ease both; }
+
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:none; } }
+
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-title-icon {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: var(--gold-glow);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold);
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    /* ── FORM ELEMENTS ─────────────────────────────────── */
+    .form-group { margin-bottom: 14px; }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 7px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 13px 16px;
+      font-size: 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      background: var(--obsidian-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input::placeholder { color: var(--text-muted); }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--border-strong);
+      background: var(--obsidian-4);
+      box-shadow: 0 0 0 3px var(--gold-glow);
+    }
+
     input[type="number"] { -moz-appearance: textfield; }
     input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
 
-    .button-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-top: 8px; }
-    .btn { padding: 14px 10px; border: 1.5px solid #e2e8f0; border-radius: 16px; font-weight: 600; font-size: .95rem; cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 8px; background: white; color: #334155; font-family: 'Inter',sans-serif; }
-    .btn:disabled { opacity: .5; cursor: not-allowed; transform: none !important; }
-    .btn-primary  { background: #4a86e8; border-color: #4a86e8; color: white; box-shadow: 0 4px 8px rgba(74,134,232,.25); }
-    .btn-primary:hover:not(:disabled)  { background: #3b74d0; transform: scale(.98); }
-    .btn-danger   { background: #fee2e2; border-color: #fecaca; color: #b91c1c; }
-    .btn-danger:hover:not(:disabled)   { background: #fecaca; }
-    .btn-success  { background: #d1fae5; border-color: #a7f3d0; color: #065f46; }
-    .btn-warning  { background: #fef3c7; border-color: #fde68a; color: #92400e; }
-    .btn-outline  { background: white; }
+    /* ── BUTTONS ───────────────────────────────────────── */
+    .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
 
-    .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
-    .stat-card { background: #f8fafc; border-radius: 18px; padding: 16px; border: 1px solid #e2e8f0; }
-    .stat-label { font-size: .8rem; color: #64748b; margin-bottom: 6px; font-weight: 500; }
-    .stat-value { font-size: 1.8rem; font-weight: 700; color: #0f172a; }
-    .revenue-card { grid-column: span 2; background: linear-gradient(135deg,#4a86e8,#6c5ce7); border: none; }
-    .revenue-card .stat-label, .revenue-card .stat-value { color: white; }
-
-    .table-wrapper { overflow-x: auto; border-radius: 18px; margin-top: 10px; }
-    table { width: 100%; border-collapse: collapse; font-size: .85rem; }
-    th { text-align: left; padding: 12px 8px; background: #f1f5f9; font-weight: 600; color: #475569; }
-    td { padding: 10px 8px; border-bottom: 1px solid #e2e8f0; }
-    tr:last-child td { border-bottom: none; }
-    .action-icon { background: none; border: none; font-size: 1rem; cursor: pointer; margin: 0 4px; color: #64748b; padding: 6px; border-radius: 50%; transition: background .2s; }
-    .action-icon:hover { background: #e2e8f0; }
-
-    .search-section { display: flex; gap: 8px; margin-bottom: 15px; }
-    .search-section input { flex: 1; }
-
-    /* ===== PAGINATION ===== */
-    .pagination-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px solid #e2e8f0;
+    .btn {
+      padding: 14px 10px;
+      min-height: 48px;
+      border-radius: var(--radius-md);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      border: 1px solid transparent;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
     }
-    .rows-per-page {
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: white;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .btn:active::after { opacity: 0.05; }
+
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* Gold primary */
+    .btn-primary {
+      background: linear-gradient(135deg, #b8943e, #d4a84b, #b8943e);
+      background-size: 200% 100%;
+      background-position: 100% 0;
+      border-color: var(--gold-dim);
+      color: var(--obsidian);
+      font-weight: 600;
+      box-shadow: 0 4px 14px rgba(201,168,76,0.2);
+    }
+    .btn-primary:hover:not(:disabled) {
+      background-position: 0% 0;
+      box-shadow: 0 4px 20px rgba(201,168,76,0.4);
+      transform: translateY(-1px);
+    }
+
+    /* Ghost */
+    .btn-ghost {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--text-secondary);
+    }
+    .btn-ghost:hover:not(:disabled) {
+      border-color: var(--border-hover);
+      background: var(--obsidian-4);
+      color: var(--text-primary);
+    }
+
+    /* Success tint */
+    .btn-success {
+      background: var(--success-bg);
+      border-color: rgba(61,153,112,0.3);
+      color: #5bc49a;
+    }
+    .btn-success:hover:not(:disabled) {
+      background: rgba(61,153,112,0.2);
+      border-color: rgba(61,153,112,0.5);
+    }
+
+    /* Danger tint */
+    .btn-danger {
+      background: var(--danger-bg);
+      border-color: rgba(192,57,43,0.3);
+      color: #e57368;
+    }
+    .btn-danger:hover:not(:disabled) {
+      background: rgba(192,57,43,0.2);
+      border-color: rgba(192,57,43,0.5);
+    }
+
+    /* Warning tint */
+    .btn-warning {
+      background: var(--warning-bg);
+      border-color: var(--border);
+      color: var(--gold-light);
+    }
+
+    /* ── DASHBOARD ─────────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .stat-tile {
+      background: var(--obsidian-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      transition: border-color 0.25s;
+    }
+    .stat-tile:hover { border-color: var(--border-hover); }
+
+    .stat-tile.gold-tile {
+      grid-column: span 2;
+      background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.04));
+      border-color: rgba(201,168,76,0.25);
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-tile.gold-tile::after {
+      content: '₱';
+      position: absolute;
+      right: 16px; bottom: -8px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem;
+      color: var(--gold);
+      opacity: 0.05;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    .stat-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .stat-tile.gold-tile .stat-label { color: var(--gold-dim); }
+    .stat-tile.gold-tile .stat-value { color: var(--gold-light); font-size: 2.6rem; }
+
+    /* ── TABLE ─────────────────────────────────────────── */
+    .table-wrapper { overflow-x: auto; margin-top: 8px; border-radius: var(--radius-lg); border: 1px solid var(--border); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+
+    thead tr { border-bottom: 1px solid var(--border); }
+
+    th {
+      padding: 11px 12px;
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: var(--obsidian-3);
+    }
+
+    th:first-child { border-radius: var(--radius-md) 0 0 0; }
+    th:last-child  { border-radius: 0 var(--radius-md) 0 0; }
+
+    td {
+      padding: 11px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    td:first-child { color: var(--text-primary); font-weight: 400; }
+
+    tbody tr { transition: background 0.15s; }
+    tbody tr:hover td { background: var(--obsidian-4); }
+    tbody tr:last-child td { border-bottom: none; }
+
+    .action-icon {
+      background: none;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 5px 7px;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+    .action-icon:hover {
+      border-color: var(--border-hover);
+      color: var(--gold-light);
+      background: var(--gold-glow);
+    }
+
+    /* ── SEARCH BAR (inventory filter) ────────────────── */
+    .filter-row {
       display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: .8rem;
-      color: #64748b;
-      white-space: nowrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .filter-row input { flex: 1; }
+    .filter-row .btn  { flex-shrink: 0; padding: 13px 18px; }
+
+    /* ── SEARCH CARD ───────────────────────────────────── */
+    .sku-row { display: flex; gap: 8px; align-items: stretch; }
+    .sku-row input { flex: 1; }
+    .sku-row .btn  { flex-shrink: 0; padding: 13px 18px; }
+
+    .search-result {
+      margin-top: 14px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      background: var(--obsidian-3);
+      overflow: hidden;
+      display: none;
+    }
+    .search-result.found  { border-color: rgba(61,153,112,0.35); background: rgba(61,153,112,0.04); }
+    .search-result.missed { border-color: rgba(192,57,43,0.35);  background: rgba(192,57,43,0.04); }
+
+    .result-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .result-header.found  { color: #5bc49a; }
+    .result-header.missed { color: #e57368; }
+
+    .result-body { display: grid; grid-template-columns: 1fr 1fr; }
+
+    .result-field {
+      padding: 10px 16px;
+      border-right: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .result-field:nth-child(even)      { border-right: none; }
+    .result-field:nth-last-child(-n+2) { border-bottom: none; }
+
+    .result-field-label { font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
+    .result-field-value { font-size: 0.88rem; font-weight: 500; color: var(--text-primary); }
+
+    .result-actions { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.05); }
+    .result-actions .btn { flex: 1; padding: 10px 8px; font-size: 0.8rem; }
+
+    /* ── SOLD QTY (update only) ────────────────────────── */
+    .sold-qty-group { display: none; padding-top: 14px; margin-top: 6px; border-top: 1px solid var(--border); }
+    .sold-qty-group.visible { display: block; }
+    .sold-qty-group label { color: var(--gold-dim); }
+    .sold-note {
+      margin-top: 7px;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      background: var(--warning-bg);
+      border: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--gold-dim);
+      line-height: 1.5;
+    }
+
+    /* ── PAGINATION ────────────────────────────────────── */
+    .pagination-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px;
+      margin-top: 16px; padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .rows-per-page {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 0.78rem; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--text-muted);
     }
     .rows-per-page select {
-      width: auto;
-      padding: 6px 10px;
-      font-size: .8rem;
-      border-radius: 10px;
-      border: 1.5px solid #e2e8f0;
-      background: #fafcff;
-      cursor: pointer;
+      width: auto; padding: 5px 10px;
+      font-size: 0.8rem; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--obsidian-4);
+      color: var(--text-secondary); cursor: pointer;
     }
-    .page-info {
-      font-size: .8rem;
-      color: #64748b;
-      flex: 1;
-      text-align: center;
-      min-width: 80px;
-    }
-    .page-info strong { color: #334155; }
+
+    .page-info { font-size: 0.78rem; color: var(--text-muted); flex: 1; text-align: center; min-width: 80px; letter-spacing: 0.04em; }
+    .page-info strong { color: var(--text-secondary); font-weight: 500; }
+
     .page-controls { display: flex; align-items: center; gap: 4px; }
+
     .page-btn {
-      min-width: 34px;
-      height: 34px;
-      padding: 0 8px;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 10px;
-      background: white;
-      color: #475569;
-      font-size: .8rem;
-      font-weight: 600;
+      min-width: 36px; height: 36px; padding: 0 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--obsidian-4);
+      color: var(--text-muted);
+      font-size: 0.82rem; font-weight: 500;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       transition: all .15s;
-      font-family: 'Inter',sans-serif;
+      font-family: 'DM Sans', sans-serif;
     }
-    .page-btn:hover:not(:disabled) { background: #f1f5f9; border-color: #cbd5e1; }
-    .page-btn:disabled { opacity: .35; cursor: not-allowed; }
-    .page-btn.active { background: #4a86e8; border-color: #4a86e8; color: white; box-shadow: 0 2px 6px rgba(74,134,232,.35); }
-    .page-btn.ellipsis { cursor: default; border-color: transparent; background: transparent; pointer-events: none; }
-    /* ====================== */
+    .page-btn:hover:not(:disabled) { border-color: var(--border-hover); color: var(--gold-light); background: var(--gold-glow); }
+    .page-btn:disabled { opacity: .25; cursor: not-allowed; }
+    .page-btn.active   { background: var(--gold-glow-md); border-color: var(--border-strong); color: var(--gold-light); box-shadow: 0 0 10px var(--gold-glow); }
+    .page-btn.ellipsis { background: transparent; border-color: transparent; pointer-events: none; }
 
-    .loader { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: white; animation: spin .8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .toast { position: fixed; bottom: 20px; left: 20px; right: 20px; background: #1e293b; color: white; padding: 14px 20px; border-radius: 40px; font-weight: 500; box-shadow: 0 10px 25px rgba(0,0,0,.2); opacity: 0; transition: opacity .3s; pointer-events: none; text-align: center; max-width: 600px; margin: 0 auto; z-index: 999; }
-    .toast.show  { opacity: 1; }
-    .toast.error   { background: #b91c1c; }
-    .toast.success { background: #065f46; }
-
-    #currentRow { display: none; }
-
-    /* Highlight pulse when form is populated */
+    /* ── FORM PULSE ────────────────────────────────────── */
     @keyframes formPulse {
-      0%   { box-shadow: 0 0 0 0 rgba(74,134,232,0.45); }
-      60%  { box-shadow: 0 0 0 10px rgba(74,134,232,0); }
-      100% { box-shadow: 0 0 0 0 rgba(74,134,232,0); }
+      0%   { box-shadow: 0 0 0 0 rgba(201,168,76,0.4); }
+      60%  { box-shadow: 0 0 0 12px rgba(201,168,76,0); }
+      100% { box-shadow: 0 0 0 0 rgba(201,168,76,0); }
     }
     .form-card-highlight {
-      animation: formPulse 0.7s ease-out;
-      border-color: #4a86e8 !important;
+      animation: formPulse 0.8s ease-out;
+      border-color: var(--border-strong) !important;
     }
 
-    /* Search result panel styles */
-    .search-result.found { border-color: #a7f3d0 !important; background: #f0fdf4; }
-    .search-result.missed { border-color: #fecaca !important; background: #fff5f5; }
-    .result-header.found { color: #065f46; }
-    .result-header.missed { color: #b91c1c; }
+    /* ── DIVIDER ───────────────────────────────────────── */
+    .gold-divider {
+      width: 40px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 0 auto 20px;
+      opacity: 0.5;
+    }
+
+    /* ── REFRESH BTN ───────────────────────────────────── */
+    .refresh-btn {
+      margin-left: auto;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .refresh-btn:hover { border-color: var(--border-hover); color: var(--gold-light); background: var(--gold-glow); }
+
+    /* ── TOAST ─────────────────────────────────────────── */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      white-space: nowrap;
+      background: var(--obsidian-4);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 12px 24px;
+      border-radius: 40px;
+      font-size: 0.82rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5), 0 0 0 1px var(--border);
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+      z-index: 999;
+      transform: translateX(-50%) translateY(8px);
+    }
+    .toast.show  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.error   { background: rgba(192,57,43,0.9); border-color: rgba(192,57,43,0.5); }
+    .toast.success { background: rgba(61,153,112,0.9); border-color: rgba(61,153,112,0.5); }
+
+    /* ── LOADER ────────────────────────────────────────── */
+    .loader { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(13,13,15,0.3); border-radius: 50%; border-top-color: var(--obsidian); animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── FOOTER ────────────────────────────────────────── */
+    .app-footer {
+      text-align: center;
+      padding: 28px 0 8px;
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
+      animation: fadeUp 0.5s 0.6s ease both;
+    }
+    .app-footer p {
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      line-height: 2;
+    }
+    .app-footer strong { color: var(--gold-dim); font-weight: 500; }
+
+    .version-badge {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    #currentRow { display: none; }
   </style>
 </head>
 <body>
 <div class="container">
 
+  <!-- HEADER -->
   <div class="app-header">
-    <h1>📦 InventoryForBabi</h1>
+    <div class="header-left">
+      <h1 class="display">Inventory<span>FB</span></h1>
+      <span class="app-tagline">Stock &amp; Revenue Management</span>
+    </div>
     <div class="connection-status">
       <span class="status-dot checking" id="statusDot"></span>
-      <span id="statusText">Checking...</span>
+      <span id="statusText">Checking</span>
     </div>
   </div>
 
-  <!-- ENTRY FORM -->
+  <!-- PRODUCT ENTRY -->
   <div class="card" id="entryFormCard">
-    <div class="card-title"><i class="fas fa-pen" style="color:#4a86e8"></i> Product Entry</div>
+    <div class="card-title">
+      <span class="card-title-icon"><i class="fas fa-pen"></i></span>
+      Product Entry
+    </div>
+
     <div class="form-group">
       <label>Product Name</label>
-      <input type="text" id="productName" placeholder="e.g., Coffee Beans" autocomplete="off">
+      <input type="text" id="productName" placeholder="e.g., Arabica Coffee Beans" autocomplete="off">
     </div>
     <div class="form-group">
       <label>Product ID / SKU</label>
@@ -195,49 +658,60 @@
       <label>Unit Price (₱)</label>
       <input type="number" id="unitPrice" placeholder="0.00" step="0.01">
     </div>
-    <div class="form-group">
-      <label>Sold Quantity (for sale update)</label>
-      <input type="number" id="soldQty" placeholder="0" value="0">
+
+    <!-- Sold qty: only visible when editing -->
+    <div class="sold-qty-group" id="soldQtyGroup">
+      <div class="form-group" style="margin-bottom:6px">
+        <label>Qty Sold <span style="text-transform:none;letter-spacing:0;font-weight:300;color:var(--text-muted)">(added to existing total)</span></label>
+        <input type="number" id="soldQty" placeholder="0" value="0">
+      </div>
+      <div class="sold-note"><i class="fas fa-info-circle" style="margin-right:5px;opacity:.7"></i>This amount will be added on top of the current sold count in the sheet.</div>
     </div>
+
     <input type="hidden" id="currentRow" value="">
-    <div class="button-grid">
-      <button class="btn btn-primary"  id="saveBtn"><i class="fas fa-plus-circle"></i> Save</button>
+
+    <div class="button-grid" style="margin-top:16px">
+      <button class="btn btn-primary"  id="saveBtn"><i class="fas fa-plus-circle"></i> Save New</button>
       <button class="btn btn-success"  id="updateBtn"><i class="fas fa-sync-alt"></i> Update</button>
-      <button class="btn btn-outline"  id="clearFormBtn"><i class="fas fa-eraser"></i> Clear</button>
+      <button class="btn btn-ghost"    id="clearFormBtn"><i class="fas fa-eraser"></i> Clear</button>
       <button class="btn btn-danger"   id="deleteBtn"><i class="fas fa-trash-alt"></i> Delete</button>
-      <button class="btn btn-danger"   id="clearAllBtn" style="grid-column:span 2"><i class="fas fa-dumpster"></i> Clear All Records</button>
+      <button class="btn btn-danger"   id="clearAllBtn" style="grid-column:span 2; opacity:.7;"><i class="fas fa-dumpster"></i> Clear All Records</button>
     </div>
   </div>
 
-  <!-- SEARCH CARD (NEW) -->
+  <!-- SEARCH PRODUCT -->
   <div class="card" id="searchCard">
-    <div class="card-title"><i class="fas fa-search" style="color:#6c5ce7"></i> Search Product</div>
-    <div style="display:flex; gap:10px; align-items:stretch;">
-      <input type="text" id="skuSearchInput" placeholder="Enter Product ID / SKU…" style="flex:1;" autocomplete="off">
-      <button class="btn btn-primary" id="skuSearchBtn" style="padding:14px 20px;"><i class="fas fa-search"></i> Search</button>
+    <div class="card-title">
+      <span class="card-title-icon"><i class="fas fa-search"></i></span>
+      Search Product
     </div>
-
-    <!-- Result preview – hidden until search fires -->
-    <div class="search-result" id="searchResult" style="display:none; margin-top:14px; border-radius:16px; border:1.5px solid #e2e8f0; background:#f8fafc; overflow:hidden;">
-      <div class="result-header" id="resultHeader" style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; font-size:.82rem; font-weight:600;"></div>
-      <div class="result-body" id="resultBody" style="display:grid; grid-template-columns:1fr 1fr; border-top:1px solid #e2e8f0;"></div>
-      <div class="result-actions" id="resultActions" style="display:flex; gap:8px; padding:12px 14px; border-top:1px solid #e2e8f0;"></div>
+    <div class="sku-row">
+      <input type="text" id="skuSearchInput" placeholder="Enter Product ID or SKU…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <button class="btn btn-primary" id="skuSearchBtn"><i class="fas fa-search"></i> Search</button>
+    </div>
+    <div class="search-result" id="searchResult">
+      <div class="result-header" id="resultHeader"></div>
+      <div class="result-body"   id="resultBody"></div>
+      <div class="result-actions" id="resultActions"></div>
     </div>
   </div>
 
   <!-- DASHBOARD -->
   <div class="card">
-    <div class="card-title"><i class="fas fa-chart-pie" style="color:#6c5ce7"></i> Dashboard</div>
-    <div class="stats-container">
-      <div class="stat-card">
-        <div class="stat-label"><i class="fas fa-boxes"></i> Total Stock</div>
+    <div class="card-title">
+      <span class="card-title-icon"><i class="fas fa-chart-bar"></i></span>
+      Overview
+    </div>
+    <div class="stats-grid">
+      <div class="stat-tile">
+        <div class="stat-label"><i class="fas fa-layer-group"></i> Total Stock</div>
         <div class="stat-value" id="totalStock">0</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-label"><i class="fas fa-truck"></i> Total Sold</div>
+      <div class="stat-tile">
+        <div class="stat-label"><i class="fas fa-arrow-up"></i> Total Sold</div>
         <div class="stat-value" id="totalSold">0</div>
       </div>
-      <div class="stat-card revenue-card">
+      <div class="stat-tile gold-tile">
         <div class="stat-label"><i class="fas fa-coins"></i> Total Revenue</div>
         <div class="stat-value" id="totalRevenue">₱0.00</div>
       </div>
@@ -247,29 +721,29 @@
   <!-- INVENTORY LIST -->
   <div class="card">
     <div class="card-title">
-      <i class="fas fa-list-ul" style="color:#4a86e8"></i> Current Inventory
-      <button id="refreshTableBtn" style="margin-left:auto;padding:6px 12px;border-radius:30px;border:1.5px solid #e2e8f0;background:white;cursor:pointer;font-size:.85rem;font-family:'Inter',sans-serif;color:#334155;">
-        <i class="fas fa-sync-alt"></i> Refresh
-      </button>
+      <span class="card-title-icon"><i class="fas fa-list-ul"></i></span>
+      Current Inventory
+      <button class="refresh-btn" id="refreshTableBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
     </div>
 
-    <div class="search-section">
-      <input type="text" id="searchInput" placeholder="Search by name or ID...">
-      <button class="btn btn-primary" id="searchTableBtn" style="padding:14px 18px"><i class="fas fa-search"></i></button>
+    <div class="filter-row">
+      <input type="text" id="searchInput" placeholder="Filter by name or ID…">
+      <button class="btn btn-ghost" id="searchTableBtn" style="padding:13px 16px"><i class="fas fa-search"></i></button>
     </div>
 
     <div class="table-wrapper">
       <table id="inventoryTable">
         <thead>
-          <tr><th>Product</th><th>ID</th><th>Stock</th><th>Sold</th><th>Price</th><th></th></tr>
+          <tr>
+            <th>Product</th><th>ID</th><th>Stock</th><th>Sold</th><th>Price</th><th></th>
+          </tr>
         </thead>
         <tbody id="tableBody">
-          <tr><td colspan="6" style="text-align:center;padding:30px">Loading inventory...</td></tr>
+          <tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted)">Loading inventory…</td></tr>
         </tbody>
       </table>
     </div>
 
-    <!-- PAGINATION BAR -->
     <div class="pagination-bar" id="paginationBar">
       <div class="rows-per-page">
         Rows:
@@ -284,13 +758,13 @@
       <div class="page-controls" id="pageControls"></div>
     </div>
   </div>
-</div>
-  
+
   <!-- FOOTER -->
-<footer style="text-align: center; padding: 16px 0 8px; color: #94a3b8; font-size: 0.75rem; border-top: 1px solid #e2e8f0; margin-top: 8px;">
-  <p>Developed by <strong style="color: #64748b;">Adriane Lorenz Racaza</strong> • IFB Management System v1.0</p>
-  <p style="margin-top: 4px;">© 2026 All rights reserved.</p>
-</footer>
+  <div class="app-footer">
+    <p>Crafted by <strong>Adriane Lorenz Racaza</strong></p>
+    <p>IFB Management System &nbsp;·&nbsp; © 2026</p>
+    <span class="version-badge">v 1.0</span>
+  </div>
 
 </div>
 
@@ -298,10 +772,10 @@
 
 <script>
   // ── CONFIG ──────────────────────────────────────────────
-  const API_URL            = 'https://script.google.com/macros/s/AKfycby9UXxlHJeQ2Tk-JwoVcZMutH-rVkjtqZE5nkDXLzKFag2WNF7FrAxG25YLOgYxlv6Y/exec';
-  const FETCH_TIMEOUT_MS   = 10000;
-  const MAX_RETRIES        = 3;
-  const HEARTBEAT_MS       = 30000;
+  const API_URL          = 'https://script.google.com/macros/s/AKfycby9UXxlHJeQ2Tk-JwoVcZMutH-rVkjtqZE5nkDXLzKFag2WNF7FrAxG25YLOgYxlv6Y/exec';
+  const FETCH_TIMEOUT_MS = 10000;
+  const MAX_RETRIES      = 3;
+  const HEARTBEAT_MS     = 30000;
 
   // ── PAGINATION STATE ─────────────────────────────────────
   let allRecords      = [];
@@ -310,7 +784,8 @@
   let rowsPerPage     = 10;
 
   // ── DOM ──────────────────────────────────────────────────
-  const $  = id => document.getElementById(id);
+  const $ = id => document.getElementById(id);
+
   const productName    = $('productName');
   const productId      = $('productId');
   const stockQty       = $('stockQty');
@@ -327,11 +802,12 @@
   const pageInfo       = $('pageInfo');
   const pageControls   = $('pageControls');
   const rowsSelect     = $('rowsPerPageSelect');
+  const soldQtyGroup   = $('soldQtyGroup');
 
   // ── STATUS ───────────────────────────────────────────────
   function setOnlineStatus(state) {
-    statusDot.className  = 'status-dot' + (state === 'offline' ? ' offline' : state === 'checking' ? ' checking' : '');
-    statusText.textContent = state === 'online' ? 'Connected' : state === 'checking' ? 'Checking...' : 'Offline';
+    statusDot.className = 'status-dot' + (state === 'offline' ? ' offline' : state === 'checking' ? ' checking' : '');
+    statusText.textContent = state === 'online' ? 'Connected' : state === 'checking' ? 'Checking' : 'Offline';
   }
 
   // ── TOAST ────────────────────────────────────────────────
@@ -356,14 +832,13 @@
   async function callApi(params, retries = MAX_RETRIES) {
     const url = new URL(API_URL);
     Object.keys(params).forEach(k => url.searchParams.append(k, params[k]));
-
     for (let attempt = 1; attempt <= retries; attempt++) {
       try {
         const res  = await fetchWithTimeout(url.toString(), FETCH_TIMEOUT_MS);
         const text = await res.text();
         let data;
         try { data = JSON.parse(text); }
-        catch { throw new Error('Server returned an unexpected response. Check Apps Script logs.'); }
+        catch { throw new Error('Unexpected server response. Check Apps Script logs.'); }
         if (!data.success) throw new Error(data.error || 'Request failed');
         return data;
       } catch (err) {
@@ -386,22 +861,20 @@
       applyFilter();
       updateDashboard(allRecords);
       setOnlineStatus('online');
-    } catch (e) { /* handled in callApi */ }
+    } catch (e) {}
   }
 
   // ── FILTER ───────────────────────────────────────────────
   function applyFilter() {
-  const term = $('searchInput').value.toLowerCase().trim();
-  filteredRecords = term
-    ? allRecords.filter(r => {
-        const name = (r.productName || '').toString().toLowerCase();
-        const id   = (r.productId   || '').toString().toLowerCase();
-        return name.includes(term) || id.startsWith(term);
-      })
-    : [...allRecords];
-  currentPage = 1;
-  renderPage();
-}
+    const term = $('searchInput').value.toLowerCase().trim();
+    filteredRecords = term
+      ? allRecords.filter(r =>
+          (r.productName || '').toString().toLowerCase().includes(term) ||
+          (r.productId   || '').toString().toLowerCase().startsWith(term))
+      : [...allRecords];
+    currentPage = 1;
+    renderPage();
+  }
 
   // ── RENDER PAGE ──────────────────────────────────────────
   function renderPage() {
@@ -414,16 +887,16 @@
     const pageRows = filteredRecords.slice(start, end);
 
     if (!total) {
-      tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:#94a3b8">No products found.</td></tr>';
+      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted)">No products found.</td></tr>`;
     } else {
       tableBody.innerHTML = pageRows.map(r => `
         <tr>
           <td>${escapeHtml(r.productName || '')}</td>
-          <td>${escapeHtml(r.productId   || '')}</td>
+          <td style="color:var(--text-muted)">${escapeHtml(r.productId || '')}</td>
           <td>${r.stockQty || 0}</td>
           <td>${r.soldQty  || 0}</td>
-          <td>₱${(Number(r.unitPrice) || 0).toFixed(2)}</td>
-          <td>
+          <td style="color:var(--gold-dim)">₱${(Number(r.unitPrice)||0).toFixed(2)}</td>
+          <td style="white-space:nowrap">
             <button class="action-icon" onclick="editRecord('${escapeAttr(r.productId)}')"><i class="fas fa-edit"></i></button>
             <button class="action-icon" onclick="deleteRecordById('${escapeAttr(r.productId)}')"><i class="fas fa-trash"></i></button>
           </td>
@@ -432,35 +905,26 @@
 
     pageInfo.innerHTML = total === 0
       ? 'No results'
-      : `Showing <strong>${start + 1}–${end}</strong> of <strong>${total}</strong>`;
+      : `<strong>${start + 1}–${end}</strong> of <strong>${total}</strong>`;
 
     renderPageControls(totalPages);
   }
 
   function renderPageControls(totalPages) {
     const pages = getPageWindow(currentPage, totalPages);
-    let html = '';
-    html += `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">
-               <i class="fas fa-chevron-left" style="font-size:.7rem"></i>
-             </button>`;
+    let html = `<button class="page-btn" ${currentPage===1?'disabled':''} onclick="goToPage(${currentPage-1})"><i class="fas fa-chevron-left" style="font-size:.65rem"></i></button>`;
     pages.forEach(p => {
-      if (p === '…') {
-        html += `<button class="page-btn ellipsis" disabled>…</button>`;
-      } else {
-        html += `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="goToPage(${p})">${p}</button>`;
-      }
+      html += p === '…'
+        ? `<button class="page-btn ellipsis" disabled>…</button>`
+        : `<button class="page-btn ${p===currentPage?'active':''}" onclick="goToPage(${p})">${p}</button>`;
     });
-    html += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">
-               <i class="fas fa-chevron-right" style="font-size:.7rem"></i>
-             </button>`;
+    html += `<button class="page-btn" ${currentPage===totalPages?'disabled':''} onclick="goToPage(${currentPage+1})"><i class="fas fa-chevron-right" style="font-size:.65rem"></i></button>`;
     pageControls.innerHTML = html;
   }
 
   function getPageWindow(current, total) {
     if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
-    const pages = [];
-    const left  = Math.max(2, current - 1);
-    const right = Math.min(total - 1, current + 1);
+    const pages = [], left = Math.max(2, current-1), right = Math.min(total-1, current+1);
     pages.push(1);
     if (left > 2)          pages.push('…');
     for (let i = left; i <= right; i++) pages.push(i);
@@ -477,20 +941,22 @@
     $('inventoryTable').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
+  // ── DASHBOARD ────────────────────────────────────────────
   function updateDashboard(records) {
     let ts = 0, tSold = 0, tRev = 0;
     records.forEach(r => {
       ts    += Number(r.stockQty) || 0;
       tSold += Number(r.soldQty)  || 0;
-      tRev  += (Number(r.soldQty) || 0) * (Number(r.unitPrice) || 0);
+      tRev  += (Number(r.soldQty)||0) * (Number(r.unitPrice)||0);
     });
     totalStockEl.textContent   = ts;
     totalSoldEl.textContent    = tSold;
-    totalRevenueEl.textContent = `₱${tRev.toFixed(2)}`;
+    totalRevenueEl.textContent = `₱${tRev.toLocaleString('en-PH', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
   }
 
+  // ── HELPERS ──────────────────────────────────────────────
   function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
-  function escapeAttr(t) { return String(t).replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+  function escapeAttr(t) { return String(t).replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
 
   function scrollToForm() {
     const card = $('entryFormCard');
@@ -499,17 +965,18 @@
     void card.offsetWidth;
     card.classList.add('form-card-highlight');
     card.addEventListener('animationend', () => card.classList.remove('form-card-highlight'), { once: true });
-    setTimeout(() => productName.focus(), 400);
+    setTimeout(() => productName.focus(), 420);
   }
 
   function clearForm() {
     productName.value = ''; productId.value = '';
-    stockQty.value = '0';   unitPrice.value = '';
-    soldQty.value  = '0';   currentRow.value = '';
+    stockQty.value    = '0'; unitPrice.value  = '';
+    soldQty.value     = '0'; currentRow.value = '';
+    soldQtyGroup.classList.remove('visible');
     clearSearchResult();
   }
 
-  // ── SEARCH UI (NEW) ───────────────────────────────────────
+  // ── SEARCH CARD ──────────────────────────────────────────
   function clearSearchResult() {
     const panel = $('searchResult');
     panel.style.display = 'none';
@@ -522,43 +989,28 @@
     const sku = $('skuSearchInput').value.trim();
     if (!sku) { showToast('Enter a Product ID to search.', 'error'); return; }
 
-    const panel   = $('searchResult');
-    const header  = $('resultHeader');
-    const body    = $('resultBody');
-    const actions = $('resultActions');
+    const panel = $('searchResult'), header = $('resultHeader'),
+          body  = $('resultBody'),   actions = $('resultActions');
 
     panel.style.display = 'block';
     panel.className = 'search-result';
     header.className = 'result-header';
-    header.innerHTML = '<span><i class="fas fa-spinner fa-spin"></i> Searching…</span>';
-    body.innerHTML   = '';
-    actions.innerHTML = '';
+    header.innerHTML = '<span><i class="fas fa-spinner fa-spin"></i>&nbsp; Searching…</span>';
+    body.innerHTML = ''; actions.innerHTML = '';
 
     try {
       const data = await callApi({ action: 'search', sku });
       if (data.found) {
         const r = data.record;
-        panel.className   = 'search-result found';
-        header.className  = 'result-header found';
-        header.innerHTML  = `<span><i class="fas fa-check-circle"></i> Product found</span><span style="font-weight:400;color:#047857">${escapeHtml(r.productId)}</span>`;
+        panel.className  = 'search-result found';
+        header.className = 'result-header found';
+        header.innerHTML = `<span><i class="fas fa-check-circle"></i>&nbsp; Product found</span><span style="font-weight:400;opacity:.7">${escapeHtml(r.productId)}</span>`;
         body.innerHTML = `
-          <div class="result-field" style="padding:8px 14px; border-right:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0;">
-            <div style="font-size:.72rem; color:#94a3b8; text-transform:uppercase;">Product Name</div>
-            <div style="font-size:.92rem; font-weight:600;">${escapeHtml(r.productName || '—')}</div>
-          </div>
-          <div class="result-field" style="padding:8px 14px; border-bottom:1px solid #e2e8f0;">
-            <div style="font-size:.72rem; color:#94a3b8; text-transform:uppercase;">SKU</div>
-            <div style="font-size:.92rem; font-weight:600;">${escapeHtml(r.productId || '—')}</div>
-          </div>
-          <div class="result-field" style="padding:8px 14px; border-right:1px solid #e2e8f0;">
-            <div style="font-size:.72rem; color:#94a3b8; text-transform:uppercase;">Unit Price</div>
-            <div style="font-size:.92rem; font-weight:600;">₱${(Number(r.unitPrice) || 0).toFixed(2)}</div>
-          </div>
-          <div class="result-field" style="padding:8px 14px;">
-            <div style="font-size:.72rem; color:#94a3b8; text-transform:uppercase;">Current Stock</div>
-            <div style="font-size:.92rem; font-weight:600;">${r.stockQty || 0}</div>
-          </div>`;
-        panel.dataset.row        = data.row;
+          <div class="result-field"><div class="result-field-label">Name</div><div class="result-field-value">${escapeHtml(r.productName||'—')}</div></div>
+          <div class="result-field"><div class="result-field-label">SKU</div><div class="result-field-value">${escapeHtml(r.productId||'—')}</div></div>
+          <div class="result-field"><div class="result-field-label">Unit Price</div><div class="result-field-value" style="color:var(--gold-dim)">₱${(Number(r.unitPrice)||0).toFixed(2)}</div></div>
+          <div class="result-field"><div class="result-field-label">Stock</div><div class="result-field-value">${r.stockQty||0}</div></div>`;
+        panel.dataset.row         = data.row;
         panel.dataset.productName = r.productName || '';
         panel.dataset.productId   = r.productId   || '';
         panel.dataset.unitPrice   = r.unitPrice    || '';
@@ -569,22 +1021,21 @@
       } else {
         panel.className  = 'search-result missed';
         header.className = 'result-header missed';
-        header.innerHTML = `<span><i class="fas fa-times-circle"></i> No product found for "<strong>${escapeHtml(sku)}</strong>"</span>`;
-        actions.innerHTML = `<button class="btn btn-outline" style="flex:1" onclick="clearSearchResult(); $('skuSearchInput').focus()"><i class="fas fa-redo"></i> Try Again</button>`;
+        header.innerHTML = `<span><i class="fas fa-times-circle"></i>&nbsp; No product found for "<strong>${escapeHtml(sku)}</strong>"</span>`;
+        actions.innerHTML = `<button class="btn btn-ghost" style="flex:1" onclick="clearSearchResult();$('skuSearchInput').focus()"><i class="fas fa-redo"></i> Try Again</button>`;
       }
-    } catch (e) {
-      panel.style.display = 'none';
-    }
+    } catch (e) { panel.style.display = 'none'; }
   }
 
   function loadFoundRecord() {
-    const panel = $('searchResult');
-    productName.value = panel.dataset.productName;
-    productId.value   = panel.dataset.productId;
-    stockQty.value    = panel.dataset.stockQty;
-    unitPrice.value   = panel.dataset.unitPrice;
+    const p = $('searchResult');
+    productName.value = p.dataset.productName;
+    productId.value   = p.dataset.productId;
+    stockQty.value    = p.dataset.stockQty;
+    unitPrice.value   = p.dataset.unitPrice;
     soldQty.value     = '0';
-    currentRow.value  = panel.dataset.row;
+    currentRow.value  = p.dataset.row;
+    soldQtyGroup.classList.add('visible');
     showToast('Record loaded — ready to update.', 'success');
     scrollToForm();
     clearSearchResult();
@@ -592,40 +1043,39 @@
   }
 
   async function deleteFoundRecord() {
-    const panel = $('searchResult');
-    const sku   = panel.dataset.productId;
-    if (!confirm(`Delete product "${sku}"? This cannot be undone.`)) return;
+    const p = $('searchResult');
+    const sku = p.dataset.productId;
+    if (!confirm(`Delete "${sku}"? This cannot be undone.`)) return;
     try {
-      await callApi({ action: 'delete', row: panel.dataset.row });
+      await callApi({ action: 'delete', row: p.dataset.row });
       showToast(`"${sku}" deleted.`, 'success');
       clearSearchResult();
       $('skuSearchInput').value = '';
-      clearForm();
-      loadInventory();
+      clearForm(); loadInventory();
     } catch (e) {}
   }
 
   // ── CRUD ─────────────────────────────────────────────────
   async function saveRecord() {
-    if (!productId.value || !productName.value) { showToast('Product ID and Name are required', 'error'); return; }
+    if (!productId.value || !productName.value) { showToast('Product ID and Name are required.', 'error'); return; }
     try {
       await callApi({ action: 'save', productName: productName.value, productId: productId.value, stockQty: stockQty.value, unitPrice: unitPrice.value });
-      showToast('Item saved successfully!', 'success');
+      showToast('Product saved successfully.', 'success');
       clearForm(); loadInventory();
     } catch (e) {}
   }
 
   async function updateRecord() {
-    if (!currentRow.value) { showToast('Load a record first using Search.', 'error'); return; }
+    if (!currentRow.value) { showToast('Search for a record first, then Load to Form.', 'error'); return; }
     try {
       await callApi({ action: 'update', row: currentRow.value, productName: productName.value, productId: productId.value, stockQty: stockQty.value, unitPrice: unitPrice.value, soldQty: soldQty.value });
-      showToast('Record updated!', 'success');
+      showToast('Record updated.', 'success');
       clearForm(); loadInventory();
     } catch (e) {}
   }
 
   async function deleteRecord() {
-    if (!currentRow.value) { showToast('Load a record first using Search.', 'error'); return; }
+    if (!currentRow.value) { showToast('Search for a record first, then Load to Form.', 'error'); return; }
     if (!confirm('Permanently delete this item?')) return;
     try {
       await callApi({ action: 'delete', row: currentRow.value });
@@ -635,15 +1085,13 @@
   }
 
   async function deleteRecordById(sku) {
-    if (!confirm(`Delete product ${sku}?`)) return;
+    if (!confirm(`Delete product "${sku}"?`)) return;
     try {
       const data = await callApi({ action: 'search', sku });
       if (data.found) {
         await callApi({ action: 'delete', row: data.row });
         showToast('Deleted.', 'success');
-        clearForm();
-        scrollToForm();
-        loadInventory();
+        clearForm(); scrollToForm(); loadInventory();
       }
     } catch (e) {}
   }
@@ -654,8 +1102,9 @@
       if (data.found) {
         const r = data.record;
         productName.value = r.productName; productId.value = r.productId;
-        stockQty.value    = r.stockQty;    unitPrice.value  = r.unitPrice;
+        stockQty.value    = r.stockQty;    unitPrice.value = r.unitPrice;
         soldQty.value     = '0';           currentRow.value = data.row;
+        soldQtyGroup.classList.add('visible');
         showToast('Record loaded for editing.', 'success');
         scrollToForm();
       }
@@ -681,24 +1130,18 @@
   $('searchTableBtn').addEventListener('click', applyFilter);
   $('searchInput').addEventListener('input', applyFilter);
   $('skuSearchBtn').addEventListener('click', skuSearch);
-  $('skuSearchInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') skuSearch(); });
-
-  rowsSelect.addEventListener('change', () => {
-    rowsPerPage = parseInt(rowsSelect.value, 10);
-    currentPage = 1;
-    renderPage();
-  });
+  $('skuSearchInput').addEventListener('keydown', e => { if (e.key === 'Enter') skuSearch(); });
+  rowsSelect.addEventListener('change', () => { rowsPerPage = parseInt(rowsSelect.value, 10); currentPage = 1; renderPage(); });
 
   setInterval(async () => { setOnlineStatus('checking'); await loadInventory(); }, HEARTBEAT_MS);
   loadInventory();
 
-  // Expose global functions
-  window.editRecord         = editRecord;
-  window.deleteRecordById   = deleteRecordById;
-  window.goToPage           = goToPage;
-  window.loadFoundRecord    = loadFoundRecord;
-  window.deleteFoundRecord  = deleteFoundRecord;
-  window.clearSearchResult  = clearSearchResult;
+  window.editRecord        = editRecord;
+  window.deleteRecordById  = deleteRecordById;
+  window.goToPage          = goToPage;
+  window.loadFoundRecord   = loadFoundRecord;
+  window.deleteFoundRecord = deleteFoundRecord;
+  window.clearSearchResult = clearSearchResult;
 </script>
 </body>
 </html>
