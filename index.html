@@ -147,7 +147,7 @@
 
     #currentRow { display: none; }
 
-    /* Highlight pulse when form is populated from table */
+    /* Highlight pulse when form is populated */
     @keyframes formPulse {
       0%   { box-shadow: 0 0 0 0 rgba(74,134,232,0.45); }
       60%  { box-shadow: 0 0 0 10px rgba(74,134,232,0); }
@@ -157,6 +157,12 @@
       animation: formPulse 0.7s ease-out;
       border-color: #4a86e8 !important;
     }
+
+    /* Search result panel styles */
+    .search-result.found { border-color: #a7f3d0 !important; background: #f0fdf4; }
+    .search-result.missed { border-color: #fecaca !important; background: #fff5f5; }
+    .result-header.found { color: #065f46; }
+    .result-header.missed { color: #b91c1c; }
   </style>
 </head>
 <body>
@@ -197,10 +203,25 @@
     <div class="button-grid">
       <button class="btn btn-primary"  id="saveBtn"><i class="fas fa-plus-circle"></i> Save</button>
       <button class="btn btn-success"  id="updateBtn"><i class="fas fa-sync-alt"></i> Update</button>
-      <button class="btn btn-warning"  id="searchBtn"><i class="fas fa-search"></i> Search</button>
-      <button class="btn btn-danger"   id="deleteBtn"><i class="fas fa-trash-alt"></i> Delete</button>
       <button class="btn btn-outline"  id="clearFormBtn"><i class="fas fa-eraser"></i> Clear</button>
+      <button class="btn btn-danger"   id="deleteBtn"><i class="fas fa-trash-alt"></i> Delete</button>
       <button class="btn btn-danger"   id="clearAllBtn" style="grid-column:span 2"><i class="fas fa-dumpster"></i> Clear All Records</button>
+    </div>
+  </div>
+
+  <!-- SEARCH CARD (NEW) -->
+  <div class="card" id="searchCard">
+    <div class="card-title"><i class="fas fa-search" style="color:#6c5ce7"></i> Search Product</div>
+    <div style="display:flex; gap:10px; align-items:stretch;">
+      <input type="text" id="skuSearchInput" placeholder="Enter Product ID / SKU…" style="flex:1;" autocomplete="off">
+      <button class="btn btn-primary" id="skuSearchBtn" style="padding:14px 20px;"><i class="fas fa-search"></i> Search</button>
+    </div>
+
+    <!-- Result preview – hidden until search fires -->
+    <div class="search-result" id="searchResult" style="display:none; margin-top:14px; border-radius:16px; border:1.5px solid #e2e8f0; background:#f8fafc; overflow:hidden;">
+      <div class="result-header" id="resultHeader" style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; font-size:.82rem; font-weight:600;"></div>
+      <div class="result-body" id="resultBody" style="display:grid; grid-template-columns:1fr 1fr; border-top:1px solid #e2e8f0;"></div>
+      <div class="result-actions" id="resultActions" style="display:flex; gap:8px; padding:12px 14px; border-top:1px solid #e2e8f0;"></div>
     </div>
   </div>
 
@@ -262,7 +283,6 @@
       <div class="page-info" id="pageInfo">—</div>
       <div class="page-controls" id="pageControls"></div>
     </div>
-
   </div>
 </div>
 
@@ -270,7 +290,7 @@
 
 <script>
   // ── CONFIG ──────────────────────────────────────────────
-  const API_URL            = 'https://script.google.com/macros/s/AKfycbzVbavjjnub6sxb52TuJn2xrt58bMcAGOWOiA2WUgrGb6FRtUS6n7QYe-Pl9xsLpnoo/exec';
+  const API_URL            = 'https://script.google.com/macros/s/AKfycby9UXxlHJeQ2Tk-JwoVcZMutH-rVkjtqZE5nkDXLzKFag2WNF7FrAxG25YLOgYxlv6Y/exec';
   const FETCH_TIMEOUT_MS   = 10000;
   const MAX_RETRIES        = 3;
   const HEARTBEAT_MS       = 30000;
@@ -362,8 +382,6 @@
   }
 
   // ── FILTER ───────────────────────────────────────────────
-  // Called on every keypress in the search box.
-  // Filters the in-memory allRecords array — no API call needed.
   function applyFilter() {
     const term = $('searchInput').value.toLowerCase().trim();
     filteredRecords = term
@@ -371,7 +389,7 @@
           (r.productName || '').toLowerCase().includes(term) ||
           (r.productId   || '').toLowerCase().includes(term))
       : [...allRecords];
-    currentPage = 1; // always reset to first page when filter changes
+    currentPage = 1;
     renderPage();
   }
 
@@ -385,7 +403,6 @@
     const end      = Math.min(start + rowsPerPage, total);
     const pageRows = filteredRecords.slice(start, end);
 
-    // Table rows
     if (!total) {
       tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:#94a3b8">No products found.</td></tr>';
     } else {
@@ -403,26 +420,19 @@
         </tr>`).join('');
     }
 
-    // "Showing X–Y of Z" label
     pageInfo.innerHTML = total === 0
       ? 'No results'
       : `Showing <strong>${start + 1}–${end}</strong> of <strong>${total}</strong>`;
 
-    // Page number buttons
     renderPageControls(totalPages);
   }
 
-  // ── PAGE CONTROLS ────────────────────────────────────────
   function renderPageControls(totalPages) {
     const pages = getPageWindow(currentPage, totalPages);
     let html = '';
-
-    // Prev
     html += `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">
                <i class="fas fa-chevron-left" style="font-size:.7rem"></i>
              </button>`;
-
-    // Numbered pages (with smart ellipsis)
     pages.forEach(p => {
       if (p === '…') {
         html += `<button class="page-btn ellipsis" disabled>…</button>`;
@@ -430,16 +440,12 @@
         html += `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="goToPage(${p})">${p}</button>`;
       }
     });
-
-    // Next
     html += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">
                <i class="fas fa-chevron-right" style="font-size:.7rem"></i>
              </button>`;
-
     pageControls.innerHTML = html;
   }
 
-  // Smart window: always show first, last, and ±1 around current page
   function getPageWindow(current, total) {
     if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
     const pages = [];
@@ -458,12 +464,9 @@
     if (page < 1 || page > totalPages) return;
     currentPage = page;
     renderPage();
-    // Scroll table into view smoothly on page change
     $('inventoryTable').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  // ── DASHBOARD ────────────────────────────────────────────
-  // Dashboard always reflects the FULL dataset, not the filtered/paginated view
   function updateDashboard(records) {
     let ts = 0, tSold = 0, tRev = 0;
     records.forEach(r => {
@@ -476,21 +479,16 @@
     totalRevenueEl.textContent = `₱${tRev.toFixed(2)}`;
   }
 
-  // ── HELPERS ──────────────────────────────────────────────
   function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
   function escapeAttr(t) { return String(t).replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
 
-  // Scroll to the entry form and briefly highlight the card so the
-  // user's eye is drawn to it, then focus the first input field.
   function scrollToForm() {
     const card = $('entryFormCard');
     card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    // Re-trigger animation each time by removing then re-adding the class
     card.classList.remove('form-card-highlight');
-    void card.offsetWidth; // force reflow
+    void card.offsetWidth;
     card.classList.add('form-card-highlight');
     card.addEventListener('animationend', () => card.classList.remove('form-card-highlight'), { once: true });
-    // Focus Product Name field after scroll settles
     setTimeout(() => productName.focus(), 400);
   }
 
@@ -498,6 +496,103 @@
     productName.value = ''; productId.value = '';
     stockQty.value = '0';   unitPrice.value = '';
     soldQty.value  = '0';   currentRow.value = '';
+    clearSearchResult();
+  }
+
+  // ── SEARCH UI (NEW) ───────────────────────────────────────
+  function clearSearchResult() {
+    const panel = $('searchResult');
+    panel.style.display = 'none';
+    panel.className = 'search-result';
+    $('resultBody').innerHTML = '';
+    $('resultActions').innerHTML = '';
+  }
+
+  async function skuSearch() {
+    const sku = $('skuSearchInput').value.trim();
+    if (!sku) { showToast('Enter a Product ID to search.', 'error'); return; }
+
+    const panel   = $('searchResult');
+    const header  = $('resultHeader');
+    const body    = $('resultBody');
+    const actions = $('resultActions');
+
+    panel.style.display = 'block';
+    panel.className = 'search-result';
+    header.className = 'result-header';
+    header.innerHTML = '<span><i class="fas fa-spinner fa-spin"></i> Searching…</span>';
+    body.innerHTML   = '';
+    actions.innerHTML = '';
+
+    try {
+      const data = await callApi({ action: 'search', sku });
+      if (data.found) {
+        const r = data.record;
+        panel.className   = 'search-result found';
+        header.className  = 'result-header found';
+        header.innerHTML  = `<span><i class="fas fa-check-circle"></i> Product found</span><span style="font-weight:400;color:#047857">${escapeHtml(r.productId)}</span>`;
+        body.innerHTML = `
+          <div class="result-field" style="padding:8px 14px; border-right:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0;">
+            <div style="font-size:.72rem; color:#94a3b8; text-transform:uppercase;">Product Name</div>
+            <div style="font-size:.92rem; font-weight:600;">${escapeHtml(r.productName || '—')}</div>
+          </div>
+          <div class="result-field" style="padding:8px 14px; border-bottom:1px solid #e2e8f0;">
+            <div style="font-size:.72rem; color:#94a3b8; text-transform:uppercase;">SKU</div>
+            <div style="font-size:.92rem; font-weight:600;">${escapeHtml(r.productId || '—')}</div>
+          </div>
+          <div class="result-field" style="padding:8px 14px; border-right:1px solid #e2e8f0;">
+            <div style="font-size:.72rem; color:#94a3b8; text-transform:uppercase;">Unit Price</div>
+            <div style="font-size:.92rem; font-weight:600;">₱${(Number(r.unitPrice) || 0).toFixed(2)}</div>
+          </div>
+          <div class="result-field" style="padding:8px 14px;">
+            <div style="font-size:.72rem; color:#94a3b8; text-transform:uppercase;">Current Stock</div>
+            <div style="font-size:.92rem; font-weight:600;">${r.stockQty || 0}</div>
+          </div>`;
+        panel.dataset.row        = data.row;
+        panel.dataset.productName = r.productName || '';
+        panel.dataset.productId   = r.productId   || '';
+        panel.dataset.unitPrice   = r.unitPrice    || '';
+        panel.dataset.stockQty    = r.stockQty     || 0;
+        actions.innerHTML = `
+          <button class="btn btn-success" onclick="loadFoundRecord()"><i class="fas fa-edit"></i> Load to Form</button>
+          <button class="btn btn-danger"  onclick="deleteFoundRecord()"><i class="fas fa-trash-alt"></i> Delete</button>`;
+      } else {
+        panel.className  = 'search-result missed';
+        header.className = 'result-header missed';
+        header.innerHTML = `<span><i class="fas fa-times-circle"></i> No product found for "<strong>${escapeHtml(sku)}</strong>"</span>`;
+        actions.innerHTML = `<button class="btn btn-outline" style="flex:1" onclick="clearSearchResult(); $('skuSearchInput').focus()"><i class="fas fa-redo"></i> Try Again</button>`;
+      }
+    } catch (e) {
+      panel.style.display = 'none';
+    }
+  }
+
+  function loadFoundRecord() {
+    const panel = $('searchResult');
+    productName.value = panel.dataset.productName;
+    productId.value   = panel.dataset.productId;
+    stockQty.value    = panel.dataset.stockQty;
+    unitPrice.value   = panel.dataset.unitPrice;
+    soldQty.value     = '0';
+    currentRow.value  = panel.dataset.row;
+    showToast('Record loaded — ready to update.', 'success');
+    scrollToForm();
+    clearSearchResult();
+    $('skuSearchInput').value = '';
+  }
+
+  async function deleteFoundRecord() {
+    const panel = $('searchResult');
+    const sku   = panel.dataset.productId;
+    if (!confirm(`Delete product "${sku}"? This cannot be undone.`)) return;
+    try {
+      await callApi({ action: 'delete', row: panel.dataset.row });
+      showToast(`"${sku}" deleted.`, 'success');
+      clearSearchResult();
+      $('skuSearchInput').value = '';
+      clearForm();
+      loadInventory();
+    } catch (e) {}
   }
 
   // ── CRUD ─────────────────────────────────────────────────
@@ -507,21 +602,6 @@
       await callApi({ action: 'save', productName: productName.value, productId: productId.value, stockQty: stockQty.value, unitPrice: unitPrice.value });
       showToast('Item saved successfully!', 'success');
       clearForm(); loadInventory();
-    } catch (e) {}
-  }
-
-  async function searchRecord() {
-    const sku = prompt('Enter Product ID to search:');
-    if (!sku) return;
-    try {
-      const data = await callApi({ action: 'search', sku });
-      if (data.found) {
-        const r = data.record;
-        productName.value = r.productName; productId.value = r.productId;
-        stockQty.value    = r.stockQty;    unitPrice.value  = r.unitPrice;
-        soldQty.value     = '0';           currentRow.value = data.row;
-        showToast('Record loaded. You may now update or delete.', 'success');
-      } else { showToast('Product ID not found.', 'error'); }
     } catch (e) {}
   }
 
@@ -583,7 +663,6 @@
 
   // ── EVENTS ───────────────────────────────────────────────
   $('saveBtn').addEventListener('click', saveRecord);
-  $('searchBtn').addEventListener('click', searchRecord);
   $('updateBtn').addEventListener('click', updateRecord);
   $('deleteBtn').addEventListener('click', deleteRecord);
   $('clearFormBtn').addEventListener('click', clearForm);
@@ -591,6 +670,8 @@
   $('refreshTableBtn').addEventListener('click', loadInventory);
   $('searchTableBtn').addEventListener('click', applyFilter);
   $('searchInput').addEventListener('input', applyFilter);
+  $('skuSearchBtn').addEventListener('click', skuSearch);
+  $('skuSearchInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') skuSearch(); });
 
   rowsSelect.addEventListener('change', () => {
     rowsPerPage = parseInt(rowsSelect.value, 10);
@@ -598,16 +679,16 @@
     renderPage();
   });
 
-  // Heartbeat: reconnect every 30s automatically
   setInterval(async () => { setOnlineStatus('checking'); await loadInventory(); }, HEARTBEAT_MS);
-
-  // Boot
   loadInventory();
 
-  // Expose for inline onclick handlers
-  window.editRecord       = editRecord;
-  window.deleteRecordById = deleteRecordById;
-  window.goToPage         = goToPage;
+  // Expose global functions
+  window.editRecord         = editRecord;
+  window.deleteRecordById   = deleteRecordById;
+  window.goToPage           = goToPage;
+  window.loadFoundRecord    = loadFoundRecord;
+  window.deleteFoundRecord  = deleteFoundRecord;
+  window.clearSearchResult  = clearSearchResult;
 </script>
 </body>
 </html>
