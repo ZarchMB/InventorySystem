@@ -8,7 +8,6 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="manifest" href="/site.webmanifest">
-  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -26,7 +25,6 @@
     }
     .container { max-width: 600px; margin: 0 auto; width: 100%; }
 
-    /* Header */
     .app-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
     .app-header h1 {
       font-size: 1.8rem; font-weight: 700;
@@ -34,71 +32,136 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .connection-status { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #64748b; }
-    .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 2px rgba(16,185,129,0.2); }
-    .status-dot.offline { background: #ef4444; box-shadow: 0 0 0 2px rgba(239,68,68,0.2); }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 2px rgba(16,185,129,0.2); transition: background 0.3s; }
+    .status-dot.offline  { background: #ef4444; box-shadow: 0 0 0 2px rgba(239,68,68,0.2); }
     .status-dot.checking { background: #f59e0b; box-shadow: 0 0 0 2px rgba(245,158,11,0.2); animation: pulse 1s infinite; }
-    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
 
-    /* Cards */
-    .card { background: white; border-radius: 24px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 10px 15px -3px rgba(0,0,0,0.05); border: 1px solid rgba(226,232,240,0.6); }
+    .card { background: white; border-radius: 24px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,.05),0 10px 15px -3px rgba(0,0,0,.05); border: 1px solid rgba(226,232,240,.6); }
     .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; color: #334155; }
 
-    /* Form */
     .form-group { margin-bottom: 16px; }
-    label { display: block; font-size: 0.85rem; font-weight: 500; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.3px; }
-    input { width: 100%; padding: 14px 16px; font-size: 1rem; border: 1.5px solid #e2e8f0; border-radius: 16px; background: #fafcff; transition: all 0.2s; font-family: 'Inter', sans-serif; }
-    input:focus { outline: none; border-color: #4a86e8; background: white; box-shadow: 0 0 0 4px rgba(74,134,232,0.1); }
+    label { display: block; font-size: .85rem; font-weight: 500; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .3px; }
+    input, select { width: 100%; padding: 14px 16px; font-size: 1rem; border: 1.5px solid #e2e8f0; border-radius: 16px; background: #fafcff; transition: all .2s; font-family: 'Inter',sans-serif; color: #1e293b; }
+    input:focus, select:focus { outline: none; border-color: #4a86e8; background: white; box-shadow: 0 0 0 4px rgba(74,134,232,.1); }
     input[type="number"] { -moz-appearance: textfield; }
-    input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-    /* Button Grid */
-    .button-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; }
-    .btn { padding: 14px 10px; border: none; border-radius: 16px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; background: white; border: 1.5px solid #e2e8f0; color: #334155; }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .btn-primary { background: #4a86e8; border-color: #4a86e8; color: white; box-shadow: 0 4px 8px rgba(74,134,232,0.25); }
-    .btn-primary:hover, .btn-primary:active { background: #3b74d0; transform: scale(0.98); }
-    .btn-danger { background: #fee2e2; border-color: #fecaca; color: #b91c1c; }
-    .btn-danger:hover, .btn-danger:active { background: #fecaca; }
-    .btn-success { background: #d1fae5; border-color: #a7f3d0; color: #065f46; }
-    .btn-warning { background: #fef3c7; border-color: #fde68a; color: #92400e; }
-    .btn-outline { background: white; }
+    .button-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-top: 8px; }
+    .btn { padding: 14px 10px; border: 1.5px solid #e2e8f0; border-radius: 16px; font-weight: 600; font-size: .95rem; cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 8px; background: white; color: #334155; font-family: 'Inter',sans-serif; }
+    .btn:disabled { opacity: .5; cursor: not-allowed; transform: none !important; }
+    .btn-primary  { background: #4a86e8; border-color: #4a86e8; color: white; box-shadow: 0 4px 8px rgba(74,134,232,.25); }
+    .btn-primary:hover:not(:disabled)  { background: #3b74d0; transform: scale(.98); }
+    .btn-danger   { background: #fee2e2; border-color: #fecaca; color: #b91c1c; }
+    .btn-danger:hover:not(:disabled)   { background: #fecaca; }
+    .btn-success  { background: #d1fae5; border-color: #a7f3d0; color: #065f46; }
+    .btn-warning  { background: #fef3c7; border-color: #fde68a; color: #92400e; }
+    .btn-outline  { background: white; }
 
-    /* Dashboard Stats */
     .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
     .stat-card { background: #f8fafc; border-radius: 18px; padding: 16px; border: 1px solid #e2e8f0; }
-    .stat-label { font-size: 0.8rem; color: #64748b; margin-bottom: 6px; font-weight: 500; }
+    .stat-label { font-size: .8rem; color: #64748b; margin-bottom: 6px; font-weight: 500; }
     .stat-value { font-size: 1.8rem; font-weight: 700; color: #0f172a; }
-    .stat-value small { font-size: 0.9rem; font-weight: 400; color: #94a3b8; }
-    .revenue-card { grid-column: span 2; background: linear-gradient(135deg, #4a86e8, #6c5ce7); color: white; border: none; }
+    .revenue-card { grid-column: span 2; background: linear-gradient(135deg,#4a86e8,#6c5ce7); border: none; }
     .revenue-card .stat-label, .revenue-card .stat-value { color: white; }
 
-    /* Table */
     .table-wrapper { overflow-x: auto; border-radius: 18px; margin-top: 10px; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    table { width: 100%; border-collapse: collapse; font-size: .85rem; }
     th { text-align: left; padding: 12px 8px; background: #f1f5f9; font-weight: 600; color: #475569; }
     td { padding: 10px 8px; border-bottom: 1px solid #e2e8f0; }
-    .action-icon { background: none; border: none; font-size: 1rem; cursor: pointer; margin: 0 4px; color: #64748b; padding: 6px; border-radius: 50%; transition: background 0.2s; }
+    tr:last-child td { border-bottom: none; }
+    .action-icon { background: none; border: none; font-size: 1rem; cursor: pointer; margin: 0 4px; color: #64748b; padding: 6px; border-radius: 50%; transition: background .2s; }
     .action-icon:hover { background: #e2e8f0; }
 
-    /* Search bar */
     .search-section { display: flex; gap: 8px; margin-bottom: 15px; }
     .search-section input { flex: 1; }
 
-    /* Loader */
-    .loader { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 0.8s linear infinite; }
+    /* ===== PAGINATION ===== */
+    .pagination-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid #e2e8f0;
+    }
+    .rows-per-page {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .8rem;
+      color: #64748b;
+      white-space: nowrap;
+    }
+    .rows-per-page select {
+      width: auto;
+      padding: 6px 10px;
+      font-size: .8rem;
+      border-radius: 10px;
+      border: 1.5px solid #e2e8f0;
+      background: #fafcff;
+      cursor: pointer;
+    }
+    .page-info {
+      font-size: .8rem;
+      color: #64748b;
+      flex: 1;
+      text-align: center;
+      min-width: 80px;
+    }
+    .page-info strong { color: #334155; }
+    .page-controls { display: flex; align-items: center; gap: 4px; }
+    .page-btn {
+      min-width: 34px;
+      height: 34px;
+      padding: 0 8px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      background: white;
+      color: #475569;
+      font-size: .8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .15s;
+      font-family: 'Inter',sans-serif;
+    }
+    .page-btn:hover:not(:disabled) { background: #f1f5f9; border-color: #cbd5e1; }
+    .page-btn:disabled { opacity: .35; cursor: not-allowed; }
+    .page-btn.active { background: #4a86e8; border-color: #4a86e8; color: white; box-shadow: 0 2px 6px rgba(74,134,232,.35); }
+    .page-btn.ellipsis { cursor: default; border-color: transparent; background: transparent; pointer-events: none; }
+    /* ====================== */
+
+    .loader { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: white; animation: spin .8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Toast */
-    .toast { position: fixed; bottom: 20px; left: 20px; right: 20px; background: #1e293b; color: white; padding: 14px 20px; border-radius: 40px; font-weight: 500; box-shadow: 0 10px 25px rgba(0,0,0,0.2); opacity: 0; transition: opacity 0.3s; pointer-events: none; text-align: center; max-width: 600px; margin: 0 auto; }
-    .toast.show { opacity: 1; }
-    .toast.error { background: #b91c1c; }
+    .toast { position: fixed; bottom: 20px; left: 20px; right: 20px; background: #1e293b; color: white; padding: 14px 20px; border-radius: 40px; font-weight: 500; box-shadow: 0 10px 25px rgba(0,0,0,.2); opacity: 0; transition: opacity .3s; pointer-events: none; text-align: center; max-width: 600px; margin: 0 auto; z-index: 999; }
+    .toast.show  { opacity: 1; }
+    .toast.error   { background: #b91c1c; }
     .toast.success { background: #065f46; }
 
     #currentRow { display: none; }
+
+    /* Highlight pulse when form is populated from table */
+    @keyframes formPulse {
+      0%   { box-shadow: 0 0 0 0 rgba(74,134,232,0.45); }
+      60%  { box-shadow: 0 0 0 10px rgba(74,134,232,0); }
+      100% { box-shadow: 0 0 0 0 rgba(74,134,232,0); }
+    }
+    .form-card-highlight {
+      animation: formPulse 0.7s ease-out;
+      border-color: #4a86e8 !important;
+    }
   </style>
 </head>
 <body>
 <div class="container">
+
   <div class="app-header">
     <h1>📦 InventoryForBabi (IFB)</h1>
     <div class="connection-status">
@@ -107,8 +170,8 @@
     </div>
   </div>
 
-  <!-- ENTRY FORM CARD -->
-  <div class="card">
+  <!-- ENTRY FORM -->
+  <div class="card" id="entryFormCard">
     <div class="card-title"><i class="fas fa-pen" style="color:#4a86e8"></i> Product Entry</div>
     <div class="form-group">
       <label>Product Name</label>
@@ -130,20 +193,18 @@
       <label>Sold Quantity (for sale update)</label>
       <input type="number" id="soldQty" placeholder="0" value="0">
     </div>
-    
     <input type="hidden" id="currentRow" value="">
-
     <div class="button-grid">
-      <button class="btn btn-primary" id="saveBtn"><i class="fas fa-plus-circle"></i> Save</button>
-      <button class="btn btn-success" id="updateBtn"><i class="fas fa-sync-alt"></i> Update</button>
-      <button class="btn btn-warning" id="searchBtn"><i class="fas fa-search"></i> Search</button>
-      <button class="btn btn-danger" id="deleteBtn"><i class="fas fa-trash-alt"></i> Delete</button>
-      <button class="btn btn-outline" id="clearFormBtn"><i class="fas fa-eraser"></i> Clear</button>
-      <button class="btn btn-danger" id="clearAllBtn" style="grid-column:span 2"><i class="fas fa-dumpster"></i> Clear All Records</button>
+      <button class="btn btn-primary"  id="saveBtn"><i class="fas fa-plus-circle"></i> Save</button>
+      <button class="btn btn-success"  id="updateBtn"><i class="fas fa-sync-alt"></i> Update</button>
+      <button class="btn btn-warning"  id="searchBtn"><i class="fas fa-search"></i> Search</button>
+      <button class="btn btn-danger"   id="deleteBtn"><i class="fas fa-trash-alt"></i> Delete</button>
+      <button class="btn btn-outline"  id="clearFormBtn"><i class="fas fa-eraser"></i> Clear</button>
+      <button class="btn btn-danger"   id="clearAllBtn" style="grid-column:span 2"><i class="fas fa-dumpster"></i> Clear All Records</button>
     </div>
   </div>
 
-  <!-- DASHBOARD CARD -->
+  <!-- DASHBOARD -->
   <div class="card">
     <div class="card-title"><i class="fas fa-chart-pie" style="color:#6c5ce7"></i> Dashboard</div>
     <div class="stats-container">
@@ -162,16 +223,20 @@
     </div>
   </div>
 
-  <!-- INVENTORY LIST CARD -->
+  <!-- INVENTORY LIST -->
   <div class="card">
     <div class="card-title">
       <i class="fas fa-list-ul" style="color:#4a86e8"></i> Current Inventory
-      <button class="btn-outline" id="refreshTableBtn" style="margin-left:auto; padding:6px 12px; border-radius:30px"><i class="fas fa-sync-alt"></i> Refresh</button>
+      <button id="refreshTableBtn" style="margin-left:auto;padding:6px 12px;border-radius:30px;border:1.5px solid #e2e8f0;background:white;cursor:pointer;font-size:.85rem;font-family:'Inter',sans-serif;color:#334155;">
+        <i class="fas fa-sync-alt"></i> Refresh
+      </button>
     </div>
+
     <div class="search-section">
       <input type="text" id="searchInput" placeholder="Search by name or ID...">
       <button class="btn btn-primary" id="searchTableBtn" style="padding:14px 18px"><i class="fas fa-search"></i></button>
     </div>
+
     <div class="table-wrapper">
       <table id="inventoryTable">
         <thead>
@@ -182,69 +247,82 @@
         </tbody>
       </table>
     </div>
+
+    <!-- PAGINATION BAR -->
+    <div class="pagination-bar" id="paginationBar">
+      <div class="rows-per-page">
+        Rows:
+        <select id="rowsPerPageSelect">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+        </select>
+      </div>
+      <div class="page-info" id="pageInfo">—</div>
+      <div class="page-controls" id="pageControls"></div>
+    </div>
+
   </div>
 </div>
 
-<div id="toast" class="toast">Message</div>
+<div id="toast" class="toast"></div>
 
 <script>
-  // ==================== CONFIGURATION ====================
-  const API_URL = 'https://script.google.com/macros/s/AKfycbzVbavjjnub6sxb52TuJn2xrt58bMcAGOWOiA2WUgrGb6FRtUS6n7QYe-Pl9xsLpnoo/exec';
+  // ── CONFIG ──────────────────────────────────────────────
+  const API_URL            = 'https://script.google.com/macros/s/AKfycbzVbavjjnub6sxb52TuJn2xrt58bMcAGOWOiA2WUgrGb6FRtUS6n7QYe-Pl9xsLpnoo/exec';
+  const FETCH_TIMEOUT_MS   = 10000;
+  const MAX_RETRIES        = 3;
+  const HEARTBEAT_MS       = 30000;
 
-  // FIX 1: Retry + timeout constants
-  const FETCH_TIMEOUT_MS = 10000;   // 10s per attempt
-  const MAX_RETRIES = 3;
-  const HEARTBEAT_INTERVAL_MS = 30000; // check connection every 30s
+  // ── PAGINATION STATE ─────────────────────────────────────
+  let allRecords      = [];
+  let filteredRecords = [];
+  let currentPage     = 1;
+  let rowsPerPage     = 10;
 
-  // DOM
-  const productName   = document.getElementById('productName');
-  const productId     = document.getElementById('productId');
-  const stockQty      = document.getElementById('stockQty');
-  const unitPrice     = document.getElementById('unitPrice');
-  const soldQty       = document.getElementById('soldQty');
-  const currentRow    = document.getElementById('currentRow');
-  const tableBody     = document.getElementById('tableBody');
-  const totalStockEl  = document.getElementById('totalStock');
-  const totalSoldEl   = document.getElementById('totalSold');
-  const totalRevenueEl = document.getElementById('totalRevenue');
-  const toast         = document.getElementById('toast');
-  const statusDot     = document.getElementById('statusDot');
-  const statusText    = document.getElementById('statusText');
+  // ── DOM ──────────────────────────────────────────────────
+  const $  = id => document.getElementById(id);
+  const productName    = $('productName');
+  const productId      = $('productId');
+  const stockQty       = $('stockQty');
+  const unitPrice      = $('unitPrice');
+  const soldQty        = $('soldQty');
+  const currentRow     = $('currentRow');
+  const tableBody      = $('tableBody');
+  const totalStockEl   = $('totalStock');
+  const totalSoldEl    = $('totalSold');
+  const totalRevenueEl = $('totalRevenue');
+  const toast          = $('toast');
+  const statusDot      = $('statusDot');
+  const statusText     = $('statusText');
+  const pageInfo       = $('pageInfo');
+  const pageControls   = $('pageControls');
+  const rowsSelect     = $('rowsPerPageSelect');
 
-  // ==================== STATUS MANAGEMENT ====================
-  // FIX 2: Separate network status from data/validation errors
-  // Only setOnlineStatus() touches the dot; never called from form validation.
+  // ── STATUS ───────────────────────────────────────────────
   function setOnlineStatus(state) {
-    // state: 'online' | 'offline' | 'checking'
-    statusDot.className = 'status-dot' + (state === 'offline' ? ' offline' : state === 'checking' ? ' checking' : '');
+    statusDot.className  = 'status-dot' + (state === 'offline' ? ' offline' : state === 'checking' ? ' checking' : '');
     statusText.textContent = state === 'online' ? 'Connected' : state === 'checking' ? 'Checking...' : 'Offline';
   }
 
-  // ==================== TOAST ====================
+  // ── TOAST ────────────────────────────────────────────────
   let toastTimer;
-  function showToast(message, type = 'info') {
+  function showToast(msg, type = 'info') {
     clearTimeout(toastTimer);
-    toast.textContent = message;
+    toast.textContent = msg;
     toast.className = 'toast show ' + type;
     toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
   }
 
-  // ==================== CORE API CALL ====================
-  // FIX 3: All requests use GET with URL params (correct for GAS doGet).
-  //         Added AbortController for timeout, redirect:'follow' for GAS redirects,
-  //         and retry logic with exponential backoff.
-  async function fetchWithTimeout(url, timeoutMs) {
-    const controller = new AbortController();
-    const tid = setTimeout(() => controller.abort(), timeoutMs);
+  // ── API ──────────────────────────────────────────────────
+  async function fetchWithTimeout(url, ms) {
+    const ctrl = new AbortController();
+    const tid  = setTimeout(() => ctrl.abort(), ms);
     try {
-      // FIX 4: redirect:'follow' ensures GAS 302 redirects are handled properly
-      const res = await fetch(url, { method: 'GET', redirect: 'follow', signal: controller.signal });
-      clearTimeout(tid);
-      return res;
-    } catch (err) {
-      clearTimeout(tid);
-      throw err;
-    }
+      const res = await fetch(url, { method: 'GET', redirect: 'follow', signal: ctrl.signal });
+      clearTimeout(tid); return res;
+    } catch (e) { clearTimeout(tid); throw e; }
   }
 
   async function callApi(params, retries = MAX_RETRIES) {
@@ -253,111 +331,182 @@
 
     for (let attempt = 1; attempt <= retries; attempt++) {
       try {
-        const res = await fetchWithTimeout(url.toString(), FETCH_TIMEOUT_MS);
-
-        // FIX 5: Catch non-JSON responses (GAS sometimes returns HTML error pages)
+        const res  = await fetchWithTimeout(url.toString(), FETCH_TIMEOUT_MS);
         const text = await res.text();
         let data;
-        try {
-          data = JSON.parse(text);
-        } catch {
-          throw new Error('Server returned an unexpected response. Check Apps Script logs.');
-        }
-
+        try { data = JSON.parse(text); }
+        catch { throw new Error('Server returned an unexpected response. Check Apps Script logs.'); }
         if (!data.success) throw new Error(data.error || 'Request failed');
         return data;
-
       } catch (err) {
-        const isLast = attempt === retries;
-        if (isLast) {
-          // Only mark offline on a genuine network/timeout failure, not a GAS logic error
-          const isNetworkErr = err.name === 'AbortError' || err.message === 'Failed to fetch' || err.message.includes('NetworkError');
-          if (isNetworkErr) setOnlineStatus('offline');
+        if (attempt === retries) {
+          const isNet = err.name === 'AbortError' || err.message === 'Failed to fetch' || err.message.includes('NetworkError');
+          if (isNet) setOnlineStatus('offline');
           showToast(err.message, 'error');
           throw err;
         }
-        // Exponential backoff: 500ms, 1000ms, 2000ms…
         await new Promise(r => setTimeout(r, 500 * attempt));
       }
     }
   }
 
-  // ==================== INVENTORY LOAD ====================
+  // ── LOAD ─────────────────────────────────────────────────
   async function loadInventory() {
     try {
       const data = await callApi({ action: 'getAll' });
-      const records = data.data || [];
-      renderTable(records);
-      updateDashboard(records);
+      allRecords = data.data || [];
+      applyFilter();
+      updateDashboard(allRecords);
       setOnlineStatus('online');
-    } catch (e) {
-      // error already shown; status already set inside callApi
-    }
+    } catch (e) { /* handled in callApi */ }
   }
 
-  function renderTable(records) {
-    if (!records.length) {
-      tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:#94a3b8">No products found. Add your first item!</td></tr>';
-      return;
-    }
-    tableBody.innerHTML = records.map(r => `
-      <tr>
-        <td>${escapeHtml(r.productName || '')}</td>
-        <td>${escapeHtml(r.productId || '')}</td>
-        <td>${r.stockQty || 0}</td>
-        <td>${r.soldQty || 0}</td>
-        <td>₱${(Number(r.unitPrice) || 0).toFixed(2)}</td>
-        <td>
-          <button class="action-icon" onclick="editRecord('${escapeAttr(r.productId)}')"><i class="fas fa-edit"></i></button>
-          <button class="action-icon" onclick="deleteRecordById('${escapeAttr(r.productId)}')"><i class="fas fa-trash"></i></button>
-        </td>
-      </tr>
-    `).join('');
+  // ── FILTER ───────────────────────────────────────────────
+  // Called on every keypress in the search box.
+  // Filters the in-memory allRecords array — no API call needed.
+  function applyFilter() {
+    const term = $('searchInput').value.toLowerCase().trim();
+    filteredRecords = term
+      ? allRecords.filter(r =>
+          (r.productName || '').toLowerCase().includes(term) ||
+          (r.productId   || '').toLowerCase().includes(term))
+      : [...allRecords];
+    currentPage = 1; // always reset to first page when filter changes
+    renderPage();
   }
 
-  function updateDashboard(records) {
-    let totalStock = 0, totalSold = 0, totalRevenue = 0;
-    records.forEach(r => {
-      totalStock  += Number(r.stockQty)  || 0;
-      totalSold   += Number(r.soldQty)   || 0;
-      totalRevenue += (Number(r.soldQty) || 0) * (Number(r.unitPrice) || 0);
+  // ── RENDER PAGE ──────────────────────────────────────────
+  function renderPage() {
+    const total      = filteredRecords.length;
+    const totalPages = Math.max(1, Math.ceil(total / rowsPerPage));
+    if (currentPage > totalPages) currentPage = totalPages;
+
+    const start    = (currentPage - 1) * rowsPerPage;
+    const end      = Math.min(start + rowsPerPage, total);
+    const pageRows = filteredRecords.slice(start, end);
+
+    // Table rows
+    if (!total) {
+      tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:#94a3b8">No products found.</td></tr>';
+    } else {
+      tableBody.innerHTML = pageRows.map(r => `
+        <tr>
+          <td>${escapeHtml(r.productName || '')}</td>
+          <td>${escapeHtml(r.productId   || '')}</td>
+          <td>${r.stockQty || 0}</td>
+          <td>${r.soldQty  || 0}</td>
+          <td>₱${(Number(r.unitPrice) || 0).toFixed(2)}</td>
+          <td>
+            <button class="action-icon" onclick="editRecord('${escapeAttr(r.productId)}')"><i class="fas fa-edit"></i></button>
+            <button class="action-icon" onclick="deleteRecordById('${escapeAttr(r.productId)}')"><i class="fas fa-trash"></i></button>
+          </td>
+        </tr>`).join('');
+    }
+
+    // "Showing X–Y of Z" label
+    pageInfo.innerHTML = total === 0
+      ? 'No results'
+      : `Showing <strong>${start + 1}–${end}</strong> of <strong>${total}</strong>`;
+
+    // Page number buttons
+    renderPageControls(totalPages);
+  }
+
+  // ── PAGE CONTROLS ────────────────────────────────────────
+  function renderPageControls(totalPages) {
+    const pages = getPageWindow(currentPage, totalPages);
+    let html = '';
+
+    // Prev
+    html += `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">
+               <i class="fas fa-chevron-left" style="font-size:.7rem"></i>
+             </button>`;
+
+    // Numbered pages (with smart ellipsis)
+    pages.forEach(p => {
+      if (p === '…') {
+        html += `<button class="page-btn ellipsis" disabled>…</button>`;
+      } else {
+        html += `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="goToPage(${p})">${p}</button>`;
+      }
     });
-    totalStockEl.textContent   = totalStock;
-    totalSoldEl.textContent    = totalSold;
-    totalRevenueEl.textContent = `₱${totalRevenue.toFixed(2)}`;
+
+    // Next
+    html += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">
+               <i class="fas fa-chevron-right" style="font-size:.7rem"></i>
+             </button>`;
+
+    pageControls.innerHTML = html;
   }
 
-  function escapeHtml(text) {
-    const d = document.createElement('div');
-    d.textContent = text;
-    return d.innerHTML;
+  // Smart window: always show first, last, and ±1 around current page
+  function getPageWindow(current, total) {
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    const pages = [];
+    const left  = Math.max(2, current - 1);
+    const right = Math.min(total - 1, current + 1);
+    pages.push(1);
+    if (left > 2)          pages.push('…');
+    for (let i = left; i <= right; i++) pages.push(i);
+    if (right < total - 1) pages.push('…');
+    pages.push(total);
+    return pages;
   }
 
-  // FIX 6: Separate attr-safe escaping for onclick values
-  function escapeAttr(text) {
-    return String(text).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+  function goToPage(page) {
+    const totalPages = Math.max(1, Math.ceil(filteredRecords.length / rowsPerPage));
+    if (page < 1 || page > totalPages) return;
+    currentPage = page;
+    renderPage();
+    // Scroll table into view smoothly on page change
+    $('inventoryTable').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // ── DASHBOARD ────────────────────────────────────────────
+  // Dashboard always reflects the FULL dataset, not the filtered/paginated view
+  function updateDashboard(records) {
+    let ts = 0, tSold = 0, tRev = 0;
+    records.forEach(r => {
+      ts    += Number(r.stockQty) || 0;
+      tSold += Number(r.soldQty)  || 0;
+      tRev  += (Number(r.soldQty) || 0) * (Number(r.unitPrice) || 0);
+    });
+    totalStockEl.textContent   = ts;
+    totalSoldEl.textContent    = tSold;
+    totalRevenueEl.textContent = `₱${tRev.toFixed(2)}`;
+  }
+
+  // ── HELPERS ──────────────────────────────────────────────
+  function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+  function escapeAttr(t) { return String(t).replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+
+  // Scroll to the entry form and briefly highlight the card so the
+  // user's eye is drawn to it, then focus the first input field.
+  function scrollToForm() {
+    const card = $('entryFormCard');
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Re-trigger animation each time by removing then re-adding the class
+    card.classList.remove('form-card-highlight');
+    void card.offsetWidth; // force reflow
+    card.classList.add('form-card-highlight');
+    card.addEventListener('animationend', () => card.classList.remove('form-card-highlight'), { once: true });
+    // Focus Product Name field after scroll settles
+    setTimeout(() => productName.focus(), 400);
   }
 
   function clearForm() {
-    productName.value = '';
-    productId.value   = '';
-    stockQty.value    = '0';
-    unitPrice.value   = '';
-    soldQty.value     = '0';
-    currentRow.value  = '';
+    productName.value = ''; productId.value = '';
+    stockQty.value = '0';   unitPrice.value = '';
+    soldQty.value  = '0';   currentRow.value = '';
   }
 
-  // ==================== CRUD ====================
+  // ── CRUD ─────────────────────────────────────────────────
   async function saveRecord() {
-    if (!productId.value || !productName.value) {
-      showToast('Product ID and Name are required', 'error');
-      return; // FIX 7: validation errors never touch the status dot
-    }
+    if (!productId.value || !productName.value) { showToast('Product ID and Name are required', 'error'); return; }
     try {
       await callApi({ action: 'save', productName: productName.value, productId: productId.value, stockQty: stockQty.value, unitPrice: unitPrice.value });
       showToast('Item saved successfully!', 'success');
-      clearForm();
-      loadInventory();
+      clearForm(); loadInventory();
     } catch (e) {}
   }
 
@@ -368,16 +517,11 @@
       const data = await callApi({ action: 'search', sku });
       if (data.found) {
         const r = data.record;
-        productName.value = r.productName;
-        productId.value   = r.productId;
-        stockQty.value    = r.stockQty;
-        unitPrice.value   = r.unitPrice;
-        soldQty.value     = '0';
-        currentRow.value  = data.row;
+        productName.value = r.productName; productId.value = r.productId;
+        stockQty.value    = r.stockQty;    unitPrice.value  = r.unitPrice;
+        soldQty.value     = '0';           currentRow.value = data.row;
         showToast('Record loaded. You may now update or delete.', 'success');
-      } else {
-        showToast('Product ID not found.', 'error');
-      }
+      } else { showToast('Product ID not found.', 'error'); }
     } catch (e) {}
   }
 
@@ -386,8 +530,7 @@
     try {
       await callApi({ action: 'update', row: currentRow.value, productName: productName.value, productId: productId.value, stockQty: stockQty.value, unitPrice: unitPrice.value, soldQty: soldQty.value });
       showToast('Record updated!', 'success');
-      clearForm();
-      loadInventory();
+      clearForm(); loadInventory();
     } catch (e) {}
   }
 
@@ -397,8 +540,7 @@
     try {
       await callApi({ action: 'delete', row: currentRow.value });
       showToast('Record deleted.', 'success');
-      clearForm();
-      loadInventory();
+      clearForm(); loadInventory();
     } catch (e) {}
   }
 
@@ -409,6 +551,8 @@
       if (data.found) {
         await callApi({ action: 'delete', row: data.row });
         showToast('Deleted.', 'success');
+        clearForm();
+        scrollToForm();
         loadInventory();
       }
     } catch (e) {}
@@ -419,13 +563,11 @@
       const data = await callApi({ action: 'search', sku });
       if (data.found) {
         const r = data.record;
-        productName.value = r.productName;
-        productId.value   = r.productId;
-        stockQty.value    = r.stockQty;
-        unitPrice.value   = r.unitPrice;
-        soldQty.value     = '0';
-        currentRow.value  = data.row;
+        productName.value = r.productName; productId.value = r.productId;
+        stockQty.value    = r.stockQty;    unitPrice.value  = r.unitPrice;
+        soldQty.value     = '0';           currentRow.value = data.row;
         showToast('Record loaded for editing.', 'success');
+        scrollToForm();
       }
     } catch (e) {}
   }
@@ -439,37 +581,33 @@
     } catch (e) {}
   }
 
-  function filterTable() {
-    const term = document.getElementById('searchInput').value.toLowerCase();
-    tableBody.querySelectorAll('tr').forEach(row => {
-      row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
-    });
-  }
+  // ── EVENTS ───────────────────────────────────────────────
+  $('saveBtn').addEventListener('click', saveRecord);
+  $('searchBtn').addEventListener('click', searchRecord);
+  $('updateBtn').addEventListener('click', updateRecord);
+  $('deleteBtn').addEventListener('click', deleteRecord);
+  $('clearFormBtn').addEventListener('click', clearForm);
+  $('clearAllBtn').addEventListener('click', clearAllRecords);
+  $('refreshTableBtn').addEventListener('click', loadInventory);
+  $('searchTableBtn').addEventListener('click', applyFilter);
+  $('searchInput').addEventListener('input', applyFilter);
 
-  // ==================== EVENT LISTENERS ====================
-  document.getElementById('saveBtn').addEventListener('click', saveRecord);
-  document.getElementById('searchBtn').addEventListener('click', searchRecord);
-  document.getElementById('updateBtn').addEventListener('click', updateRecord);
-  document.getElementById('deleteBtn').addEventListener('click', deleteRecord);
-  document.getElementById('clearFormBtn').addEventListener('click', clearForm);
-  document.getElementById('clearAllBtn').addEventListener('click', clearAllRecords);
-  document.getElementById('refreshTableBtn').addEventListener('click', loadInventory);
-  document.getElementById('searchTableBtn').addEventListener('click', filterTable);
-  document.getElementById('searchInput').addEventListener('keyup', filterTable);
+  rowsSelect.addEventListener('change', () => {
+    rowsPerPage = parseInt(rowsSelect.value, 10);
+    currentPage = 1;
+    renderPage();
+  });
 
-  // FIX 8: Periodic heartbeat — re-checks connection every 30 seconds
-  // and auto-recovers without user needing to click Refresh.
-  setInterval(async () => {
-    setOnlineStatus('checking');
-    await loadInventory();
-  }, HEARTBEAT_INTERVAL_MS);
+  // Heartbeat: reconnect every 30s automatically
+  setInterval(async () => { setOnlineStatus('checking'); await loadInventory(); }, HEARTBEAT_MS);
 
-  // Initial load
+  // Boot
   loadInventory();
 
-  // Expose for table onclick handlers
-  window.editRecord = editRecord;
+  // Expose for inline onclick handlers
+  window.editRecord       = editRecord;
   window.deleteRecordById = deleteRecordById;
+  window.goToPage         = goToPage;
 </script>
 </body>
 </html>
