@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>📦 Inventory Manager</title>
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fb;
+      padding: 16px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Header */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .app-header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #4a86e8, #6c5ce7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .connection-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
+    .status-dot.offline {
+      background: #ef4444;
+      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 10px 15px -3px rgba(0,0,0,0.05);
+      border: 1px solid rgba(226, 232, 240, 0.6);
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #334155;
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #64748b;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 1rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 16px;
+      background: #fafcff;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    input:focus {
+      outline: none;
+      border-color: #4a86e8;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(74, 134, 232, 0.1);
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Button Grid */
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .btn {
+      padding: 14px 10px;
+      border: none;
+      border-radius: 16px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: white;
+      border: 1.5px solid #e2e8f0;
+      color: #334155;
+    }
+    .btn-primary {
+      background: #4a86e8;
+      border-color: #4a86e8;
+      color: white;
+      box-shadow: 0 4px 8px rgba(74, 134, 232, 0.25);
+    }
+    .btn-primary:hover, .btn-primary:active {
+      background: #3b74d0;
+      transform: scale(0.98);
+    }
+    .btn-danger {
+      background: #fee2e2;
+      border-color: #fecaca;
+      color: #b91c1c;
+    }
+    .btn-danger:hover, .btn-danger:active {
+      background: #fecaca;
+    }
+    .btn-success {
+      background: #d1fae5;
+      border-color: #a7f3d0;
+      color: #065f46;
+    }
+    .btn-warning {
+      background: #fef3c7;
+      border-color: #fde68a;
+      color: #92400e;
+    }
+    .btn-outline {
+      background: white;
+    }
+
+    /* Dashboard Stats */
+    .stats-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .stat-card {
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 16px;
+      border: 1px solid #e2e8f0;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .stat-value small {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #94a3b8;
+    }
+    .revenue-card {
+      grid-column: span 2;
+      background: linear-gradient(135deg, #4a86e8, #6c5ce7);
+      color: white;
+      border: none;
+    }
+    .revenue-card .stat-label,
+    .revenue-card .stat-value {
+      color: white;
+    }
+
+    /* Table */
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 18px;
+      margin-top: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th {
+      text-align: left;
+      padding: 12px 8px;
+      background: #f1f5f9;
+      font-weight: 600;
+      color: #475569;
+    }
+    td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .action-icon {
+      background: none;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 0 4px;
+      color: #64748b;
+      padding: 6px;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+    .action-icon:hover {
+      background: #e2e8f0;
+    }
+
+    /* Search bar */
+    .search-section {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+    .search-section input {
+      flex: 1;
+    }
+
+    /* Loader */
+    .loader {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      background: #1e293b;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 40px;
+      font-weight: 500;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .toast.show { opacity: 1; }
+    .toast.error { background: #b91c1c; }
+    .toast.success { background: #065f46; }
+
+    /* Hidden row tracker */
+    #currentRow { display: none; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="app-header">
+    <h1>📦 StockFlow</h1>
+    <div class="connection-status">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="statusText">Connected</span>
+    </div>
+  </div>
+
+  <!-- ENTRY FORM CARD -->
+  <div class="card">
+    <div class="card-title"><i class="fas fa-pen" style="color:#4a86e8"></i> Product Entry</div>
+    <div class="form-group">
+      <label>Product Name</label>
+      <input type="text" id="productName" placeholder="e.g., Coffee Beans" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label>Product ID / SKU</label>
+      <input type="text" id="productId" placeholder="SKU-12345">
+    </div>
+    <div class="form-group">
+      <label>Stock Quantity</label>
+      <input type="number" id="stockQty" placeholder="0" value="0">
+    </div>
+    <div class="form-group">
+      <label>Unit Price (₱)</label>
+      <input type="number" id="unitPrice" placeholder="0.00" step="0.01">
+    </div>
+    <div class="form-group">
+      <label>Sold Quantity (for sale update)</label>
+      <input type="number" id="soldQty" placeholder="0" value="0">
+    </div>
+    
+    <!-- Hidden row tracker -->
+    <input type="hidden" id="currentRow" value="">
+
+    <div class="button-grid">
+      <button class="btn btn-primary" id="saveBtn"><i class="fas fa-plus-circle"></i> Save</button>
+      <button class="btn btn-success" id="updateBtn"><i class="fas fa-sync-alt"></i> Update</button>
+      <button class="btn btn-warning" id="searchBtn"><i class="fas fa-search"></i> Search</button>
+      <button class="btn btn-danger" id="deleteBtn"><i class="fas fa-trash-alt"></i> Delete</button>
+      <button class="btn btn-outline" id="clearFormBtn"><i class="fas fa-eraser"></i> Clear</button>
+      <button class="btn btn-danger" id="clearAllBtn" style="grid-column:span 2"><i class="fas fa-dumpster"></i> Clear All Records</button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD CARD -->
+  <div class="card">
+    <div class="card-title"><i class="fas fa-chart-pie" style="color:#6c5ce7"></i> Dashboard</div>
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-label"><i class="fas fa-boxes"></i> Total Stock</div>
+        <div class="stat-value" id="totalStock">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><i class="fas fa-truck"></i> Total Sold</div>
+        <div class="stat-value" id="totalSold">0</div>
+      </div>
+      <div class="stat-card revenue-card">
+        <div class="stat-label"><i class="fas fa-coins"></i> Total Revenue</div>
+        <div class="stat-value" id="totalRevenue">₱0.00</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INVENTORY LIST CARD -->
+  <div class="card">
+    <div class="card-title"><i class="fas fa-list-ul" style="color:#4a86e8"></i> Current Inventory 
+      <button class="btn-outline" id="refreshTableBtn" style="margin-left:auto; padding:6px 12px; border-radius:30px"><i class="fas fa-sync-alt"></i> Refresh</button>
+    </div>
+    <div class="search-section">
+      <input type="text" id="searchInput" placeholder="Search by name or ID...">
+      <button class="btn btn-primary" id="searchTableBtn" style="padding:14px 18px"><i class="fas fa-search"></i></button>
+    </div>
+    <div class="table-wrapper">
+      <table id="inventoryTable">
+        <thead>
+          <tr><th>Product</th><th>ID</th><th>Stock</th><th>Sold</th><th>Price</th><th></th></tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr><td colspan="6" style="text-align:center;padding:30px">Loading inventory...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast">Message</div>
+
+<script>
+  // ==================== CONFIGURATION ====================
+  const API_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL'; // <-- REPLACE WITH YOUR DEPLOYED WEB APP URL
+
+  // DOM Elements
+  const productName = document.getElementById('productName');
+  const productId = document.getElementById('productId');
+  const stockQty = document.getElementById('stockQty');
+  const unitPrice = document.getElementById('unitPrice');
+  const soldQty = document.getElementById('soldQty');
+  const currentRow = document.getElementById('currentRow');
+  const tableBody = document.getElementById('tableBody');
+  const totalStockEl = document.getElementById('totalStock');
+  const totalSoldEl = document.getElementById('totalSold');
+  const totalRevenueEl = document.getElementById('totalRevenue');
+  const toast = document.getElementById('toast');
+  const statusDot = document.getElementById('statusDot');
+  const statusText = document.getElementById('statusText');
+
+  // Helper: Show toast message
+  function showToast(message, type = 'info') {
+    toast.textContent = message;
+    toast.className = 'toast show ' + type;
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  // Helper: API call
+  async function callApi(params) {
+    try {
+      const url = new URL(API_URL);
+      Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+      const response = await fetch(url, { method: params.action === 'getAll' ? 'GET' : 'POST' });
+      const data = await response.json();
+      if (!data.success) throw new Error(data.error || 'Request failed');
+      return data;
+    } catch (error) {
+      showToast(error.message, 'error');
+      throw error;
+    }
+  }
+
+  // Load all records and update dashboard/table
+  async function loadInventory() {
+    try {
+      const data = await callApi({ action: 'getAll' });
+      const records = data.data || [];
+      renderTable(records);
+      updateDashboard(records);
+      setOnlineStatus(true);
+    } catch (e) {
+      setOnlineStatus(false);
+    }
+  }
+
+  function renderTable(records) {
+    if (records.length === 0) {
+      tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:#94a3b8">No products found. Add your first item!</td></tr>';
+      return;
+    }
+    tableBody.innerHTML = records.map(r => `
+      <tr>
+        <td>${escapeHtml(r.productName || '')}</td>
+        <td>${escapeHtml(r.productId || '')}</td>
+        <td>${r.stockQty || 0}</td>
+        <td>${r.soldQty || 0}</td>
+        <td>₱${(r.unitPrice || 0).toFixed(2)}</td>
+        <td>
+          <button class="action-icon" onclick="editRecord('${r.productId}')"><i class="fas fa-edit"></i></button>
+          <button class="action-icon" onclick="deleteRecordById('${r.productId}')"><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function updateDashboard(records) {
+    let totalStock = 0, totalSold = 0, totalRevenue = 0;
+    records.forEach(r => {
+      totalStock += Number(r.stockQty) || 0;
+      totalSold += Number(r.soldQty) || 0;
+      totalRevenue += (Number(r.soldQty) || 0) * (Number(r.unitPrice) || 0);
+    });
+    totalStockEl.textContent = totalStock;
+    totalSoldEl.textContent = totalSold;
+    totalRevenueEl.textContent = `₱${totalRevenue.toFixed(2)}`;
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function setOnlineStatus(online) {
+    if (online) {
+      statusDot.className = 'status-dot';
+      statusText.textContent = 'Connected';
+    } else {
+      statusDot.className = 'status-dot offline';
+      statusText.textContent = 'Offline';
+    }
+  }
+
+  // Clear form
+  function clearForm() {
+    productName.value = '';
+    productId.value = '';
+    stockQty.value = '0';
+    unitPrice.value = '';
+    soldQty.value = '0';
+    currentRow.value = '';
+  }
+
+  // Save new record
+  async function saveRecord() {
+    if (!productId.value || !productName.value) {
+      showToast('Product ID and Name are required', 'error');
+      return;
+    }
+    try {
+      await callApi({
+        action: 'save',
+        productName: productName.value,
+        productId: productId.value,
+        stockQty: stockQty.value,
+        unitPrice: unitPrice.value
+      });
+      showToast('Item saved successfully!', 'success');
+      clearForm();
+      loadInventory();
+    } catch (e) {}
+  }
+
+  // Search and load into form
+  async function searchRecord() {
+    const sku = prompt('Enter Product ID to search:');
+    if (!sku) return;
+    try {
+      const data = await callApi({ action: 'search', sku: sku });
+      if (data.found) {
+        const r = data.record;
+        productName.value = r.productName;
+        productId.value = r.productId;
+        stockQty.value = r.stockQty;
+        unitPrice.value = r.unitPrice;
+        soldQty.value = '0';
+        currentRow.value = data.row;
+        showToast('Record loaded. You may now update or delete.', 'success');
+      } else {
+        showToast('Product ID not found.', 'error');
+      }
+    } catch (e) {}
+  }
+
+  // Update record
+  async function updateRecord() {
+    if (!currentRow.value) {
+      showToast('Load a record first using Search.', 'error');
+      return;
+    }
+    try {
+      await callApi({
+        action: 'update',
+        row: currentRow.value,
+        productName: productName.value,
+        productId: productId.value,
+        stockQty: stockQty.value,
+        unitPrice: unitPrice.value,
+        soldQty: soldQty.value
+      });
+      showToast('Record updated!', 'success');
+      clearForm();
+      loadInventory();
+    } catch (e) {}
+  }
+
+  // Delete current loaded record
+  async function deleteRecord() {
+    if (!currentRow.value) {
+      showToast('Load a record first using Search.', 'error');
+      return;
+    }
+    if (!confirm('Permanently delete this item?')) return;
+    try {
+      await callApi({ action: 'delete', row: currentRow.value });
+      showToast('Record deleted.', 'success');
+      clearForm();
+      loadInventory();
+    } catch (e) {}
+  }
+
+  // Delete by product ID (from table)
+  async function deleteRecordById(sku) {
+    if (!confirm(`Delete product ${sku}?`)) return;
+    try {
+      // First find the row
+      const data = await callApi({ action: 'search', sku: sku });
+      if (data.found) {
+        await callApi({ action: 'delete', row: data.row });
+        showToast('Deleted.', 'success');
+        loadInventory();
+      }
+    } catch (e) {}
+  }
+
+  // Edit from table
+  async function editRecord(sku) {
+    try {
+      const data = await callApi({ action: 'search', sku: sku });
+      if (data.found) {
+        const r = data.record;
+        productName.value = r.productName;
+        productId.value = r.productId;
+        stockQty.value = r.stockQty;
+        unitPrice.value = r.unitPrice;
+        soldQty.value = '0';
+        currentRow.value = data.row;
+        showToast('Record loaded for editing.', 'success');
+      }
+    } catch (e) {}
+  }
+
+  // Clear all records
+  async function clearAllRecords() {
+    if (!confirm('DELETE ALL INVENTORY RECORDS? This cannot be undone!')) return;
+    try {
+      await callApi({ action: 'clearAll' });
+      showToast('All records cleared.', 'success');
+      loadInventory();
+    } catch (e) {}
+  }
+
+  // Filter table
+  function filterTable() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const rows = tableBody.querySelectorAll('tr');
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(searchTerm) ? '' : 'none';
+    });
+  }
+
+  // Event listeners
+  document.getElementById('saveBtn').addEventListener('click', saveRecord);
+  document.getElementById('searchBtn').addEventListener('click', searchRecord);
+  document.getElementById('updateBtn').addEventListener('click', updateRecord);
+  document.getElementById('deleteBtn').addEventListener('click', deleteRecord);
+  document.getElementById('clearFormBtn').addEventListener('click', clearForm);
+  document.getElementById('clearAllBtn').addEventListener('click', clearAllRecords);
+  document.getElementById('refreshTableBtn').addEventListener('click', loadInventory);
+  document.getElementById('searchTableBtn').addEventListener('click', filterTable);
+  document.getElementById('searchInput').addEventListener('keyup', filterTable);
+
+  // Initial load
+  loadInventory();
+
+  // Make functions global for table buttons
+  window.editRecord = editRecord;
+  window.deleteRecordById = deleteRecordById;
+</script>
+</body>
+</html>
