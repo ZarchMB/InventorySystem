@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-   
+    
     :root,
     [data-theme="dark"] {
       --bg-page:       #0d0d0f;
@@ -52,7 +52,7 @@
       --shadow-toast:  0 8px 30px rgba(0,0,0,0.6);
       --card-top-line: var(--gold-dim);
 
-      --toggle-icon:   '\f186';   /* moon */
+      --toggle-icon:   '\f186';
       --toggle-label:  'Light Mode';
     }
 
@@ -93,7 +93,7 @@
       --shadow-toast:  0 8px 30px rgba(0,0,0,0.15);
       --card-top-line: rgba(154,110,28,0.35);
 
-      --toggle-icon:   '\f185';   /* sun */
+      --toggle-icon:   '\f185';
       --toggle-label:  'Dark Mode';
     }
 
@@ -594,6 +594,57 @@
       font-size: 0.75rem; letter-spacing: 0.1em; color: var(--text-muted);
     }
 
+    /* ── CONFIRMATION MODAL (CUSTOM OVERLAY) ───────────── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center; justify-content: center;
+      z-index: 1000;
+      animation: fadeIn 0.2s ease;
+    }
+    .modal-overlay.visible { display: flex; }
+    .modal-card {
+      max-width: 360px; width: 90%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 28px;
+      padding: 28px 24px 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px var(--border);
+      text-align: center;
+      animation: fadeUp 0.25s ease;
+    }
+    .modal-icon {
+      font-size: 2.5rem;
+      color: var(--danger);
+      margin-bottom: 16px;
+      opacity: 0.9;
+    }
+    .modal-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .modal-message {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+    .modal-actions .btn {
+      flex: 1;
+      min-width: 100px;
+    }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
     #currentRow { display: none; }
   </style>
 </head>
@@ -741,6 +792,19 @@
 
 </div>
 
+<!-- CUSTOM CONFIRMATION MODAL -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-card">
+    <div class="modal-icon"><i class="fas fa-exclamation-triangle"></i></div>
+    <div class="modal-title">Confirm Action</div>
+    <div class="modal-message" id="confirmMessage">Are you sure you want to proceed?</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="modalCancelBtn">Cancel</button>
+      <button class="btn btn-danger" id="modalConfirmBtn">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast" class="toast"></div>
 
 <script>
@@ -756,7 +820,6 @@
   const themeIcon   = document.getElementById('themeIcon');
   const themeLabel  = document.getElementById('themeLabel');
 
-  // Restore saved preference, default to dark
   const savedTheme = localStorage.getItem('ifb-theme') || 'dark';
   applyTheme(savedTheme);
 
@@ -803,6 +866,48 @@
   const pageControls   = $('pageControls');
   const rowsSelect     = $('rowsPerPageSelect');
   const soldQtyGroup   = $('soldQtyGroup');
+
+  // ── MODAL ─────────────────────────────────────────────────
+  const modalOverlay     = $('confirmModal');
+  const modalMessageEl   = $('confirmMessage');
+  const modalCancelBtn   = $('modalCancelBtn');
+  const modalConfirmBtn  = $('modalConfirmBtn');
+
+  let modalResolve = null; // Promise resolver
+
+  function showConfirmModal(message, confirmText = 'Yes, Delete') {
+    modalMessageEl.textContent = message;
+    modalConfirmBtn.innerHTML = `<i class="fas fa-trash-alt"></i> ${confirmText}`;
+    modalOverlay.classList.add('visible');
+    return new Promise((resolve) => {
+      modalResolve = resolve;
+    });
+  }
+
+  function hideConfirmModal() {
+    modalOverlay.classList.remove('visible');
+    if (modalResolve) {
+      modalResolve(false);
+      modalResolve = null;
+    }
+  }
+
+  modalCancelBtn.addEventListener('click', () => {
+    hideConfirmModal();
+  });
+
+  modalConfirmBtn.addEventListener('click', () => {
+    modalOverlay.classList.remove('visible');
+    if (modalResolve) {
+      modalResolve(true);
+      modalResolve = null;
+    }
+  });
+
+  // Close modal on overlay click
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) hideConfirmModal();
+  });
 
   // ── STATUS ───────────────────────────────────────────────
   function setOnlineStatus(state) {
@@ -1040,7 +1145,8 @@
   async function deleteFoundRecord() {
     const p = $('searchResult');
     const sku = p.dataset.productId;
-    if (!confirm(`Delete "${sku}"? This cannot be undone.`)) return;
+    const confirmed = await showConfirmModal(`Permanently delete "${sku}"? This action cannot be undone.`, 'Delete');
+    if (!confirmed) return;
     try {
       await callApi({ action: 'delete', row: p.dataset.row });
       showToast(`"${sku}" deleted.`, 'success');
@@ -1071,7 +1177,8 @@
 
   async function deleteRecord() {
     if (!currentRow.value) { showToast('Search for a record first, then Load to Form.', 'error'); return; }
-    if (!confirm('Permanently delete this item?')) return;
+    const confirmed = await showConfirmModal('Permanently delete this item? This action cannot be undone.', 'Delete Item');
+    if (!confirmed) return;
     try {
       await callApi({ action: 'delete', row: currentRow.value });
       showToast('Record deleted.', 'success');
@@ -1080,7 +1187,8 @@
   }
 
   async function deleteRecordById(sku) {
-    if (!confirm(`Delete product "${sku}"?`)) return;
+    const confirmed = await showConfirmModal(`Delete product "${sku}"? This action cannot be undone.`, 'Delete');
+    if (!confirmed) return;
     try {
       const data = await callApi({ action: 'search', sku });
       if (data.found) {
@@ -1107,7 +1215,11 @@
   }
 
   async function clearAllRecords() {
-    if (!confirm('DELETE ALL INVENTORY RECORDS? This cannot be undone!')) return;
+    const confirmed = await showConfirmModal(
+      'DELETE ALL INVENTORY RECORDS? This cannot be undone and will permanently erase all data.',
+      'Clear All'
+    );
+    if (!confirmed) return;
     try {
       await callApi({ action: 'clearAll' });
       showToast('All records cleared.', 'success');
