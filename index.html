@@ -396,7 +396,7 @@
     ? allRecords.filter(r => {
         const name = (r.productName || '').toString().toLowerCase();
         const id   = (r.productId   || '').toString().toLowerCase();
-        return name.includes(term) || id.includes(term);
+        return name.includes(term) || id.startsWith(term);
       })
     : [...allRecords];
   currentPage = 1;
