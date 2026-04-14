@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* ===== CSS Variables ===== */
+   
     :root,
     [data-theme="dark"] {
       --bg-page:       #0d0d0f;
@@ -921,6 +921,7 @@
     let filteredRecords = [];
     let currentPage     = 1;
     let rowsPerPage     = 10;
+    let lastFilterTerm  = '';                       // Track filter term for smart reset
 
     // ── DOM ──────────────────────────────────────────────────
     const $ = id => document.getElementById(id);
@@ -1062,21 +1063,32 @@
       try {
         const data = await callApi({ action: 'getAll' });
         allRecords = data.data || [];
-        applyFilter();
+        applyFilter(false);                    // ← preserve page when filter unchanged
         updateDashboard(allRecords);
         setOnlineStatus('online');
       } catch (e) {}
     }
 
     // ── FILTER ───────────────────────────────────────────────
-    function applyFilter() {
+    // resetPage = true  → go to page 1 (used when filter term changes)
+    // resetPage = false → keep current page if still valid
+    function applyFilter(resetPage = true) {
       const term = $('searchInput').value.toLowerCase().trim();
+      const termChanged = (term !== lastFilterTerm);
+      lastFilterTerm = term;
+
       filteredRecords = term
         ? allRecords.filter(r =>
             (r.productName || '').toString().toLowerCase().includes(term) ||
             (r.productId   || '').toString().toLowerCase().startsWith(term))
         : [...allRecords];
-      currentPage = 1;
+
+      if (resetPage || termChanged) {
+        currentPage = 1;
+      } else {
+        const totalPages = Math.max(1, Math.ceil(filteredRecords.length / rowsPerPage));
+        if (currentPage > totalPages) currentPage = totalPages;
+      }
       renderPage();
     }
 
@@ -1416,8 +1428,8 @@
     $('clearFormBtn').addEventListener('click', clearForm);
     $('clearAllBtn').addEventListener('click', clearAllRecords);
     $('refreshTableBtn').addEventListener('click', loadInventory);
-    $('searchTableBtn').addEventListener('click', applyFilter);
-    $('searchInput').addEventListener('input', applyFilter);
+    $('searchTableBtn').addEventListener('click', () => applyFilter(true)); // explicit reset
+    $('searchInput').addEventListener('input', () => applyFilter(true));    // explicit reset
     $('skuSearchBtn').addEventListener('click', skuSearch);
     $('skuSearchInput').addEventListener('keydown', e => { if (e.key === 'Enter') skuSearch(); });
     rowsSelect.addEventListener('change', () => { rowsPerPage = parseInt(rowsSelect.value, 10); currentPage = 1; renderPage(); });
