@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    
+    /* ===== CSS Variables ===== */
     :root,
     [data-theme="dark"] {
       --bg-page:       #0d0d0f;
@@ -24,22 +24,18 @@
       --bg-th:         #1a1a1f;
       --bg-stat:       #1a1a1f;
       --bg-page-btn:   #222228;
-
       --gold:          #c9a84c;
       --gold-light:    #e4c97a;
       --gold-dim:      #b89540;
       --gold-glow:     rgba(201,168,76,0.15);
       --gold-glow-md:  rgba(201,168,76,0.25);
-
       --text-primary:  #f0ede6;
       --text-secondary:#b8b2a8;
       --text-muted:    #8c8680;
-
       --border:        rgba(201,168,76,0.22);
       --border-hover:  rgba(201,168,76,0.40);
       --border-strong: rgba(201,168,76,0.60);
       --border-subtle: rgba(255,255,255,0.05);
-
       --success:       #3d9970;
       --success-bg:    rgba(61,153,112,0.14);
       --success-text:  #5bc49a;
@@ -47,11 +43,9 @@
       --danger-bg:     rgba(192,57,43,0.14);
       --danger-text:   #e57368;
       --warning-bg:    rgba(201,168,76,0.12);
-
       --shadow-card:   none;
       --shadow-toast:  0 8px 30px rgba(0,0,0,0.6);
       --card-top-line: var(--gold-dim);
-
       --toggle-icon:   '\f186';
       --toggle-label:  'Light Mode';
     }
@@ -65,22 +59,18 @@
       --bg-th:         #f5f2eb;
       --bg-stat:       #faf8f4;
       --bg-page-btn:   #f0ede6;
-
       --gold:          #9a6e1c;
       --gold-light:    #7a5515;
       --gold-dim:      #7a5515;
       --gold-glow:     rgba(154,110,28,0.10);
       --gold-glow-md:  rgba(154,110,28,0.18);
-
       --text-primary:  #1a1208;
       --text-secondary:#4a3f2f;
       --text-muted:    #7a6e5e;
-
       --border:        rgba(154,110,28,0.25);
       --border-hover:  rgba(154,110,28,0.45);
       --border-strong: rgba(154,110,28,0.65);
       --border-subtle: rgba(0,0,0,0.06);
-
       --success:       #166534;
       --success-bg:    rgba(22,101,52,0.08);
       --success-text:  #166534;
@@ -88,11 +78,9 @@
       --danger-bg:     rgba(153,27,27,0.08);
       --danger-text:   #991b1b;
       --warning-bg:    rgba(154,110,28,0.08);
-
       --shadow-card:   0 2px 12px rgba(0,0,0,0.06);
       --shadow-toast:  0 8px 30px rgba(0,0,0,0.15);
       --card-top-line: rgba(154,110,28,0.35);
-
       --toggle-icon:   '\f185';
       --toggle-label:  'Dark Mode';
     }
@@ -113,6 +101,7 @@
 
     .container { max-width: 580px; margin: 0 auto; width: 100%; }
 
+    /* Header */
     .app-header {
       display: flex;
       align-items: flex-start;
@@ -122,9 +111,7 @@
       border-bottom: 1px solid var(--border);
       animation: fadeDown 0.5s ease both;
     }
-
     .header-left { display: flex; flex-direction: column; gap: 4px; }
-
     .app-header h1 {
       font-family: 'Cormorant Garamond', serif;
       font-size: 2rem;
@@ -134,7 +121,6 @@
       line-height: 1;
     }
     .app-header h1 span { color: var(--gold); }
-
     .app-tagline {
       font-size: 0.78rem;
       letter-spacing: 0.12em;
@@ -142,14 +128,12 @@
       color: var(--text-muted);
       font-weight: 400;
     }
-
     .header-right {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
       gap: 8px;
     }
-
     .connection-status {
       display: flex;
       align-items: center;
@@ -159,7 +143,6 @@
       color: var(--text-muted);
       text-transform: uppercase;
     }
-
     .status-dot {
       width: 7px; height: 7px;
       border-radius: 50%;
@@ -197,6 +180,7 @@
     .theme-toggle i { font-size: 0.78rem; color: var(--gold); transition: transform 0.4s ease; }
     .theme-toggle:hover i { transform: rotate(20deg); }
 
+    /* Cards */
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -248,8 +232,8 @@
       transition: background 0.35s;
     }
 
+    /* Form Elements */
     .form-group { margin-bottom: 14px; }
-
     label {
       display: block;
       font-size: 0.78rem;
@@ -260,7 +244,6 @@
       margin-bottom: 7px;
       transition: color 0.35s;
     }
-
     input, select {
       width: 100%;
       padding: 13px 16px;
@@ -286,8 +269,8 @@
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
 
+    /* Buttons */
     .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-
     .btn {
       padding: 14px 10px;
       min-height: 48px;
@@ -347,8 +330,8 @@
     }
     .btn-danger:hover:not(:disabled) { background: rgba(192,57,43,0.18); border-color: rgba(192,57,43,0.5); }
 
+    /* Dashboard */
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
-
     .stat-tile {
       background: var(--bg-stat);
       border: 1px solid var(--border);
@@ -357,7 +340,6 @@
       transition: border-color 0.25s, background 0.35s;
     }
     .stat-tile:hover { border-color: var(--border-hover); }
-
     .stat-tile.gold-tile {
       grid-column: span 2;
       background: linear-gradient(135deg, var(--gold-glow), transparent);
@@ -370,7 +352,6 @@
       font-family: 'Cormorant Garamond', serif;
       font-size: 5rem; color: var(--gold); opacity: 0.06; line-height: 1;
     }
-
     .stat-label {
       font-size: 0.75rem;
       letter-spacing: 0.1em;
@@ -391,6 +372,7 @@
     .stat-tile.gold-tile .stat-label { color: var(--gold-dim); }
     .stat-tile.gold-tile .stat-value { color: var(--gold); font-size: 2.6rem; }
 
+    /* Table */
     .table-wrapper { overflow-x: auto; margin-top: 8px; border-radius: 20px; border: 1px solid var(--border); transition: border-color 0.35s; }
     table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
     thead tr { border-bottom: 1px solid var(--border); }
@@ -431,6 +413,7 @@
       background: var(--gold-glow);
     }
 
+    /* Filter & Search */
     .filter-row { display: flex; gap: 8px; margin-bottom: 14px; }
     .filter-row input { flex: 1; }
     .filter-row .btn  { flex-shrink: 0; padding: 13px 18px; }
@@ -474,9 +457,74 @@
     .result-actions { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border-subtle); }
     .result-actions .btn { flex: 1; padding: 10px 8px; font-size: 0.8rem; }
 
+    /* Sold Qty Group + Stepper + Override */
     .sold-qty-group { display: none; padding-top: 14px; margin-top: 6px; border-top: 1px solid var(--border); }
     .sold-qty-group.visible { display: block; }
     .sold-qty-group label { color: var(--gold-dim); }
+
+    .stepper-wrapper {
+      display: flex;
+      align-items: stretch;
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg-input);
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .stepper-wrapper:focus-within {
+      border-color: var(--border-strong);
+      box-shadow: 0 0 0 3px var(--gold-glow);
+    }
+    .stepper-btn {
+      width: 52px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 1.6rem;
+      font-weight: 300;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, color 0.2s;
+      font-family: 'DM Sans', sans-serif;
+      line-height: 1;
+    }
+    .stepper-btn:hover {
+      background: var(--gold-glow);
+      color: var(--gold);
+    }
+    .stepper-btn:active {
+      background: var(--gold-glow-md);
+    }
+    .stepper-input {
+      flex: 1;
+      min-width: 60px;
+      text-align: center;
+      border: none;
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-radius: 0;
+      background: transparent;
+      padding: 13px 4px;
+      font-size: 1rem;
+      color: var(--text-primary);
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+    .stepper-input::-webkit-outer-spin-button,
+    .stepper-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .stepper-input:focus {
+      outline: none;
+      box-shadow: none;
+      background: var(--bg-input-focus);
+    }
+
     .sold-note {
       margin-top: 7px; padding: 8px 12px;
       border-radius: 10px;
@@ -488,6 +536,14 @@
       transition: background 0.35s, color 0.35s;
     }
 
+    /* Override panel */
+    #overrideSoldContainer {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border);
+    }
+
+    /* Pagination */
     .pagination-bar {
       display: flex; align-items: center; justify-content: space-between;
       flex-wrap: wrap; gap: 10px;
@@ -526,6 +582,7 @@
     .page-btn.active { background: var(--gold-glow-md); border-color: var(--border-strong); color: var(--gold); }
     .page-btn.ellipsis { background:transparent; border-color:transparent; pointer-events:none; }
 
+    /* Animations */
     @keyframes formPulse {
       0%   { box-shadow: 0 0 0 0 rgba(201,168,76,0.4); }
       60%  { box-shadow: 0 0 0 12px rgba(201,168,76,0); }
@@ -533,6 +590,7 @@
     }
     .form-card-highlight { animation: formPulse 0.8s ease-out; border-color: var(--border-strong) !important; }
 
+    /* Refresh Button */
     .refresh-btn {
       margin-left: auto; padding: 6px 14px;
       border-radius: 20px; border: 1px solid var(--border);
@@ -544,6 +602,7 @@
     }
     .refresh-btn:hover { border-color: var(--border-hover); color: var(--gold); background: var(--gold-glow); }
 
+    /* Toast */
     .toast {
       position: fixed; bottom: 24px; left: 50%;
       transform: translateX(-50%) translateY(8px);
@@ -562,9 +621,11 @@
     .toast.error   { background: rgba(192,57,43,0.92); border-color: rgba(192,57,43,0.5); color:#fff; }
     .toast.success { background: rgba(22,101,52,0.92);  border-color: rgba(22,101,52,0.5);  color:#fff; }
 
+    /* Loader */
     .loader { display:inline-block; width:14px; height:14px; border:2px solid rgba(0,0,0,.2); border-radius:50%; border-top-color: var(--gold); animation:spin .7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* Footer */
     .app-footer {
       text-align: center; padding: 28px 0 8px;
       border-top: 1px solid var(--border); margin-top: 8px;
@@ -578,6 +639,7 @@
       font-size: 0.75rem; letter-spacing: 0.1em; color: var(--text-muted);
     }
 
+    /* Modal Overlay */
     .modal-overlay {
       position: fixed; inset: 0;
       background: rgba(0,0,0,0.5);
@@ -675,11 +737,43 @@
       <input type="number" id="unitPrice" placeholder="0.00" step="0.01">
     </div>
     <div class="sold-qty-group" id="soldQtyGroup">
-      <div class="form-group" style="margin-bottom:6px">
-        <label>Qty Sold <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--text-muted)">(added to existing total)</span></label>
-        <input type="number" id="soldQty" placeholder="0" value="0">
+      <!-- Current Sold Display -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <label style="margin-bottom: 0; color: var(--text-muted);">Current Total Sold</label>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span id="currentSoldDisplay" style="font-size: 1.2rem; font-weight: 600; color: var(--gold-dim);">0</span>
+          <button type="button" id="showOverrideSoldBtn" class="action-icon" style="border: 1px solid var(--border); padding: 4px 8px;" title="Correct total sold">
+            <i class="fas fa-pencil-alt"></i>
+          </button>
+        </div>
       </div>
-      <div class="sold-note"><i class="fas fa-info-circle" style="margin-right:5px;opacity:.7"></i>This amount will be added on top of the current sold count in the sheet.</div>
+
+      <!-- Add New Sale (stepper) -->
+      <div class="form-group" style="margin-bottom:6px">
+        <label>Add Sold Quantity <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--text-muted)">(new sales)</span></label>
+        <div class="stepper-wrapper">
+          <button type="button" class="stepper-btn" id="soldQtyDecrement" aria-label="Decrease quantity">−</button>
+          <input type="number" id="soldQty" class="stepper-input" placeholder="0" value="0" min="0" step="1">
+          <button type="button" class="stepper-btn" id="soldQtyIncrement" aria-label="Increase quantity">+</button>
+        </div>
+      </div>
+
+      <!-- Override Total Sold (hidden by default) -->
+      <div id="overrideSoldContainer" style="display: none;">
+        <label>Override Total Sold <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--danger-text);">(correction)</span></label>
+        <div class="stepper-wrapper">
+          <button type="button" class="stepper-btn" id="overrideSoldDecrement">−</button>
+          <input type="number" id="overrideSoldQty" class="stepper-input" placeholder="0" value="0" min="0" step="1">
+          <button type="button" class="stepper-btn" id="overrideSoldIncrement">+</button>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 8px;">
+          <button type="button" class="btn btn-ghost" id="cancelOverrideBtn" style="flex:1;">Cancel</button>
+          <button type="button" class="btn btn-danger" id="applyOverrideBtn" style="flex:1;">Apply Correction</button>
+        </div>
+        <p style="font-size:0.7rem; color: var(--danger-text); margin-top:6px;"><i class="fas fa-exclamation-triangle"></i> This will overwrite the total sold count. Use only to fix mistakes.</p>
+      </div>
+
+      <div class="sold-note"><i class="fas fa-info-circle" style="margin-right:5px;opacity:.7"></i>Add quantity records new sales and updates stock automatically.</div>
     </div>
     <input type="hidden" id="currentRow" value="">
     <div class="button-grid" style="margin-top:16px">
@@ -772,7 +866,6 @@
     <p>IFB Inventory Management &nbsp;·&nbsp; © 2026</p>
     <span class="version-badge">v 1.0</span>
   </div>
-
 </div>
 
 <!-- CUSTOM CONFIRMATION MODAL -->
@@ -791,462 +884,556 @@
 <div id="toast" class="toast"></div>
 
 <script>
-  // ── CONFIG ───────────────────────────────────────────────
-  const API_URL          = 'https://script.google.com/macros/s/AKfycby9UXxlHJeQ2Tk-JwoVcZMutH-rVkjtqZE5nkDXLzKFag2WNF7FrAxG25YLOgYxlv6Y/exec';
-  const FETCH_TIMEOUT_MS = 10000;
-  const MAX_RETRIES      = 3;
-  const HEARTBEAT_MS     = 30000;
+  (function(){
+    // ── CONFIG ───────────────────────────────────────────────
+    const API_URL          = 'https://script.google.com/macros/s/AKfycby9UXxlHJeQ2Tk-JwoVcZMutH-rVkjtqZE5nkDXLzKFag2WNF7FrAxG25YLOgYxlv6Y/exec';
+    const FETCH_TIMEOUT_MS = 10000;
+    const MAX_RETRIES      = 3;
+    const HEARTBEAT_MS     = 30000;
 
-  // ── THEME ────────────────────────────────────────────────
-  const html        = document.documentElement;
-  const themeToggle = document.getElementById('themeToggle');
-  const themeIcon   = document.getElementById('themeIcon');
-  const themeLabel  = document.getElementById('themeLabel');
+    // ── THEME ────────────────────────────────────────────────
+    const html        = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon   = document.getElementById('themeIcon');
+    const themeLabel  = document.getElementById('themeLabel');
 
-  const savedTheme = localStorage.getItem('ifb-theme') || 'dark';
-  applyTheme(savedTheme);
+    const savedTheme = localStorage.getItem('ifb-theme') || 'dark';
+    applyTheme(savedTheme);
 
-  function applyTheme(theme) {
-    html.setAttribute('data-theme', theme);
-    localStorage.setItem('ifb-theme', theme);
-    if (theme === 'dark') {
-      themeIcon.className    = 'fas fa-sun';
-      themeLabel.textContent = 'Light Mode';
-    } else {
-      themeIcon.className    = 'fas fa-moon';
-      themeLabel.textContent = 'Dark Mode';
-    }
-  }
-
-  themeToggle.addEventListener('click', () => {
-    applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-  });
-
-  // ── PAGINATION STATE ─────────────────────────────────────
-  let allRecords      = [];
-  let filteredRecords = [];
-  let currentPage     = 1;
-  let rowsPerPage     = 10;
-
-  // ── DOM ──────────────────────────────────────────────────
-  const $ = id => document.getElementById(id);
-
-  const productName    = $('productName');
-  const productId      = $('productId');
-  const stockQty       = $('stockQty');
-  const unitPrice      = $('unitPrice');
-  const soldQty        = $('soldQty');
-  const currentRow     = $('currentRow');
-  const tableBody      = $('tableBody');
-  const totalStockEl   = $('totalStock');
-  const totalSoldEl    = $('totalSold');
-  const totalRevenueEl = $('totalRevenue');
-  const toast          = $('toast');
-  const statusDot      = $('statusDot');
-  const statusText     = $('statusText');
-  const pageInfo       = $('pageInfo');
-  const pageControls   = $('pageControls');
-  const rowsSelect     = $('rowsPerPageSelect');
-  const soldQtyGroup   = $('soldQtyGroup');
-
-  // ── MODAL ─────────────────────────────────────────────────
-  const modalOverlay    = $('confirmModal');
-  const modalMessageEl  = $('confirmMessage');
-  const modalCancelBtn  = $('modalCancelBtn');
-  const modalConfirmBtn = $('modalConfirmBtn');
-  let modalResolve = null;
-
-  function showConfirmModal(message, confirmText = 'Yes, Delete') {
-    modalMessageEl.textContent = message;
-    modalConfirmBtn.innerHTML  = `<i class="fas fa-trash-alt"></i> ${confirmText}`;
-    modalOverlay.classList.add('visible');
-    return new Promise(resolve => { modalResolve = resolve; });
-  }
-
-  function hideConfirmModal() {
-    modalOverlay.classList.remove('visible');
-    if (modalResolve) { modalResolve(false); modalResolve = null; }
-  }
-
-  modalCancelBtn.addEventListener('click', hideConfirmModal);
-  modalConfirmBtn.addEventListener('click', () => {
-    modalOverlay.classList.remove('visible');
-    if (modalResolve) { modalResolve(true); modalResolve = null; }
-  });
-  modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) hideConfirmModal(); });
-
-  // ── FORM MODE ─────────────────────────────────────────────
-  // 'add'  → Add Item enabled;  Update & Delete disabled
-  // 'edit' → Add Item disabled; Update & Delete enabled
-  function setFormMode(mode) {
-    const saveBtnEl   = $('saveBtn');
-    const updateBtnEl = $('updateBtn');
-    const deleteBtnEl = $('deleteBtn');
-    if (mode === 'edit') {
-      saveBtnEl.disabled   = true;
-      updateBtnEl.disabled = false;
-      deleteBtnEl.disabled = false;
-      saveBtnEl.title   = 'Clear the form first to add a new item';
-      updateBtnEl.title = '';
-      deleteBtnEl.title = '';
-    } else {
-      saveBtnEl.disabled   = false;
-      updateBtnEl.disabled = true;
-      deleteBtnEl.disabled = true;
-      saveBtnEl.title   = '';
-      updateBtnEl.title = 'Load a record first to update';
-      deleteBtnEl.title = 'Load a record first to delete';
-    }
-  }
-
-  // ── STATUS ───────────────────────────────────────────────
-  function setOnlineStatus(state) {
-    statusDot.className    = 'status-dot' + (state === 'offline' ? ' offline' : state === 'checking' ? ' checking' : '');
-    statusText.textContent = state === 'online' ? 'Connected' : state === 'checking' ? 'Checking' : 'Offline';
-  }
-
-  // ── TOAST ────────────────────────────────────────────────
-  let toastTimer;
-  function showToast(msg, type = 'info') {
-    clearTimeout(toastTimer);
-    toast.textContent = msg;
-    toast.className   = 'toast show ' + type;
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
-  }
-
-  // ── API ──────────────────────────────────────────────────
-  async function fetchWithTimeout(url, ms) {
-    const ctrl = new AbortController();
-    const tid  = setTimeout(() => ctrl.abort(), ms);
-    try {
-      const res = await fetch(url, { method: 'GET', redirect: 'follow', signal: ctrl.signal });
-      clearTimeout(tid); return res;
-    } catch (e) { clearTimeout(tid); throw e; }
-  }
-
-  async function callApi(params, retries = MAX_RETRIES) {
-    const url = new URL(API_URL);
-    Object.keys(params).forEach(k => url.searchParams.append(k, params[k]));
-    for (let attempt = 1; attempt <= retries; attempt++) {
-      try {
-        const res  = await fetchWithTimeout(url.toString(), FETCH_TIMEOUT_MS);
-        const text = await res.text();
-        let data;
-        try { data = JSON.parse(text); }
-        catch { throw new Error('Unexpected server response. Check Apps Script logs.'); }
-        if (!data.success) throw new Error(data.error || 'Request failed');
-        return data;
-      } catch (err) {
-        if (attempt === retries) {
-          const isNet = err.name === 'AbortError' || err.message === 'Failed to fetch' || err.message.includes('NetworkError');
-          if (isNet) setOnlineStatus('offline');
-          showToast(err.message, 'error');
-          throw err;
-        }
-        await new Promise(r => setTimeout(r, 500 * attempt));
-      }
-    }
-  }
-
-  // ── LOAD ─────────────────────────────────────────────────
-  async function loadInventory() {
-    try {
-      const data = await callApi({ action: 'getAll' });
-      allRecords = data.data || [];
-      applyFilter();
-      updateDashboard(allRecords);
-      setOnlineStatus('online');
-    } catch (e) {}
-  }
-
-  // ── FILTER ───────────────────────────────────────────────
-  function applyFilter() {
-    const term = $('searchInput').value.toLowerCase().trim();
-    filteredRecords = term
-      ? allRecords.filter(r =>
-          (r.productName || '').toString().toLowerCase().includes(term) ||
-          (r.productId   || '').toString().toLowerCase().startsWith(term))
-      : [...allRecords];
-    currentPage = 1;
-    renderPage();
-  }
-
-  // ── RENDER PAGE ──────────────────────────────────────────
-  function renderPage() {
-    const total      = filteredRecords.length;
-    const totalPages = Math.max(1, Math.ceil(total / rowsPerPage));
-    if (currentPage > totalPages) currentPage = totalPages;
-    const start    = (currentPage - 1) * rowsPerPage;
-    const end      = Math.min(start + rowsPerPage, total);
-    const pageRows = filteredRecords.slice(start, end);
-
-    if (!total) {
-      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted)">No products found.</td></tr>`;
-    } else {
-      tableBody.innerHTML = pageRows.map(r => `
-        <tr>
-          <td>${escapeHtml(r.productName || '')}</td>
-          <td style="color:var(--text-muted)">${escapeHtml(r.productId || '')}</td>
-          <td>${r.stockQty || 0}</td>
-          <td>${r.soldQty  || 0}</td>
-          <td style="color:var(--gold-dim)">₱${(Number(r.unitPrice)||0).toFixed(2)}</td>
-          <td style="white-space:nowrap">
-            <button class="action-icon" onclick="editRecord('${escapeAttr(r.productId)}')"><i class="fas fa-edit"></i></button>
-            <button class="action-icon" onclick="deleteRecordById('${escapeAttr(r.productId)}')"><i class="fas fa-trash"></i></button>
-          </td>
-        </tr>`).join('');
-    }
-
-    pageInfo.innerHTML = total === 0
-      ? 'No results'
-      : `<strong>${start + 1}–${end}</strong> of <strong>${total}</strong>`;
-    renderPageControls(totalPages);
-  }
-
-  function renderPageControls(totalPages) {
-    const pages = getPageWindow(currentPage, totalPages);
-    let html = `<button class="page-btn" ${currentPage===1?'disabled':''} onclick="goToPage(${currentPage-1})"><i class="fas fa-chevron-left" style="font-size:.65rem"></i></button>`;
-    pages.forEach(p => {
-      html += p === '…'
-        ? `<button class="page-btn ellipsis" disabled>…</button>`
-        : `<button class="page-btn ${p===currentPage?'active':''}" onclick="goToPage(${p})">${p}</button>`;
-    });
-    html += `<button class="page-btn" ${currentPage===totalPages?'disabled':''} onclick="goToPage(${currentPage+1})"><i class="fas fa-chevron-right" style="font-size:.65rem"></i></button>`;
-    pageControls.innerHTML = html;
-  }
-
-  function getPageWindow(current, total) {
-    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
-    const pages = [], left = Math.max(2, current-1), right = Math.min(total-1, current+1);
-    pages.push(1);
-    if (left > 2)          pages.push('…');
-    for (let i = left; i <= right; i++) pages.push(i);
-    if (right < total - 1) pages.push('…');
-    pages.push(total);
-    return pages;
-  }
-
-  function goToPage(page) {
-    const totalPages = Math.max(1, Math.ceil(filteredRecords.length / rowsPerPage));
-    if (page < 1 || page > totalPages) return;
-    currentPage = page;
-    renderPage();
-    $('inventoryTable').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
-  // ── DASHBOARD ────────────────────────────────────────────
-  function updateDashboard(records) {
-    let ts = 0, tSold = 0, tRev = 0;
-    records.forEach(r => {
-      ts    += Number(r.stockQty) || 0;
-      tSold += Number(r.soldQty)  || 0;
-      tRev  += (Number(r.soldQty)||0) * (Number(r.unitPrice)||0);
-    });
-    totalStockEl.textContent   = ts;
-    totalSoldEl.textContent    = tSold;
-    totalRevenueEl.textContent = `₱${tRev.toLocaleString('en-PH', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
-  }
-
-  // ── HELPERS ──────────────────────────────────────────────
-  function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
-  function escapeAttr(t) { return String(t).replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
-
-  function scrollToForm() {
-    const card = $('entryFormCard');
-    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    card.classList.remove('form-card-highlight');
-    void card.offsetWidth;
-    card.classList.add('form-card-highlight');
-    card.addEventListener('animationend', () => card.classList.remove('form-card-highlight'), { once: true });
-    setTimeout(() => productName.focus(), 420);
-  }
-
-  // FIX 1: stockQty resets to '100' (not '0') on every clear
-  // FIX 2: setFormMode('add') re-enables Add Item and disables Update/Delete
-  function clearForm() {
-    productName.value = ''; productId.value  = '';
-    stockQty.value    = '100'; unitPrice.value = '';
-    soldQty.value     = '0';   currentRow.value = '';
-    soldQtyGroup.classList.remove('visible');
-    clearSearchResult();
-    setFormMode('add');
-  }
-
-  // ── SEARCH CARD ──────────────────────────────────────────
-  function clearSearchResult() {
-    const panel = $('searchResult');
-    panel.style.display = 'none';
-    panel.className = 'search-result';
-    $('resultBody').innerHTML   = '';
-    $('resultActions').innerHTML = '';
-  }
-
-  async function skuSearch() {
-    const sku = $('skuSearchInput').value.trim();
-    if (!sku) { showToast('Enter a Product ID to search.', 'error'); return; }
-    const panel = $('searchResult'), header = $('resultHeader'),
-          body  = $('resultBody'),   actions = $('resultActions');
-    panel.style.display = 'block';
-    panel.className     = 'search-result';
-    header.className    = 'result-header';
-    header.innerHTML    = '<span><i class="fas fa-spinner fa-spin"></i>&nbsp; Searching…</span>';
-    body.innerHTML = ''; actions.innerHTML = '';
-    try {
-      const data = await callApi({ action: 'search', sku });
-      if (data.found) {
-        const r = data.record;
-        panel.className  = 'search-result found';
-        header.className = 'result-header found';
-        header.innerHTML = `<span><i class="fas fa-check-circle"></i>&nbsp; Product found</span><span style="font-weight:400;opacity:.7">${escapeHtml(r.productId)}</span>`;
-        body.innerHTML = `
-          <div class="result-field"><div class="result-field-label">Name</div><div class="result-field-value">${escapeHtml(r.productName||'—')}</div></div>
-          <div class="result-field"><div class="result-field-label">SKU</div><div class="result-field-value">${escapeHtml(r.productId||'—')}</div></div>
-          <div class="result-field"><div class="result-field-label">Unit Price</div><div class="result-field-value" style="color:var(--gold-dim)">₱${(Number(r.unitPrice)||0).toFixed(2)}</div></div>
-          <div class="result-field"><div class="result-field-label">Stock</div><div class="result-field-value">${r.stockQty||0}</div></div>`;
-        panel.dataset.row         = data.row;
-        panel.dataset.productName = r.productName || '';
-        panel.dataset.productId   = r.productId   || '';
-        panel.dataset.unitPrice   = r.unitPrice    || '';
-        panel.dataset.stockQty    = r.stockQty     || 0;
-        actions.innerHTML = `
-          <button class="btn btn-success" onclick="loadFoundRecord()"><i class="fas fa-edit"></i> Load to Form</button>
-          <button class="btn btn-danger"  onclick="deleteFoundRecord()"><i class="fas fa-trash-alt"></i> Delete</button>`;
+    function applyTheme(theme) {
+      html.setAttribute('data-theme', theme);
+      localStorage.setItem('ifb-theme', theme);
+      if (theme === 'dark') {
+        themeIcon.className    = 'fas fa-sun';
+        themeLabel.textContent = 'Light Mode';
       } else {
-        panel.className  = 'search-result missed';
-        header.className = 'result-header missed';
-        header.innerHTML = `<span><i class="fas fa-times-circle"></i>&nbsp; No product found for "<strong>${escapeHtml(sku)}</strong>"</span>`;
-        actions.innerHTML = `<button class="btn btn-ghost" style="flex:1" onclick="clearSearchResult();$('skuSearchInput').focus()"><i class="fas fa-redo"></i> Try Again</button>`;
+        themeIcon.className    = 'fas fa-moon';
+        themeLabel.textContent = 'Dark Mode';
       }
-    } catch (e) { panel.style.display = 'none'; }
-  }
+    }
 
-  // FIX 2: setFormMode('edit') disables Add Item when a record is loaded
-  function loadFoundRecord() {
-    const p = $('searchResult');
-    productName.value = p.dataset.productName;
-    productId.value   = p.dataset.productId;
-    stockQty.value    = p.dataset.stockQty;
-    unitPrice.value   = p.dataset.unitPrice;
-    soldQty.value     = '0';
-    currentRow.value  = p.dataset.row;
-    soldQtyGroup.classList.add('visible');
-    showToast('Record loaded — ready to update.', 'success');
-    setFormMode('edit');
-    scrollToForm();
-    clearSearchResult();
-    $('skuSearchInput').value = '';
-  }
+    themeToggle.addEventListener('click', () => {
+      applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
 
-  async function deleteFoundRecord() {
-    const p   = $('searchResult');
-    const sku = p.dataset.productId;
-    const confirmed = await showConfirmModal(`Permanently delete "${sku}"? This action cannot be undone.`, 'Delete');
-    if (!confirmed) return;
-    try {
-      await callApi({ action: 'delete', row: p.dataset.row });
-      showToast(`"${sku}" deleted.`, 'success');
+    // ── PAGINATION STATE ─────────────────────────────────────
+    let allRecords      = [];
+    let filteredRecords = [];
+    let currentPage     = 1;
+    let rowsPerPage     = 10;
+
+    // ── DOM ──────────────────────────────────────────────────
+    const $ = id => document.getElementById(id);
+
+    const productName    = $('productName');
+    const productId      = $('productId');
+    const stockQty       = $('stockQty');
+    const unitPrice      = $('unitPrice');
+    const soldQty        = $('soldQty');
+    const currentRow     = $('currentRow');
+    const tableBody      = $('tableBody');
+    const totalStockEl   = $('totalStock');
+    const totalSoldEl    = $('totalSold');
+    const totalRevenueEl = $('totalRevenue');
+    const toast          = $('toast');
+    const statusDot      = $('statusDot');
+    const statusText     = $('statusText');
+    const pageInfo       = $('pageInfo');
+    const pageControls   = $('pageControls');
+    const rowsSelect     = $('rowsPerPageSelect');
+    const soldQtyGroup   = $('soldQtyGroup');
+
+    // Sold correction elements
+    const currentSoldDisplay = $('currentSoldDisplay');
+    const overrideSoldContainer = $('overrideSoldContainer');
+    const overrideSoldQty = $('overrideSoldQty');
+    const overrideSoldDecrement = $('overrideSoldDecrement');
+    const overrideSoldIncrement = $('overrideSoldIncrement');
+    const showOverrideSoldBtn = $('showOverrideSoldBtn');
+    const cancelOverrideBtn = $('cancelOverrideBtn');
+    const applyOverrideBtn = $('applyOverrideBtn');
+
+    // Stepper buttons (add sale)
+    const soldQtyDecrement = $('soldQtyDecrement');
+    const soldQtyIncrement = $('soldQtyIncrement');
+
+    // Track original total sold
+    let originalTotalSold = 0;
+
+    // ── MODAL ─────────────────────────────────────────────────
+    const modalOverlay    = $('confirmModal');
+    const modalMessageEl  = $('confirmMessage');
+    const modalCancelBtn  = $('modalCancelBtn');
+    const modalConfirmBtn = $('modalConfirmBtn');
+    let modalResolve = null;
+
+    function showConfirmModal(message, confirmText = 'Yes, Delete') {
+      modalMessageEl.textContent = message;
+      modalConfirmBtn.innerHTML  = `<i class="fas fa-trash-alt"></i> ${confirmText}`;
+      modalOverlay.classList.add('visible');
+      return new Promise(resolve => { modalResolve = resolve; });
+    }
+
+    function hideConfirmModal() {
+      modalOverlay.classList.remove('visible');
+      if (modalResolve) { modalResolve(false); modalResolve = null; }
+    }
+
+    modalCancelBtn.addEventListener('click', hideConfirmModal);
+    modalConfirmBtn.addEventListener('click', () => {
+      modalOverlay.classList.remove('visible');
+      if (modalResolve) { modalResolve(true); modalResolve = null; }
+    });
+    modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) hideConfirmModal(); });
+
+    // ── FORM MODE ─────────────────────────────────────────────
+    function setFormMode(mode) {
+      const saveBtnEl   = $('saveBtn');
+      const updateBtnEl = $('updateBtn');
+      const deleteBtnEl = $('deleteBtn');
+      if (mode === 'edit') {
+        saveBtnEl.disabled   = true;
+        updateBtnEl.disabled = false;
+        deleteBtnEl.disabled = false;
+        saveBtnEl.title   = 'Clear the form first to add a new item';
+        updateBtnEl.title = '';
+        deleteBtnEl.title = '';
+      } else {
+        saveBtnEl.disabled   = false;
+        updateBtnEl.disabled = true;
+        deleteBtnEl.disabled = true;
+        saveBtnEl.title   = '';
+        updateBtnEl.title = 'Load a record first to update';
+        deleteBtnEl.title = 'Load a record first to delete';
+      }
+    }
+
+    // ── STATUS ───────────────────────────────────────────────
+    function setOnlineStatus(state) {
+      statusDot.className    = 'status-dot' + (state === 'offline' ? ' offline' : state === 'checking' ? ' checking' : '');
+      statusText.textContent = state === 'online' ? 'Connected' : state === 'checking' ? 'Checking' : 'Offline';
+    }
+
+    // ── TOAST ────────────────────────────────────────────────
+    let toastTimer;
+    function showToast(msg, type = 'info') {
+      clearTimeout(toastTimer);
+      toast.textContent = msg;
+      toast.className   = 'toast show ' + type;
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // ── API ──────────────────────────────────────────────────
+    async function fetchWithTimeout(url, ms) {
+      const ctrl = new AbortController();
+      const tid  = setTimeout(() => ctrl.abort(), ms);
+      try {
+        const res = await fetch(url, { method: 'GET', redirect: 'follow', signal: ctrl.signal });
+        clearTimeout(tid); return res;
+      } catch (e) { clearTimeout(tid); throw e; }
+    }
+
+    async function callApi(params, retries = MAX_RETRIES) {
+      const url = new URL(API_URL);
+      Object.keys(params).forEach(k => url.searchParams.append(k, params[k]));
+      for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+          const res  = await fetchWithTimeout(url.toString(), FETCH_TIMEOUT_MS);
+          const text = await res.text();
+          let data;
+          try { data = JSON.parse(text); }
+          catch { throw new Error('Unexpected server response. Check Apps Script logs.'); }
+          if (!data.success) throw new Error(data.error || 'Request failed');
+          return data;
+        } catch (err) {
+          if (attempt === retries) {
+            const isNet = err.name === 'AbortError' || err.message === 'Failed to fetch' || err.message.includes('NetworkError');
+            if (isNet) setOnlineStatus('offline');
+            showToast(err.message, 'error');
+            throw err;
+          }
+          await new Promise(r => setTimeout(r, 500 * attempt));
+        }
+      }
+    }
+
+    // ── LOAD ─────────────────────────────────────────────────
+    async function loadInventory() {
+      try {
+        const data = await callApi({ action: 'getAll' });
+        allRecords = data.data || [];
+        applyFilter();
+        updateDashboard(allRecords);
+        setOnlineStatus('online');
+      } catch (e) {}
+    }
+
+    // ── FILTER ───────────────────────────────────────────────
+    function applyFilter() {
+      const term = $('searchInput').value.toLowerCase().trim();
+      filteredRecords = term
+        ? allRecords.filter(r =>
+            (r.productName || '').toString().toLowerCase().includes(term) ||
+            (r.productId   || '').toString().toLowerCase().startsWith(term))
+        : [...allRecords];
+      currentPage = 1;
+      renderPage();
+    }
+
+    // ── RENDER PAGE ──────────────────────────────────────────
+    function renderPage() {
+      const total      = filteredRecords.length;
+      const totalPages = Math.max(1, Math.ceil(total / rowsPerPage));
+      if (currentPage > totalPages) currentPage = totalPages;
+      const start    = (currentPage - 1) * rowsPerPage;
+      const end      = Math.min(start + rowsPerPage, total);
+      const pageRows = filteredRecords.slice(start, end);
+
+      if (!total) {
+        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted)">No products found.</td></tr>`;
+      } else {
+        tableBody.innerHTML = pageRows.map(r => `
+          <tr>
+            <td>${escapeHtml(r.productName || '')}</td>
+            <td style="color:var(--text-muted)">${escapeHtml(r.productId || '')}</td>
+            <td>${r.stockQty || 0}</td>
+            <td>${r.soldQty  || 0}</td>
+            <td style="color:var(--gold-dim)">₱${(Number(r.unitPrice)||0).toFixed(2)}</td>
+            <td style="white-space:nowrap">
+              <button class="action-icon" onclick="editRecord('${escapeAttr(r.productId)}')"><i class="fas fa-edit"></i></button>
+              <button class="action-icon" onclick="deleteRecordById('${escapeAttr(r.productId)}')"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>`).join('');
+      }
+
+      pageInfo.innerHTML = total === 0
+        ? 'No results'
+        : `<strong>${start + 1}–${end}</strong> of <strong>${total}</strong>`;
+      renderPageControls(totalPages);
+    }
+
+    function renderPageControls(totalPages) {
+      const pages = getPageWindow(currentPage, totalPages);
+      let html = `<button class="page-btn" ${currentPage===1?'disabled':''} onclick="goToPage(${currentPage-1})"><i class="fas fa-chevron-left" style="font-size:.65rem"></i></button>`;
+      pages.forEach(p => {
+        html += p === '…'
+          ? `<button class="page-btn ellipsis" disabled>…</button>`
+          : `<button class="page-btn ${p===currentPage?'active':''}" onclick="goToPage(${p})">${p}</button>`;
+      });
+      html += `<button class="page-btn" ${currentPage===totalPages?'disabled':''} onclick="goToPage(${currentPage+1})"><i class="fas fa-chevron-right" style="font-size:.65rem"></i></button>`;
+      pageControls.innerHTML = html;
+    }
+
+    function getPageWindow(current, total) {
+      if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+      const pages = [], left = Math.max(2, current-1), right = Math.min(total-1, current+1);
+      pages.push(1);
+      if (left > 2)          pages.push('…');
+      for (let i = left; i <= right; i++) pages.push(i);
+      if (right < total - 1) pages.push('…');
+      pages.push(total);
+      return pages;
+    }
+
+    function goToPage(page) {
+      const totalPages = Math.max(1, Math.ceil(filteredRecords.length / rowsPerPage));
+      if (page < 1 || page > totalPages) return;
+      currentPage = page;
+      renderPage();
+      $('inventoryTable').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // ── DASHBOARD ────────────────────────────────────────────
+    function updateDashboard(records) {
+      let ts = 0, tSold = 0, tRev = 0;
+      records.forEach(r => {
+        ts    += Number(r.stockQty) || 0;
+        tSold += Number(r.soldQty)  || 0;
+        tRev  += (Number(r.soldQty)||0) * (Number(r.unitPrice)||0);
+      });
+      totalStockEl.textContent   = ts;
+      totalSoldEl.textContent    = tSold;
+      totalRevenueEl.textContent = `₱${tRev.toLocaleString('en-PH', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+    }
+
+    // ── HELPERS ──────────────────────────────────────────────
+    function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+    function escapeAttr(t) { return String(t).replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+
+    function scrollToForm() {
+      const card = $('entryFormCard');
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      card.classList.remove('form-card-highlight');
+      void card.offsetWidth;
+      card.classList.add('form-card-highlight');
+      card.addEventListener('animationend', () => card.classList.remove('form-card-highlight'), { once: true });
+      setTimeout(() => productName.focus(), 420);
+    }
+
+    function clearForm() {
+      productName.value = ''; productId.value  = '';
+      stockQty.value    = '100'; unitPrice.value = '';
+      soldQty.value     = '0';   currentRow.value = '';
+      currentSoldDisplay.textContent = '0';
+      overrideSoldContainer.style.display = 'none';
+      soldQtyGroup.classList.remove('visible');
+      clearSearchResult();
+      setFormMode('add');
+    }
+
+    // Helper to set current sold display and reset override
+    function setCurrentSoldDisplay(value) {
+      originalTotalSold = Number(value) || 0;
+      currentSoldDisplay.textContent = originalTotalSold;
+      overrideSoldQty.value = originalTotalSold;
+      overrideSoldContainer.style.display = 'none';
+    }
+
+    // ── SEARCH CARD ──────────────────────────────────────────
+    function clearSearchResult() {
+      const panel = $('searchResult');
+      panel.style.display = 'none';
+      panel.className = 'search-result';
+      $('resultBody').innerHTML   = '';
+      $('resultActions').innerHTML = '';
+    }
+
+    async function skuSearch() {
+      const sku = $('skuSearchInput').value.trim();
+      if (!sku) { showToast('Enter a Product ID to search.', 'error'); return; }
+      const panel = $('searchResult'), header = $('resultHeader'),
+            body  = $('resultBody'),   actions = $('resultActions');
+      panel.style.display = 'block';
+      panel.className     = 'search-result';
+      header.className    = 'result-header';
+      header.innerHTML    = '<span><i class="fas fa-spinner fa-spin"></i>&nbsp; Searching…</span>';
+      body.innerHTML = ''; actions.innerHTML = '';
+      try {
+        const data = await callApi({ action: 'search', sku });
+        if (data.found) {
+          const r = data.record;
+          panel.className  = 'search-result found';
+          header.className = 'result-header found';
+          header.innerHTML = `<span><i class="fas fa-check-circle"></i>&nbsp; Product found</span><span style="font-weight:400;opacity:.7">${escapeHtml(r.productId)}</span>`;
+          body.innerHTML = `
+            <div class="result-field"><div class="result-field-label">Name</div><div class="result-field-value">${escapeHtml(r.productName||'—')}</div></div>
+            <div class="result-field"><div class="result-field-label">SKU</div><div class="result-field-value">${escapeHtml(r.productId||'—')}</div></div>
+            <div class="result-field"><div class="result-field-label">Unit Price</div><div class="result-field-value" style="color:var(--gold-dim)">₱${(Number(r.unitPrice)||0).toFixed(2)}</div></div>
+            <div class="result-field"><div class="result-field-label">Stock</div><div class="result-field-value">${r.stockQty||0}</div></div>`;
+          panel.dataset.row         = data.row;
+          panel.dataset.productName = r.productName || '';
+          panel.dataset.productId   = r.productId   || '';
+          panel.dataset.unitPrice   = r.unitPrice    || '';
+          panel.dataset.stockQty    = r.stockQty     || 0;
+          panel.dataset.soldQty     = r.soldQty      || 0;
+          actions.innerHTML = `
+            <button class="btn btn-success" onclick="loadFoundRecord()"><i class="fas fa-edit"></i> Load to Form</button>
+            <button class="btn btn-danger"  onclick="deleteFoundRecord()"><i class="fas fa-trash-alt"></i> Delete</button>`;
+        } else {
+          panel.className  = 'search-result missed';
+          header.className = 'result-header missed';
+          header.innerHTML = `<span><i class="fas fa-times-circle"></i>&nbsp; No product found for "<strong>${escapeHtml(sku)}</strong>"</span>`;
+          actions.innerHTML = `<button class="btn btn-ghost" style="flex:1" onclick="clearSearchResult();$('skuSearchInput').focus()"><i class="fas fa-redo"></i> Try Again</button>`;
+        }
+      } catch (e) { panel.style.display = 'none'; }
+    }
+
+    function loadFoundRecord() {
+      const p = $('searchResult');
+      productName.value = p.dataset.productName;
+      productId.value   = p.dataset.productId;
+      stockQty.value    = p.dataset.stockQty;
+      unitPrice.value   = p.dataset.unitPrice;
+      soldQty.value     = '0';
+      currentRow.value  = p.dataset.row;
+      setCurrentSoldDisplay(p.dataset.soldQty || 0);
+      soldQtyGroup.classList.add('visible');
+      showToast('Record loaded — ready to update.', 'success');
+      setFormMode('edit');
+      scrollToForm();
       clearSearchResult();
       $('skuSearchInput').value = '';
-      clearForm(); loadInventory();
-    } catch (e) {}
-  }
+    }
 
-  // ── CRUD ─────────────────────────────────────────────────
-  async function saveRecord() {
-    if (!productId.value || !productName.value) { showToast('Product ID and Name are required.', 'error'); return; }
-    try {
-      await callApi({ action: 'save', productName: productName.value, productId: productId.value, stockQty: stockQty.value, unitPrice: unitPrice.value });
-      showToast('Product saved successfully.', 'success');
-      clearForm(); loadInventory();
-    } catch (e) {}
-  }
+    async function deleteFoundRecord() {
+      const p   = $('searchResult');
+      const sku = p.dataset.productId;
+      const confirmed = await showConfirmModal(`Permanently delete "${sku}"? This action cannot be undone.`, 'Delete');
+      if (!confirmed) return;
+      try {
+        await callApi({ action: 'delete', row: p.dataset.row });
+        showToast(`"${sku}" deleted.`, 'success');
+        clearSearchResult();
+        $('skuSearchInput').value = '';
+        clearForm(); loadInventory();
+      } catch (e) {}
+    }
 
-  async function updateRecord() {
-    if (!currentRow.value) { showToast('Search for a record first, then Load to Form.', 'error'); return; }
-    try {
-      await callApi({ action: 'update', row: currentRow.value, productName: productName.value, productId: productId.value, stockQty: stockQty.value, unitPrice: unitPrice.value, soldQty: soldQty.value });
-      showToast('Record updated.', 'success');
-      clearForm(); loadInventory();
-    } catch (e) {}
-  }
+    // ── CRUD ─────────────────────────────────────────────────
+    async function saveRecord() {
+      if (!productId.value || !productName.value) { showToast('Product ID and Name are required.', 'error'); return; }
+      try {
+        await callApi({ action: 'save', productName: productName.value, productId: productId.value, stockQty: stockQty.value, unitPrice: unitPrice.value });
+        showToast('Product saved successfully.', 'success');
+        clearForm(); loadInventory();
+      } catch (e) {}
+    }
 
-  async function deleteRecord() {
-    if (!currentRow.value) { showToast('Search for a record first, then Load to Form.', 'error'); return; }
-    const confirmed = await showConfirmModal('Permanently delete this item? This action cannot be undone.', 'Delete Item');
-    if (!confirmed) return;
-    try {
-      await callApi({ action: 'delete', row: currentRow.value });
-      showToast('Record deleted.', 'success');
-      clearForm(); loadInventory();
-    } catch (e) {}
-  }
+    async function updateRecord() {
+      if (!currentRow.value) { showToast('Search for a record first, then Load to Form.', 'error'); return; }
+      try {
+        await callApi({ action: 'update', row: currentRow.value, productName: productName.value, productId: productId.value, stockQty: stockQty.value, unitPrice: unitPrice.value, soldQty: soldQty.value });
+        showToast('Record updated.', 'success');
+        clearForm(); loadInventory();
+      } catch (e) {}
+    }
 
-  async function deleteRecordById(sku) {
-    const confirmed = await showConfirmModal(`Delete product "${sku}"? This action cannot be undone.`, 'Delete');
-    if (!confirmed) return;
-    try {
-      const data = await callApi({ action: 'search', sku });
-      if (data.found) {
-        await callApi({ action: 'delete', row: data.row });
-        showToast('Deleted.', 'success');
-        clearForm(); scrollToForm(); loadInventory();
+    async function deleteRecord() {
+      if (!currentRow.value) { showToast('Search for a record first, then Load to Form.', 'error'); return; }
+      const confirmed = await showConfirmModal('Permanently delete this item? This action cannot be undone.', 'Delete Item');
+      if (!confirmed) return;
+      try {
+        await callApi({ action: 'delete', row: currentRow.value });
+        showToast('Record deleted.', 'success');
+        clearForm(); loadInventory();
+      } catch (e) {}
+    }
+
+    async function deleteRecordById(sku) {
+      const confirmed = await showConfirmModal(`Delete product "${sku}"? This action cannot be undone.`, 'Delete');
+      if (!confirmed) return;
+      try {
+        const data = await callApi({ action: 'search', sku });
+        if (data.found) {
+          await callApi({ action: 'delete', row: data.row });
+          showToast('Deleted.', 'success');
+          clearForm(); scrollToForm(); loadInventory();
+        }
+      } catch (e) {}
+    }
+
+    async function editRecord(sku) {
+      try {
+        const data = await callApi({ action: 'search', sku });
+        if (data.found) {
+          const r = data.record;
+          productName.value = r.productName; productId.value  = r.productId;
+          stockQty.value    = r.stockQty;    unitPrice.value  = r.unitPrice;
+          soldQty.value     = '0';           currentRow.value = data.row;
+          setCurrentSoldDisplay(r.soldQty || 0);
+          soldQtyGroup.classList.add('visible');
+          showToast('Record loaded for editing.', 'success');
+          setFormMode('edit');
+          scrollToForm();
+        }
+      } catch (e) {}
+    }
+
+    async function clearAllRecords() {
+      const confirmed = await showConfirmModal(
+        'DELETE ALL INVENTORY RECORDS? This cannot be undone and will permanently erase all data.',
+        'Clear All'
+      );
+      if (!confirmed) return;
+      try {
+        await callApi({ action: 'clearAll' });
+        showToast('All records cleared.', 'success');
+        loadInventory();
+      } catch (e) {}
+    }
+
+    // ── SOLD CORRECTION (Override) ───────────────────────────
+    async function applySoldCorrection() {
+      if (!currentRow.value) { showToast('No record loaded.', 'error'); return; }
+      const newTotalSold = parseInt(overrideSoldQty.value, 10);
+      if (isNaN(newTotalSold) || newTotalSold < 0) {
+        showToast('Invalid sold quantity.', 'error');
+        return;
       }
-    } catch (e) {}
-  }
+      try {
+        // Call the 'correctSold' endpoint (must be added in Apps Script)
+        await callApi({
+          action: 'correctSold',
+          row: currentRow.value,
+          newSoldQty: newTotalSold
+        });
+        showToast('Total sold corrected.', 'success');
+        overrideSoldContainer.style.display = 'none';
+        // Reload the record to refresh display
+        const sku = productId.value;
+        if (sku) {
+          const data = await callApi({ action: 'search', sku });
+          if (data.found) {
+            const r = data.record;
+            stockQty.value = r.stockQty;
+            setCurrentSoldDisplay(r.soldQty);
+          }
+        }
+        loadInventory();
+      } catch (e) {}
+    }
 
-  // FIX 2: setFormMode('edit') disables Add Item when editing from table
-  async function editRecord(sku) {
-    try {
-      const data = await callApi({ action: 'search', sku });
-      if (data.found) {
-        const r = data.record;
-        productName.value = r.productName; productId.value  = r.productId;
-        stockQty.value    = r.stockQty;    unitPrice.value  = r.unitPrice;
-        soldQty.value     = '0';           currentRow.value = data.row;
-        soldQtyGroup.classList.add('visible');
-        showToast('Record loaded for editing.', 'success');
-        setFormMode('edit');
-        scrollToForm();
-      }
-    } catch (e) {}
-  }
+    // ── STEPPER CONTROLS (Add Sale) ──────────────────────────
+    function adjustSoldQty(delta) {
+      let current = parseInt(soldQty.value, 10);
+      if (isNaN(current)) current = 0;
+      const newVal = Math.max(0, current + delta);
+      soldQty.value = newVal;
+    }
+    soldQtyDecrement.addEventListener('click', () => adjustSoldQty(-1));
+    soldQtyIncrement.addEventListener('click', () => adjustSoldQty(1));
+    soldQty.addEventListener('change', () => {
+      let val = parseInt(soldQty.value, 10);
+      if (isNaN(val) || val < 0) soldQty.value = 0;
+    });
 
-  async function clearAllRecords() {
-    const confirmed = await showConfirmModal(
-      'DELETE ALL INVENTORY RECORDS? This cannot be undone and will permanently erase all data.',
-      'Clear All'
-    );
-    if (!confirmed) return;
-    try {
-      await callApi({ action: 'clearAll' });
-      showToast('All records cleared.', 'success');
-      loadInventory();
-    } catch (e) {}
-  }
+    // ── OVERRIDE STEPPER ─────────────────────────────────────
+    function adjustOverrideSold(delta) {
+      let val = parseInt(overrideSoldQty.value, 10);
+      if (isNaN(val)) val = 0;
+      overrideSoldQty.value = Math.max(0, val + delta);
+    }
+    overrideSoldDecrement.addEventListener('click', () => adjustOverrideSold(-1));
+    overrideSoldIncrement.addEventListener('click', () => adjustOverrideSold(1));
+    overrideSoldQty.addEventListener('change', () => {
+      let val = parseInt(overrideSoldQty.value, 10);
+      if (isNaN(val) || val < 0) overrideSoldQty.value = 0;
+    });
 
-  // ── EVENTS ───────────────────────────────────────────────
-  $('saveBtn').addEventListener('click', saveRecord);
-  $('updateBtn').addEventListener('click', updateRecord);
-  $('deleteBtn').addEventListener('click', deleteRecord);
-  $('clearFormBtn').addEventListener('click', clearForm);
-  $('clearAllBtn').addEventListener('click', clearAllRecords);
-  $('refreshTableBtn').addEventListener('click', loadInventory);
-  $('searchTableBtn').addEventListener('click', applyFilter);
-  $('searchInput').addEventListener('input', applyFilter);
-  $('skuSearchBtn').addEventListener('click', skuSearch);
-  $('skuSearchInput').addEventListener('keydown', e => { if (e.key === 'Enter') skuSearch(); });
-  rowsSelect.addEventListener('change', () => { rowsPerPage = parseInt(rowsSelect.value, 10); currentPage = 1; renderPage(); });
+    showOverrideSoldBtn.addEventListener('click', () => {
+      overrideSoldContainer.style.display = 'block';
+      overrideSoldQty.value = originalTotalSold;
+    });
+    cancelOverrideBtn.addEventListener('click', () => {
+      overrideSoldContainer.style.display = 'none';
+    });
+    applyOverrideBtn.addEventListener('click', applySoldCorrection);
 
-  setInterval(async () => { setOnlineStatus('checking'); await loadInventory(); }, HEARTBEAT_MS);
-  setFormMode('add');  // initialize — Add Item enabled, Update/Delete disabled
-  loadInventory();
+    // ── EVENTS ───────────────────────────────────────────────
+    $('saveBtn').addEventListener('click', saveRecord);
+    $('updateBtn').addEventListener('click', updateRecord);
+    $('deleteBtn').addEventListener('click', deleteRecord);
+    $('clearFormBtn').addEventListener('click', clearForm);
+    $('clearAllBtn').addEventListener('click', clearAllRecords);
+    $('refreshTableBtn').addEventListener('click', loadInventory);
+    $('searchTableBtn').addEventListener('click', applyFilter);
+    $('searchInput').addEventListener('input', applyFilter);
+    $('skuSearchBtn').addEventListener('click', skuSearch);
+    $('skuSearchInput').addEventListener('keydown', e => { if (e.key === 'Enter') skuSearch(); });
+    rowsSelect.addEventListener('change', () => { rowsPerPage = parseInt(rowsSelect.value, 10); currentPage = 1; renderPage(); });
 
-  window.editRecord        = editRecord;
-  window.deleteRecordById  = deleteRecordById;
-  window.goToPage          = goToPage;
-  window.loadFoundRecord   = loadFoundRecord;
-  window.deleteFoundRecord = deleteFoundRecord;
-  window.clearSearchResult = clearSearchResult;
+    setInterval(async () => { setOnlineStatus('checking'); await loadInventory(); }, HEARTBEAT_MS);
+    setFormMode('add');
+    loadInventory();
+
+    // Expose for inline handlers
+    window.editRecord        = editRecord;
+    window.deleteRecordById  = deleteRecordById;
+    window.goToPage          = goToPage;
+    window.loadFoundRecord   = loadFoundRecord;
+    window.deleteFoundRecord = deleteFoundRecord;
+    window.clearSearchResult = clearSearchResult;
+  })();
 </script>
 </body>
 </html>
