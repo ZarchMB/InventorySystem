@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-   
+    /* ===== CSS Variables ===== */
     :root,
     [data-theme="dark"] {
       --bg-page:       #0d0d0f;
@@ -422,41 +422,36 @@
     .sku-row input { flex: 1; }
     .sku-row .btn  { flex-shrink: 0; padding: 13px 18px; }
 
-    .search-result {
-      margin-top: 14px;
-      border-radius: 18px;
+    /* Search Dropdown (NEW) */
+    .search-dropdown {
+      margin-top: 8px;
+      border-radius: 16px;
       border: 1px solid var(--border);
       background: var(--bg-input);
       overflow: hidden;
-      display: none;
-      transition: background 0.35s;
+      max-height: 300px;
+      overflow-y: auto;
     }
-    .search-result.found  { border-color: rgba(61,153,112,0.4);  background: var(--success-bg); }
-    .search-result.missed { border-color: rgba(192,57,43,0.4);   background: var(--danger-bg); }
-
-    .result-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 16px;
-      font-size: 0.82rem; font-weight: 500; letter-spacing: 0.04em;
+    .search-dropdown-item {
+      padding: 12px 16px;
       border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer;
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    .result-header.found  { color: var(--success-text); }
-    .result-header.missed { color: var(--danger-text); }
-
-    .result-body { display: grid; grid-template-columns: 1fr 1fr; }
-    .result-field {
-      padding: 10px 16px;
-      border-right: 1px solid var(--border-subtle);
-      border-bottom: 1px solid var(--border-subtle);
+    .search-dropdown-item:last-child { border-bottom: none; }
+    .search-dropdown-item:hover { background: var(--bg-row-hover); }
+    .search-dropdown-item .item-name { font-weight: 500; color: var(--text-primary); }
+    .search-dropdown-item .item-sku { font-size: 0.75rem; color: var(--text-muted); }
+    .search-dropdown-empty {
+      padding: 16px;
+      text-align: center;
+      color: var(--text-muted);
     }
-    .result-field:nth-child(even)      { border-right: none; }
-    .result-field:nth-last-child(-n+2) { border-bottom: none; }
-    .result-field-label { font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
-    .result-field-value { font-size: 0.88rem; font-weight: 500; color: var(--text-primary); }
 
-    .result-actions { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border-subtle); }
-    .result-actions .btn { flex: 1; padding: 10px 8px; font-size: 0.8rem; }
-
+    /* Sold Qty Group + Stepper + Override */
     .sold-qty-group { display: none; padding-top: 14px; margin-top: 6px; border-top: 1px solid var(--border); }
     .sold-qty-group.visible { display: block; }
     .sold-qty-group label { color: var(--gold-dim); }
@@ -784,21 +779,20 @@
     </div>
   </div>
 
-  <!-- SEARCH PRODUCT -->
+  <!-- SEARCH PRODUCT (ENHANCED) -->
   <div class="card" id="searchCard">
     <div class="card-title">
       <span class="card-title-icon"><i class="fas fa-search"></i></span>
       Search Product
     </div>
     <div class="sku-row">
-      <input type="text" id="skuSearchInput" placeholder="Enter Product ID or SKU…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <input type="text" id="skuSearchInput" placeholder="Search by name or ID…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       <button class="btn btn-primary" id="skuSearchBtn"><i class="fas fa-search"></i> Search</button>
     </div>
-    <div class="search-result" id="searchResult">
-      <div class="result-header" id="resultHeader"></div>
-      <div class="result-body"   id="resultBody"></div>
-      <div class="result-actions" id="resultActions"></div>
-    </div>
+    <!-- Dropdown for search results -->
+    <div class="search-dropdown" id="searchDropdown" style="display: none;"></div>
+    <!-- Old result panel hidden -->
+    <div class="search-result" id="searchResult" style="display: none;"></div>
   </div>
 
   <!-- DASHBOARD -->
@@ -920,7 +914,7 @@
     let filteredRecords = [];
     let currentPage     = 1;
     let rowsPerPage     = 10;
-    let lastFilterTerm  = '';                      
+    let lastFilterTerm  = '';
 
     // ── DOM ──────────────────────────────────────────────────
     const $ = id => document.getElementById(id);
@@ -956,6 +950,9 @@
     // Stepper buttons (add sale)
     const soldQtyDecrement = $('soldQtyDecrement');
     const soldQtyIncrement = $('soldQtyIncrement');
+
+    // Search dropdown
+    const searchDropdown = $('searchDropdown');
 
     let originalTotalSold = 0;
 
@@ -1061,7 +1058,7 @@
       try {
         const data = await callApi({ action: 'getAll' });
         allRecords = data.data || [];
-        applyFilter(false);                    
+        applyFilter(false);
         updateDashboard(allRecords);
         setOnlineStatus('online');
       } catch (e) {}
@@ -1185,11 +1182,10 @@
       currentSoldDisplay.textContent = '0';
       overrideSoldContainer.style.display = 'none';
       soldQtyGroup.classList.remove('visible');
-      clearSearchResult();
+      searchDropdown.style.display = 'none';
       setFormMode('add');
     }
 
-    // Helper to set current sold display and reset override
     function setCurrentSoldDisplay(value) {
       originalTotalSold = Number(value) || 0;
       currentSoldDisplay.textContent = originalTotalSold;
@@ -1197,84 +1193,52 @@
       overrideSoldContainer.style.display = 'none';
     }
 
-    // ── SEARCH CARD ──────────────────────────────────────────
-    function clearSearchResult() {
-      const panel = $('searchResult');
-      panel.style.display = 'none';
-      panel.className = 'search-result';
-      $('resultBody').innerHTML   = '';
-      $('resultActions').innerHTML = '';
+    // ── ENHANCED SEARCH (Name + ID, client‑side) ───────────────
+    async function performSearch() {
+      const query = $('skuSearchInput').value.trim();
+      if (!query) {
+        searchDropdown.style.display = 'none';
+        showToast('Enter a search term.', 'error');
+        return;
+      }
+
+      if (!allRecords.length) {
+        try { await loadInventory(); } catch(e) { return; }
+      }
+
+      const term = query.toLowerCase();
+      const matches = allRecords.filter(r => 
+        (r.productName || '').toString().toLowerCase().includes(term) ||
+        (r.productId   || '').toString().toLowerCase().includes(term)
+      );
+
+      if (matches.length === 0) {
+        searchDropdown.innerHTML = `<div class="search-dropdown-empty">No products found for "${escapeHtml(query)}"</div>`;
+        searchDropdown.style.display = 'block';
+        return;
+      }
+
+      const displayItems = matches.slice(0, 5);
+      let html = '';
+      displayItems.forEach(r => {
+        html += `
+          <div class="search-dropdown-item" onclick="selectSearchResult('${escapeAttr(r.productId)}')">
+            <span class="item-name">${escapeHtml(r.productName || '—')}</span>
+            <span class="item-sku">${escapeHtml(r.productId || '')}</span>
+          </div>
+        `;
+      });
+      if (matches.length > 5) {
+        html += `<div class="search-dropdown-item" style="color: var(--text-muted); justify-content: center; cursor: default;">... and ${matches.length - 5} more (refine search)</div>`;
+      }
+      searchDropdown.innerHTML = html;
+      searchDropdown.style.display = 'block';
     }
 
-    async function skuSearch() {
-      const sku = $('skuSearchInput').value.trim();
-      if (!sku) { showToast('Enter a Product ID to search.', 'error'); return; }
-      const panel = $('searchResult'), header = $('resultHeader'),
-            body  = $('resultBody'),   actions = $('resultActions');
-      panel.style.display = 'block';
-      panel.className     = 'search-result';
-      header.className    = 'result-header';
-      header.innerHTML    = '<span><i class="fas fa-spinner fa-spin"></i>&nbsp; Searching…</span>';
-      body.innerHTML = ''; actions.innerHTML = '';
-      try {
-        const data = await callApi({ action: 'search', sku });
-        if (data.found) {
-          const r = data.record;
-          panel.className  = 'search-result found';
-          header.className = 'result-header found';
-          header.innerHTML = `<span><i class="fas fa-check-circle"></i>&nbsp; Product found</span><span style="font-weight:400;opacity:.7">${escapeHtml(r.productId)}</span>`;
-          body.innerHTML = `
-            <div class="result-field"><div class="result-field-label">Name</div><div class="result-field-value">${escapeHtml(r.productName||'—')}</div></div>
-            <div class="result-field"><div class="result-field-label">SKU</div><div class="result-field-value">${escapeHtml(r.productId||'—')}</div></div>
-            <div class="result-field"><div class="result-field-label">Unit Price</div><div class="result-field-value" style="color:var(--gold-dim)">₱${(Number(r.unitPrice)||0).toFixed(2)}</div></div>
-            <div class="result-field"><div class="result-field-label">Stock</div><div class="result-field-value">${r.stockQty||0}</div></div>`;
-          panel.dataset.row         = data.row;
-          panel.dataset.productName = r.productName || '';
-          panel.dataset.productId   = r.productId   || '';
-          panel.dataset.unitPrice   = r.unitPrice    || '';
-          panel.dataset.stockQty    = r.stockQty     || 0;
-          panel.dataset.soldQty     = r.soldQty      || 0;
-          actions.innerHTML = `
-            <button class="btn btn-success" onclick="loadFoundRecord()"><i class="fas fa-edit"></i> Load to Form</button>
-            <button class="btn btn-danger"  onclick="deleteFoundRecord()"><i class="fas fa-trash-alt"></i> Delete</button>`;
-        } else {
-          panel.className  = 'search-result missed';
-          header.className = 'result-header missed';
-          header.innerHTML = `<span><i class="fas fa-times-circle"></i>&nbsp; No product found for "<strong>${escapeHtml(sku)}</strong>"</span>`;
-          actions.innerHTML = `<button class="btn btn-ghost" style="flex:1" onclick="clearSearchResult();$('skuSearchInput').focus()"><i class="fas fa-redo"></i> Try Again</button>`;
-        }
-      } catch (e) { panel.style.display = 'none'; }
-    }
-
-    function loadFoundRecord() {
-      const p = $('searchResult');
-      productName.value = p.dataset.productName;
-      productId.value   = p.dataset.productId;
-      stockQty.value    = p.dataset.stockQty;
-      unitPrice.value   = p.dataset.unitPrice;
-      soldQty.value     = '0';
-      currentRow.value  = p.dataset.row;
-      setCurrentSoldDisplay(p.dataset.soldQty || 0);
-      soldQtyGroup.classList.add('visible');
-      showToast('Record loaded — ready to update.', 'success');
-      setFormMode('edit');
-      scrollToForm();
-      clearSearchResult();
+    async function selectSearchResult(sku) {
+      searchDropdown.style.display = 'none';
       $('skuSearchInput').value = '';
-    }
-
-    async function deleteFoundRecord() {
-      const p   = $('searchResult');
-      const sku = p.dataset.productId;
-      const confirmed = await showConfirmModal(`Permanently delete "${sku}"? This action cannot be undone.`, 'Delete');
-      if (!confirmed) return;
-      try {
-        await callApi({ action: 'delete', row: p.dataset.row });
-        showToast(`"${sku}" deleted.`, 'success');
-        clearSearchResult();
-        $('skuSearchInput').value = '';
-        clearForm(); loadInventory();
-      } catch (e) {}
+      await editRecord(sku);
     }
 
     // ── CRUD ─────────────────────────────────────────────────
@@ -1359,15 +1323,9 @@
         return;
       }
       try {
-        
-        await callApi({
-          action: 'correctSold',
-          row: currentRow.value,
-          newSoldQty: newTotalSold
-        });
+        await callApi({ action: 'correctSold', row: currentRow.value, newSoldQty: newTotalSold });
         showToast('Total sold corrected.', 'success');
         overrideSoldContainer.style.display = 'none';
-        
         const sku = productId.value;
         if (sku) {
           const data = await callApi({ action: 'search', sku });
@@ -1381,7 +1339,7 @@
       } catch (e) {}
     }
 
-    // ── STEPPER CONTROLS (Add Sale) ──────────────────────────
+    // ── STEPPER CONTROLS ──────────────────────────────────────
     function adjustSoldQty(delta) {
       let current = parseInt(soldQty.value, 10);
       if (isNaN(current)) current = 0;
@@ -1395,7 +1353,6 @@
       if (isNaN(val) || val < 0) soldQty.value = 0;
     });
 
-    // ── OVERRIDE STEPPER ─────────────────────────────────────
     function adjustOverrideSold(delta) {
       let val = parseInt(overrideSoldQty.value, 10);
       if (isNaN(val)) val = 0;
@@ -1412,9 +1369,7 @@
       overrideSoldContainer.style.display = 'block';
       overrideSoldQty.value = originalTotalSold;
     });
-    cancelOverrideBtn.addEventListener('click', () => {
-      overrideSoldContainer.style.display = 'none';
-    });
+    cancelOverrideBtn.addEventListener('click', () => { overrideSoldContainer.style.display = 'none'; });
     applyOverrideBtn.addEventListener('click', applySoldCorrection);
 
     // ── EVENTS ───────────────────────────────────────────────
@@ -1425,9 +1380,11 @@
     $('clearAllBtn').addEventListener('click', clearAllRecords);
     $('refreshTableBtn').addEventListener('click', loadInventory);
     $('searchTableBtn').addEventListener('click', () => applyFilter(true));
-    $('searchInput').addEventListener('input', () => applyFilter(true));   
-    $('skuSearchBtn').addEventListener('click', skuSearch);
-    $('skuSearchInput').addEventListener('keydown', e => { if (e.key === 'Enter') skuSearch(); });
+    $('searchInput').addEventListener('input', () => applyFilter(true));
+    $('skuSearchBtn').addEventListener('click', performSearch);
+    $('skuSearchInput').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); performSearch(); } });
+    $('skuSearchInput').addEventListener('input', () => { if (!$('skuSearchInput').value.trim()) searchDropdown.style.display = 'none'; });
+    document.addEventListener('click', (e) => { if (!e.target.closest('#searchCard')) searchDropdown.style.display = 'none'; });
     rowsSelect.addEventListener('change', () => { rowsPerPage = parseInt(rowsSelect.value, 10); currentPage = 1; renderPage(); });
 
     setInterval(async () => { setOnlineStatus('checking'); await loadInventory(); }, HEARTBEAT_MS);
@@ -1438,9 +1395,7 @@
     window.editRecord        = editRecord;
     window.deleteRecordById  = deleteRecordById;
     window.goToPage          = goToPage;
-    window.loadFoundRecord   = loadFoundRecord;
-    window.deleteFoundRecord = deleteFoundRecord;
-    window.clearSearchResult = clearSearchResult;
+    window.selectSearchResult = selectSearchResult;
   })();
 </script>
 </body>
