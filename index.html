@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* ===== CSS Variables ===== */
+    
     :root,
     [data-theme="dark"] {
       --bg-page:       #0d0d0f;
@@ -789,10 +789,10 @@
       <input type="text" id="skuSearchInput" placeholder="Search by name or ID…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       <button class="btn btn-primary" id="skuSearchBtn"><i class="fas fa-search"></i> Search</button>
     </div>
-    <!-- Dropdown for search results -->
+  
     <div class="search-dropdown" id="searchDropdown" style="display: none;"></div>
-    <!-- Old result panel hidden -->
     <div class="search-result" id="searchResult" style="display: none;"></div>
+    
   </div>
 
   <!-- DASHBOARD -->
@@ -1192,8 +1192,7 @@
       overrideSoldQty.value = originalTotalSold;
       overrideSoldContainer.style.display = 'none';
     }
-
-    // ── ENHANCED SEARCH (Name + ID, client‑side) ───────────────
+    
     async function performSearch() {
       const query = $('skuSearchInput').value.trim();
       if (!query) {
@@ -1314,7 +1313,6 @@
       } catch (e) {}
     }
 
-    // ── SOLD CORRECTION (Override) ───────────────────────────
     async function applySoldCorrection() {
       if (!currentRow.value) { showToast('No record loaded.', 'error'); return; }
       const newTotalSold = parseInt(overrideSoldQty.value, 10);
@@ -1391,7 +1389,6 @@
     setFormMode('add');
     loadInventory();
 
-    // Expose for inline handlers
     window.editRecord        = editRecord;
     window.deleteRecordById  = deleteRecordById;
     window.goToPage          = goToPage;
