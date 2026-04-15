@@ -422,7 +422,7 @@
     .sku-row input { flex: 1; }
     .sku-row .btn  { flex-shrink: 0; padding: 13px 18px; }
 
-    /* Search Dropdown (NEW) */
+    /* Search Dropdown */
     .search-dropdown {
       margin-top: 8px;
       border-radius: 16px;
@@ -451,7 +451,6 @@
       color: var(--text-muted);
     }
 
-    /* Sold Qty Group + Stepper + Override */
     .sold-qty-group { display: none; padding-top: 14px; margin-top: 6px; border-top: 1px solid var(--border); }
     .sold-qty-group.visible { display: block; }
     .sold-qty-group label { color: var(--gold-dim); }
@@ -720,7 +719,7 @@
     </div>
     <div class="form-group">
       <label>Product ID / SKU</label>
-      <input type="text" id="productId" placeholder="SKU-12345">
+      <input type="text" id="productId" placeholder="ZRC-000001">
     </div>
     <div class="form-group">
       <label>Stock Quantity</label>
@@ -752,7 +751,6 @@
         </div>
       </div>
 
-      <!-- Override Total Sold (hidden by default) -->
       <div id="overrideSoldContainer" style="display: none;">
         <label>Override Total Sold <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--danger-text);">(correction)</span></label>
         <div class="stepper-wrapper">
@@ -1053,6 +1051,32 @@
       }
     }
 
+    // ── AUTO-GENERATE PRODUCT ID ───────────────────────────────
+    function generateNextProductId() {
+      const prefix = 'ZRC-';
+      const existingNumbers = allRecords
+        .map(r => r.productId)
+        .filter(id => id && id.startsWith(prefix))
+        .map(id => {
+          const numPart = id.substring(prefix.length);
+          const num = parseInt(numPart, 10);
+          return isNaN(num) ? 0 : num;
+        });
+      
+      const maxNum = existingNumbers.length > 0 ? Math.max(...existingNumbers) : 0;
+      const nextNum = maxNum + 1;
+      const paddedNum = nextNum.toString().padStart(6, '0');
+      return prefix + paddedNum;
+    }
+
+    function applyNextProductId() {
+      if (allRecords.length > 0) {
+        productId.value = generateNextProductId();
+      } else {
+        productId.value = 'ZRC-000001';
+      }
+    }
+
     // ── LOAD ─────────────────────────────────────────────────
     async function loadInventory() {
       try {
@@ -1061,6 +1085,10 @@
         applyFilter(false);
         updateDashboard(allRecords);
         setOnlineStatus('online');
+        // Generate initial product ID if form is in 'add' mode and empty
+        if ($('saveBtn').disabled === false && !productId.value) {
+          applyNextProductId();
+        }
       } catch (e) {}
     }
 
@@ -1176,14 +1204,18 @@
     }
 
     function clearForm() {
-      productName.value = ''; productId.value  = '';
-      stockQty.value    = '100'; unitPrice.value = '';
-      soldQty.value     = '0';   currentRow.value = '';
+      productName.value = ''; 
+      stockQty.value    = '100'; 
+      unitPrice.value   = '';
+      soldQty.value     = '0';   
+      currentRow.value  = '';
       currentSoldDisplay.textContent = '0';
       overrideSoldContainer.style.display = 'none';
       soldQtyGroup.classList.remove('visible');
       searchDropdown.style.display = 'none';
       setFormMode('add');
+      // Generate a fresh Product ID
+      applyNextProductId();
     }
 
     function setCurrentSoldDisplay(value) {
@@ -1246,7 +1278,8 @@
       try {
         await callApi({ action: 'save', productName: productName.value, productId: productId.value, stockQty: stockQty.value, unitPrice: unitPrice.value });
         showToast('Product saved successfully.', 'success');
-        clearForm(); loadInventory();
+        clearForm(); 
+        loadInventory();
       } catch (e) {}
     }
 
@@ -1255,7 +1288,8 @@
       try {
         await callApi({ action: 'update', row: currentRow.value, productName: productName.value, productId: productId.value, stockQty: stockQty.value, unitPrice: unitPrice.value, soldQty: soldQty.value });
         showToast('Record updated.', 'success');
-        clearForm(); loadInventory();
+        clearForm(); 
+        loadInventory();
       } catch (e) {}
     }
 
@@ -1266,7 +1300,8 @@
       try {
         await callApi({ action: 'delete', row: currentRow.value });
         showToast('Record deleted.', 'success');
-        clearForm(); loadInventory();
+        clearForm(); 
+        loadInventory();
       } catch (e) {}
     }
 
@@ -1278,7 +1313,9 @@
         if (data.found) {
           await callApi({ action: 'delete', row: data.row });
           showToast('Deleted.', 'success');
-          clearForm(); scrollToForm(); loadInventory();
+          clearForm(); 
+          scrollToForm(); 
+          loadInventory();
         }
       } catch (e) {}
     }
@@ -1288,9 +1325,12 @@
         const data = await callApi({ action: 'search', sku });
         if (data.found) {
           const r = data.record;
-          productName.value = r.productName; productId.value  = r.productId;
-          stockQty.value    = r.stockQty;    unitPrice.value  = r.unitPrice;
-          soldQty.value     = '0';           currentRow.value = data.row;
+          productName.value = r.productName; 
+          productId.value   = r.productId;
+          stockQty.value    = r.stockQty;    
+          unitPrice.value   = r.unitPrice;
+          soldQty.value     = '0';           
+          currentRow.value  = data.row;
           setCurrentSoldDisplay(r.soldQty || 0);
           soldQtyGroup.classList.add('visible');
           showToast('Record loaded for editing.', 'success');
@@ -1387,7 +1427,10 @@
 
     setInterval(async () => { setOnlineStatus('checking'); await loadInventory(); }, HEARTBEAT_MS);
     setFormMode('add');
-    loadInventory();
+    loadInventory().then(() => {
+      
+      if (!productId.value) applyNextProductId();
+    });
 
     window.editRecord        = editRecord;
     window.deleteRecordById  = deleteRecordById;
