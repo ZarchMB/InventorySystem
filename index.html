@@ -1588,57 +1588,87 @@
 
     // ── PDF IMPORT ────────────────────────────────────────────
     async function importPdf(file) {
-      const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-      let fullText = '';
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const textContent = await page.getTextContent();
-        const pageText = textContent.items.map(item => item.str).join(' ');
-        fullText += pageText + '\n';
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        let fullText = '';
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          const pageText = textContent.items.map(item => item.str).join(' ');
+          fullText += pageText + '\n';
+        }
+        console.log('=== Extracted PDF Text ===');
+        console.log(fullText);
+        return parseExportedData(fullText);
       }
-      return parseExportedData(fullText);
-    }
-
-    function parseExportedData(text) {
+      
+      function parseExportedData(text) {
         const records = [];
-        
         const lines = text.split('\n').map(l => l.replace(/\s+/g, ' ').trim()).filter(l => l);
         
-        let inTable = false;
+        let headerIndices = null;
+        
         for (let line of lines) {
-         
-          if (line.includes('Product Name') && line.includes('ID / SKU')) {
-            inTable = true;
+        
+          if (!headerIndices && line.includes('Product Name') && line.includes('ID / SKU')) {
+            const parts = line.split(/\s{2,}/);
+            headerIndices = {
+              name: parts.findIndex(p => p.includes('Product Name')),
+              id: parts.findIndex(p => p.includes('ID / SKU')),
+              stock: parts.findIndex(p => p.includes('Stock')),
+              sold: parts.findIndex(p => p.includes('Sold')),
+              price: parts.findIndex(p => p.includes('Price')),
+            };
             continue;
           }
-          if (!inTable) continue;
           
           if (line.includes('InventoryFB') || line.includes('Generated:')) break;
           
-          const match = line.match(/^(.+?)\s+([A-Za-z0-9\-]+)\s+(\d+)\s+(\d+)\s+₱?([\d,]+\.?\d*)\s+[\d,]+\.?\d*$/);
-          if (match) {
-            const productName = match[1].trim();
-            const productId   = match[2].trim();
-            const stockQty    = parseInt(match[3], 10) || 0;
-            const soldQty     = parseInt(match[4], 10) || 0;
-            const unitPrice   = parseFloat(match[5].replace(/,/g, '')) || 0;
-            
-            if (productId && productName) {
-              records.push({ productName, productId, stockQty, soldQty, unitPrice });
+          if (headerIndices) {
+            const parts = line.split(/\s{2,}/);
+            if (parts.length >= 5) {
+              const productName = parts[headerIndices.name]?.trim() || '';
+              const productId   = parts[headerIndices.id]?.trim() || '';
+              const stockQty    = parseInt(parts[headerIndices.stock]) || 0;
+              const soldQty     = parseInt(parts[headerIndices.sold]) || 0;
+              let unitPrice     = parts[headerIndices.price]?.replace(/[₱,]/g, '').trim() || '0';
+              unitPrice         = parseFloat(unitPrice) || 0;
+              
+              if (productId && productName) {
+                records.push({ productName, productId, stockQty, soldQty, unitPrice });
+              }
             }
           }
         }
+        
+        if (records.length === 0) {
+          console.warn('Column header not found, falling back to regex...');
+          for (let line of lines) {
+            const match = line.match(/^(.+?)\s+([A-Za-z0-9\-]+)\s+(\d+)\s+(\d+)\s+₱?([\d,]+\.?\d*)\s+[\d,]+\.?\d*$/);
+            if (match) {
+              const productName = match[1].trim();
+              const productId   = match[2].trim();
+              const stockQty    = parseInt(match[3], 10) || 0;
+              const soldQty     = parseInt(match[4], 10) || 0;
+              const unitPrice   = parseFloat(match[5].replace(/,/g, '')) || 0;
+              if (productId && productName) {
+                records.push({ productName, productId, stockQty, soldQty, unitPrice });
+              }
+            }
+          }
+        }
+        
+        console.log('Parsed records:', records.length);
         return records;
       }
-
-    async function handlePdfUpload(file) {
+      
+      async function handlePdfUpload(file) {
         if (!file) return;
         showToast('Parsing PDF…', 'info');
         try {
           const records = await importPdf(file);
           if (!records.length) {
-            showToast('No valid records found in PDF. The file may be corrupted or not an exported inventory.', 'error');
+            showToast('No valid records found in PDF. Check browser console (F12) for extracted text.', 'error');
             return;
           }
           showToast(`Found ${records.length} records. Importing…`, 'info');
