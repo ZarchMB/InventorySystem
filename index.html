@@ -12,10 +12,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <!-- PDF.js library -->
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
-    /* ... (all existing CSS unchanged) ... */
+    
     :root,
     [data-theme="dark"] {
       --bg-page:       #0d0d0f;
@@ -1085,7 +1085,7 @@
   </div>
 </div>
 
-<!-- SUCCESS MODAL (for PDF import) -->
+<!-- SUCCESS MODAL -->
 <div class="modal-overlay" id="importSuccessModal">
   <div class="modal-card post-save-modal">
     <div class="modal-icon success"><i class="fas fa-cloud-upload-alt"></i></div>
@@ -1234,7 +1234,7 @@
     });
     modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) hideConfirmModal(); });
 
-    // ── POST-SAVE MODAL (PDF export follow-up) ────────────────
+    // ── POST-SAVE MODAL ────────────────
     const postSaveModal   = $('postSaveModal');
     const postSaveNewBtn  = $('postSaveNewBtn');
     const postSaveKeepBtn = $('postSaveKeepBtn');
