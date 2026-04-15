@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    
+   
     :root,
     [data-theme="dark"] {
       --bg-page:       #0d0d0f;
@@ -670,6 +670,12 @@
     .toast.error   { background: rgba(192,57,43,0.92); border-color: rgba(192,57,43,0.5); color:#fff; }
     .toast.success { background: rgba(22,101,52,0.92);  border-color: rgba(22,101,52,0.5);  color:#fff; }
 
+    .toast.info {background: linear-gradient(135deg, var(--gold-glow-md), var(--bg-card));
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+      box-shadow: 0 8px 20px rgba(201,168,76,0.15);}
+    .toast.info i {color: var(--gold); margin-right: 8px; }
+
     /* Loader */
     .loader { display:inline-block; width:14px; height:14px; border:2px solid rgba(0,0,0,.2); border-radius:50%; border-top-color: var(--gold); animation:spin .7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -996,7 +1002,6 @@
     <div class="card-title">
       <span class="card-title-icon"><i class="fas fa-list-ul"></i></span>
       Current Inventory
-      <!-- toolbar: download + refresh sit together -->
       <div class="card-toolbar">
         <button class="download-btn" id="downloadPdfBtn" title="Download inventory as PDF">
           <i class="fas fa-file-pdf"></i> Export PDF
@@ -1041,7 +1046,7 @@
   </div>
 </div>
 
-<!-- CONFIRMATION MODAL (existing) -->
+<!-- CONFIRMATION MODAL -->
 <div class="modal-overlay" id="confirmModal">
   <div class="modal-card">
     <div class="modal-icon"><i class="fas fa-exclamation-triangle"></i></div>
@@ -1054,11 +1059,10 @@
   </div>
 </div>
 
-<!-- POST-SAVE MODAL (NEW) -->
 <div class="modal-overlay" id="postSaveModal">
   <div class="modal-card post-save-modal">
     <div class="modal-icon success"><i class="fas fa-check-circle"></i></div>
-    <div class="modal-title">Item Saved!</div>
+    <div class="modal-title">PDF Exported!</div>
     <p class="modal-sub">What would you like to do next?</p>
     <div class="modal-message" id="postSaveMessage">
       Choose to start a fresh inventory list or keep the current records.
@@ -1079,7 +1083,6 @@
 </div>
 
 <div id="printTarget"></div>
-
 <div id="toast" class="toast"></div>
 
 <script>
@@ -1183,7 +1186,7 @@
     });
     modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) hideConfirmModal(); });
 
-    // ── POST-SAVE MODAL (NEW) ─────────────────────────────────
+    // ── POST-SAVE MODAL (PDF export follow-up) ────────────────
     const postSaveModal   = $('postSaveModal');
     const postSaveNewBtn  = $('postSaveNewBtn');
     const postSaveKeepBtn = $('postSaveKeepBtn');
@@ -1197,14 +1200,11 @@
 
     postSaveKeepBtn.addEventListener('click', () => {
       hidePostSaveModal();
-      // Stay on current inventory, just refresh display
-      loadInventory();
-      showToast('Inventory kept. Ready for next entry.', 'success');
+      showToast('Inventory kept. Ready for next actions.', 'success');
     });
 
     postSaveNewBtn.addEventListener('click', async () => {
       hidePostSaveModal();
-      // Ask one more time before wiping — destructive action
       const confirmed = await showConfirmModal(
         'This will permanently delete ALL current inventory records and start fresh. Are you sure?',
         'Yes, Clear All'
@@ -1220,7 +1220,6 @@
       } catch (e) {}
     });
 
-    // Close post-save modal on overlay click
     postSaveModal.addEventListener('click', e => { if (e.target === postSaveModal) hidePostSaveModal(); });
 
     // ── FORM MODE ─────────────────────────────────────────────
@@ -1469,20 +1468,16 @@
       overrideSoldContainer.style.display = 'none';
     }
 
-    // ── PDF EXPORT (NEW) ─────────────────────────────────────
-    // Builds a clean print-ready DOM fragment, injects it into #printTarget,
-    // calls window.print(), then removes it — no external library needed.
     function exportPdf() {
       if (!allRecords.length) {
         showToast('No inventory records to export.', 'error');
         return;
       }
 
-      const now    = new Date();
+      const now     = new Date();
       const dateStr = now.toLocaleDateString('en-PH', { year:'numeric', month:'long', day:'numeric' });
       const timeStr = now.toLocaleTimeString('en-PH', { hour:'2-digit', minute:'2-digit' });
 
-      // Compute totals
       let ts = 0, tSold = 0, tRev = 0;
       allRecords.forEach(r => {
         ts    += Number(r.stockQty) || 0;
@@ -1490,7 +1485,6 @@
         tRev  += (Number(r.soldQty)||0) * (Number(r.unitPrice)||0);
       });
 
-      // Build all-records table rows (not paginated — full list)
       const rows = allRecords.map(r => `
         <tr>
           <td>${escapeHtml(r.productName || '')}</td>
@@ -1515,46 +1509,25 @@
             <div style="margin-top:6px"><strong>${allRecords.length} item${allRecords.length !== 1 ? 's' : ''}</strong></div>
           </div>
         </div>
-
         <div class="print-stats">
-          <div class="print-stat">
-            <div class="print-stat-label">Total Stock</div>
-            <div class="print-stat-value">${ts}</div>
-          </div>
-          <div class="print-stat">
-            <div class="print-stat-label">Total Sold</div>
-            <div class="print-stat-value">${tSold}</div>
-          </div>
-          <div class="print-stat revenue">
-            <div class="print-stat-label">Total Revenue</div>
-            <div class="print-stat-value">₱${tRev.toLocaleString('en-PH',{minimumFractionDigits:2})}</div>
-          </div>
+          <div class="print-stat"><div class="print-stat-label">Total Stock</div><div class="print-stat-value">${ts}</div></div>
+          <div class="print-stat"><div class="print-stat-label">Total Sold</div><div class="print-stat-value">${tSold}</div></div>
+          <div class="print-stat revenue"><div class="print-stat-label">Total Revenue</div><div class="print-stat-value">₱${tRev.toLocaleString('en-PH',{minimumFractionDigits:2})}</div></div>
         </div>
-
         <table>
           <thead>
-            <tr>
-              <th>Product Name</th>
-              <th>ID / SKU</th>
-              <th style="text-align:right">Stock</th>
-              <th style="text-align:right">Sold</th>
-              <th style="text-align:right">Unit Price</th>
-              <th style="text-align:right">Revenue</th>
-            </tr>
+            <tr><th>Product Name</th><th>ID / SKU</th><th style="text-align:right">Stock</th><th style="text-align:right">Sold</th><th style="text-align:right">Unit Price</th><th style="text-align:right">Revenue</th></tr>
           </thead>
           <tbody>${rows}</tbody>
         </table>
-
         <div class="print-footer">
           <span>InventoryFB &nbsp;·&nbsp; Zarch Technology © 2026</span>
           <span>Generated: ${dateStr} ${timeStr}</span>
         </div>`;
 
-      // Trigger print dialog — browser Save as PDF handles the rest
       window.print();
-
-      // Clean up after print dialog closes
       setTimeout(() => { printTarget.innerHTML = ''; }, 1000);
+      setTimeout(() => { showPostSaveModal(); }, 500);
     }
 
     // ── SEARCH CARD ──────────────────────────────────────────
@@ -1601,25 +1574,99 @@
     }
 
     // ── CRUD ─────────────────────────────────────────────────
-        async function saveRecord() {
+    async function saveRecord() {
       if (!productId.value || !productName.value) {
         showToast('Product ID and Name are required.', 'error');
         return;
       }
-      try {
-        await callApi({
-          action: 'save',
-          productName: productName.value,
-          productId: productId.value,
-          stockQty: stockQty.value,
-          unitPrice: unitPrice.value
-        });
-    
-        await loadInventory();
-        clearForm();
-    
-        showPostSaveModal();
-      } catch (e) {}
+
+      const attemptSave = async (idToSave) => {
+        try {
+          await callApi({
+            action: 'save',
+            productName: productName.value,
+            productId: idToSave,
+            stockQty: stockQty.value,
+            unitPrice: unitPrice.value
+          });
+          return { success: true };
+        } catch (e) {
+          return { success: false, error: e.message };
+        }
+      };
+
+      let currentId = productId.value.trim();
+      let result = await attemptSave(currentId);
+
+      if (!result.success && result.error.toLowerCase().includes('already exists')) {
+        const prefix = 'ZRC-';
+        let nextId = currentId;
+        
+        if (currentId.startsWith(prefix)) {
+          const numPart = currentId.substring(prefix.length);
+          const baseNum = parseInt(numPart, 10);
+          if (!isNaN(baseNum)) {
+            let candidateNum = baseNum + 1;
+            let candidateId = prefix + candidateNum.toString().padStart(6, '0');
+            while (allRecords.some(r => r.productId === candidateId)) {
+              candidateNum++;
+              candidateId = prefix + candidateNum.toString().padStart(6, '0');
+            }
+            nextId = candidateId;
+          } else {
+            nextId = generateNextProductId();
+          }
+        } else {
+          nextId = generateNextProductId();
+        }
+
+        productId.value = nextId;
+        lastAutoGeneratedId = nextId;
+        updateAutoBadgeVisibility();
+        
+        result = await attemptSave(nextId);
+        if (result.success) {
+          showToast(`That ID is already in use. Re-assigning to this available ID: ${nextId}`, 'info');
+        } else {
+          showToast(result.error, 'error');
+          return;
+        }
+      } else if (!result.success) {
+        showToast(result.error, 'error');
+        return;
+      }
+
+      await loadInventory();
+
+      const finalId = productId.value.trim();
+      if (finalId.startsWith('ZRC-')) {
+        const numPart = finalId.substring(4);
+        const currentNum = parseInt(numPart, 10);
+        if (!isNaN(currentNum)) {
+          const nextNum = currentNum + 1;
+          const nextId = 'ZRC-' + nextNum.toString().padStart(6, '0');
+          productId.value = nextId;
+          lastAutoGeneratedId = nextId;
+        } else {
+          applyNextProductId();
+        }
+      } else {
+        applyNextProductId();
+      }
+
+      productName.value = '';
+      stockQty.value = '100';
+      unitPrice.value = '';
+      soldQty.value = '0';
+      currentRow.value = '';
+      currentSoldDisplay.textContent = '0';
+      overrideSoldContainer.style.display = 'none';
+      soldQtyGroup.classList.remove('visible');
+      searchDropdown.style.display = 'none';
+      setFormMode('add');
+      updateAutoBadgeVisibility();
+
+      showToast('Item saved successfully!', 'success');
     }
 
     async function updateRecord() {
