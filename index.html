@@ -1730,21 +1730,27 @@
       return records;
     }
 
-    async function handleCsvUpload(file) {
+   async function handleCsvUpload(file) {
       if (!file) return;
       showToast('Parsing CSV…', 'info');
       try {
         const text = await file.text();
         const records = parseCsv(text);
+        console.log('Parsed records:', records);
+        
         if (!records.length) {
           showToast('No valid records found in CSV. Check column headers.', 'error');
           return;
         }
         showToast(`Found ${records.length} records. Importing…`, 'info');
+        
         const response = await callApi({
           action: 'bulkImport',
           records: JSON.stringify(records)
         });
+        
+        console.log('Bulk import response:', response);
+        
         await loadInventory();
         if (response.imported === 0 && response.skipped > 0) {
           importSummary.textContent = `All ${response.skipped} records already exist. Nothing imported.`;
@@ -1753,6 +1759,7 @@
         }
         importSuccessModal.classList.add('visible');
       } catch (e) {
+        console.error('Import error:', e);
         showToast('Import failed: ' + e.message, 'error');
       }
     }
