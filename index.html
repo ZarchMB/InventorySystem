@@ -12,8 +12,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- PDF.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
-   
+    /* ... (all existing CSS unchanged) ... */
     :root,
     [data-theme="dark"] {
       --bg-page:       #0d0d0f;
@@ -76,7 +78,7 @@
       --success-text:  #166534;
       --danger:        #991b1b;
       --danger-bg:     rgba(153,27,27,0.08);
-      --danger-text:   #991b1b;
+      --275:   #991b1b;
       --warning-bg:    rgba(154,110,28,0.08);
       --shadow-card:   0 2px 12px rgba(0,0,0,0.06);
       --shadow-toast:  0 8px 30px rgba(0,0,0,0.15);
@@ -644,6 +646,21 @@
       background: var(--success-bg);
     }
 
+    .upload-btn {
+      padding: 6px 14px;
+      border-radius: 20px; border: 1px solid rgba(201,168,76,0.35);
+      background: transparent; cursor: pointer;
+      font-size: 0.78rem; letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--gold-dim); transition: all 0.2s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .upload-btn:hover {
+      border-color: var(--border-strong);
+      background: var(--gold-glow);
+    }
+
     .card-toolbar {
       display: flex;
       align-items: center;
@@ -669,12 +686,16 @@
     .toast.show  { opacity:1; transform: translateX(-50%) translateY(0); }
     .toast.error   { background: rgba(192,57,43,0.92); border-color: rgba(192,57,43,0.5); color:#fff; }
     .toast.success { background: rgba(22,101,52,0.92);  border-color: rgba(22,101,52,0.5);  color:#fff; }
-
-    .toast.info {background: linear-gradient(135deg, var(--gold-glow-md), var(--bg-card));
+    .toast.info {
+      background: linear-gradient(135deg, var(--gold-glow-md), var(--bg-card));
       border-color: var(--border-strong);
       color: var(--text-primary);
-      box-shadow: 0 8px 20px rgba(201,168,76,0.15);}
-    .toast.info i {color: var(--gold); margin-right: 8px; }
+      box-shadow: 0 8px 20px rgba(201,168,76,0.15);
+    }
+    .toast.info i {
+      color: var(--gold);
+      margin-right: 8px;
+    }
 
     /* Loader */
     .loader { display:inline-block; width:14px; height:14px; border:2px solid rgba(0,0,0,.2); border-radius:50%; border-top-color: var(--gold); animation:spin .7s linear infinite; }
@@ -1003,12 +1024,17 @@
       <span class="card-title-icon"><i class="fas fa-list-ul"></i></span>
       Current Inventory
       <div class="card-toolbar">
+        <button class="upload-btn" id="uploadPdfBtn" title="Upload and import PDF">
+          <i class="fas fa-upload"></i> Import PDF
+        </button>
         <button class="download-btn" id="downloadPdfBtn" title="Download inventory as PDF">
           <i class="fas fa-file-pdf"></i> Export PDF
         </button>
         <button class="refresh-btn" id="refreshTableBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
       </div>
     </div>
+    <!-- Hidden file input -->
+    <input type="file" id="pdfFileInput" accept=".pdf,application/pdf" style="display: none;">
     <div class="filter-row">
       <input type="text" id="searchInput" placeholder="Filter by name or ID…">
       <button class="btn btn-ghost" id="searchTableBtn" style="padding:13px 16px"><i class="fas fa-search"></i></button>
@@ -1059,6 +1085,18 @@
   </div>
 </div>
 
+<!-- SUCCESS MODAL (for PDF import) -->
+<div class="modal-overlay" id="importSuccessModal">
+  <div class="modal-card post-save-modal">
+    <div class="modal-icon success"><i class="fas fa-cloud-upload-alt"></i></div>
+    <div class="modal-title">Import Successful!</div>
+    <p class="modal-sub" id="importSummary"></p>
+    <div class="modal-actions">
+      <button class="btn btn-keep-record" id="importSuccessOkBtn">Continue</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="postSaveModal">
   <div class="modal-card post-save-modal">
     <div class="modal-icon success"><i class="fas fa-check-circle"></i></div>
@@ -1092,6 +1130,9 @@
     const FETCH_TIMEOUT_MS = 10000;
     const MAX_RETRIES      = 3;
     const HEARTBEAT_MS     = 30000;
+
+    // Set PDF.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
     // ── THEME ────────────────────────────────────────────────
     const html        = document.documentElement;
@@ -1159,6 +1200,13 @@
     const soldQtyIncrement      = $('soldQtyIncrement');
     const searchDropdown        = $('searchDropdown');
 
+    // PDF Upload elements
+    const uploadPdfBtn   = $('uploadPdfBtn');
+    const pdfFileInput   = $('pdfFileInput');
+    const importSuccessModal = $('importSuccessModal');
+    const importSummary  = $('importSummary');
+    const importSuccessOkBtn = $('importSuccessOkBtn');
+
     let originalTotalSold   = 0;
     let lastAutoGeneratedId = '';
 
@@ -1221,6 +1269,13 @@
     });
 
     postSaveModal.addEventListener('click', e => { if (e.target === postSaveModal) hidePostSaveModal(); });
+
+    // Import success modal
+    importSuccessOkBtn.addEventListener('click', () => {
+      importSuccessModal.classList.remove('visible');
+      scrollToForm();
+    });
+    importSuccessModal.addEventListener('click', e => { if (e.target === importSuccessModal) importSuccessModal.classList.remove('visible'); });
 
     // ── FORM MODE ─────────────────────────────────────────────
     function setFormMode(mode) {
@@ -1468,6 +1523,7 @@
       overrideSoldContainer.style.display = 'none';
     }
 
+    // ── PDF EXPORT ───────────────────────────────────────────
     function exportPdf() {
       if (!allRecords.length) {
         showToast('No inventory records to export.', 'error');
@@ -1528,6 +1584,69 @@
       window.print();
       setTimeout(() => { printTarget.innerHTML = ''; }, 1000);
       setTimeout(() => { showPostSaveModal(); }, 500);
+    }
+
+    // ── PDF IMPORT ────────────────────────────────────────────
+    async function importPdf(file) {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let fullText = '';
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items.map(item => item.str).join(' ');
+        fullText += pageText + '\n';
+      }
+      return parseExportedData(fullText);
+    }
+
+    function parseExportedData(text) {
+      const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+      const records = [];
+      let inTable = false;
+      for (let line of lines) {
+        if (line.includes('Product Name') && line.includes('ID / SKU')) {
+          inTable = true;
+          continue;
+        }
+        if (inTable) {
+          if (line.includes('InventoryFB') || line.includes('Generated:')) break;
+          const parts = line.split(/\s{2,}|\t/);
+          if (parts.length >= 6) {
+            const productName = parts[0];
+            const productId   = parts[1];
+            const stockQty    = parseInt(parts[2]) || 0;
+            const soldQty     = parseInt(parts[3]) || 0;
+            const unitPrice   = parseFloat(parts[4].replace(/[₱,]/g, '')) || 0;
+            if (productId && productName) {
+              records.push({ productName, productId, stockQty, soldQty, unitPrice });
+            }
+          }
+        }
+      }
+      return records;
+    }
+
+    async function handlePdfUpload(file) {
+      if (!file) return;
+      showToast('Parsing PDF…', 'info');
+      try {
+        const records = await importPdf(file);
+        if (!records.length) {
+          showToast('No valid records found in PDF.', 'error');
+          return;
+        }
+        showToast(`Found ${records.length} records. Importing…`, 'info');
+        const response = await callApi({
+          action: 'bulkImport',
+          records: JSON.stringify(records)
+        });
+        await loadInventory();
+        importSummary.textContent = `Imported: ${response.imported}, Skipped: ${response.skipped}`;
+        importSuccessModal.classList.add('visible');
+      } catch (e) {
+        showToast('Import failed: ' + e.message, 'error');
+      }
     }
 
     // ── SEARCH CARD ──────────────────────────────────────────
@@ -1790,6 +1909,12 @@
     $('clearAllBtn').addEventListener('click', clearAllRecords);
     $('refreshTableBtn').addEventListener('click', loadInventory);
     $('downloadPdfBtn').addEventListener('click', exportPdf);
+    $('uploadPdfBtn').addEventListener('click', () => pdfFileInput.click());
+    pdfFileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) handlePdfUpload(file);
+      pdfFileInput.value = '';
+    });
     $('searchTableBtn').addEventListener('click', () => applyFilter(true));
     $('searchInput').addEventListener('input', () => applyFilter(true));
     $('skuSearchBtn').addEventListener('click', performSearch);
