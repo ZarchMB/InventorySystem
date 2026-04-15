@@ -76,7 +76,7 @@
       --success-text:  #166534;
       --danger:        #991b1b;
       --danger-bg:     rgba(153,27,27,0.08);
-      --275:   #991b1b;
+      --danger-text:   #991b1b;
       --warning-bg:    rgba(154,110,28,0.08);
       --shadow-card:   0 2px 12px rgba(0,0,0,0.06);
       --shadow-toast:  0 8px 30px rgba(0,0,0,0.15);
@@ -485,7 +485,6 @@
       color: var(--text-muted);
     }
 
-    /* Sold Qty Group + Stepper + Override */
     .sold-qty-group { display: none; padding-top: 14px; margin-top: 6px; border-top: 1px solid var(--border); }
     .sold-qty-group.visible { display: block; }
     .sold-qty-group label { color: var(--gold-dim); }
@@ -620,7 +619,7 @@
 
     /* Refresh Button */
     .refresh-btn {
-      margin-left: auto; padding: 6px 14px;
+      padding: 6px 14px;
       border-radius: 20px; border: 1px solid var(--border);
       background: transparent; cursor: pointer;
       font-size: 0.78rem; letter-spacing: 0.06em;
@@ -629,6 +628,28 @@
       color: var(--text-muted); transition: all 0.2s;
     }
     .refresh-btn:hover { border-color: var(--border-hover); color: var(--gold); background: var(--gold-glow); }
+
+    .download-btn {
+      padding: 6px 14px;
+      border-radius: 20px; border: 1px solid rgba(61,153,112,0.35);
+      background: transparent; cursor: pointer;
+      font-size: 0.78rem; letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--success-text); transition: all 0.2s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .download-btn:hover {
+      border-color: rgba(61,153,112,0.6);
+      background: var(--success-bg);
+    }
+
+    .card-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
 
     /* Toast */
     .toast {
@@ -667,7 +688,6 @@
       font-size: 0.75rem; letter-spacing: 0.1em; color: var(--text-muted);
     }
 
-    /* Modal Overlay */
     .modal-overlay {
       position: fixed; inset: 0;
       background: rgba(0,0,0,0.5);
@@ -694,6 +714,7 @@
       margin-bottom: 16px;
       opacity: 0.9;
     }
+    .modal-icon.success { color: var(--success); }
     .modal-title {
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.6rem;
@@ -716,9 +737,133 @@
       flex: 1;
       min-width: 100px;
     }
+
+    .post-save-modal .modal-icon { color: var(--success); }
+    .post-save-modal .modal-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: -16px;
+      margin-bottom: 20px;
+      letter-spacing: 0.04em;
+    }
+    .post-save-modal .btn-new-record {
+      background: var(--danger-bg);
+      border-color: rgba(192,57,43,0.3);
+      color: var(--danger-text);
+    }
+    .post-save-modal .btn-new-record:hover {
+      background: rgba(192,57,43,0.22);
+      border-color: rgba(192,57,43,0.5);
+    }
+    .post-save-modal .btn-keep-record {
+      background: var(--success-bg);
+      border-color: rgba(61,153,112,0.3);
+      color: var(--success-text);
+    }
+    .post-save-modal .btn-keep-record:hover {
+      background: rgba(61,153,112,0.22);
+      border-color: rgba(61,153,112,0.5);
+    }
+
     @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 
+    @media print {
+      body > * { display: none !important; }
+      #printTarget { display: block !important; }
+
+      body {
+        background: #fff !important;
+        color: #000 !important;
+        padding: 0 !important;
+        font-family: 'DM Sans', Arial, sans-serif !important;
+      }
+
+      #printTarget {
+        width: 100%;
+        padding: 24px;
+      }
+
+      .print-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-bottom: 2px solid #b89540;
+        padding-bottom: 12px;
+        margin-bottom: 20px;
+      }
+      .print-header h1 {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #1a1208;
+      }
+      .print-header h1 span { color: #b89540; }
+      .print-meta { text-align: right; font-size: 0.8rem; color: #555; }
+      .print-meta strong { color: #1a1208; }
+
+      .print-stats {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+      .print-stat {
+        flex: 1;
+        border: 1px solid #e2d9c8;
+        border-radius: 10px;
+        padding: 10px 14px;
+        background: #faf8f4;
+      }
+      .print-stat-label {
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #7a6e5e;
+        margin-bottom: 4px;
+      }
+      .print-stat-value {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: 1.6rem;
+        font-weight: 600;
+        color: #1a1208;
+      }
+      .print-stat.revenue .print-stat-value { color: #b89540; }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.82rem;
+      }
+      th {
+        background: #f5f2eb !important;
+        color: #4a3f2f !important;
+        padding: 9px 10px;
+        text-align: left;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border-bottom: 2px solid #e2d9c8;
+        border-radius: 0 !important;
+      }
+      td {
+        padding: 9px 10px;
+        color: #2a2010 !important;
+        border-bottom: 1px solid #ede8df;
+        background: #fff !important;
+      }
+      .print-footer {
+        margin-top: 24px;
+        border-top: 1px solid #e2d9c8;
+        padding-top: 10px;
+        font-size: 0.7rem;
+        color: #7a6e5e;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+
     #currentRow { display: none; }
+    #printTarget { display: none; }
   </style>
 </head>
 <body>
@@ -768,7 +913,6 @@
       <input type="number" id="unitPrice" placeholder="0.00" step="0.01">
     </div>
     <div class="sold-qty-group" id="soldQtyGroup">
-      <!-- Current Sold Display -->
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
         <label style="margin-bottom: 0; color: var(--text-muted);">Current Total Sold</label>
         <div style="display: flex; align-items: center; gap: 8px;">
@@ -778,8 +922,6 @@
           </button>
         </div>
       </div>
-
-      <!-- Add New Sale (stepper) -->
       <div class="form-group" style="margin-bottom:6px">
         <label>Add Sold Quantity <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--text-muted)">(new sales)</span></label>
         <div class="stepper-wrapper">
@@ -788,8 +930,6 @@
           <button type="button" class="stepper-btn" id="soldQtyIncrement" aria-label="Increase quantity">+</button>
         </div>
       </div>
-
-      <!-- Override Total Sold (hidden by default) -->
       <div id="overrideSoldContainer" style="display: none;">
         <label>Override Total Sold <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--danger-text);">(correction)</span></label>
         <div class="stepper-wrapper">
@@ -803,7 +943,6 @@
         </div>
         <p style="font-size:0.7rem; color: var(--danger-text); margin-top:6px;"><i class="fas fa-exclamation-triangle"></i> This will overwrite the total sold count. Use only to fix mistakes.</p>
       </div>
-
       <div class="sold-note"><i class="fas fa-info-circle" style="margin-right:5px;opacity:.7"></i>Add quantity records new sales and updates stock automatically.</div>
     </div>
     <input type="hidden" id="currentRow" value="">
@@ -816,7 +955,7 @@
     </div>
   </div>
 
-  <!-- SEARCH PRODUCT (ENHANCED) -->
+  <!-- SEARCH PRODUCT -->
   <div class="card" id="searchCard">
     <div class="card-title">
       <span class="card-title-icon"><i class="fas fa-search"></i></span>
@@ -826,10 +965,8 @@
       <input type="text" id="skuSearchInput" placeholder="Search by name or ID…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       <button class="btn btn-primary" id="skuSearchBtn"><i class="fas fa-search"></i> Search</button>
     </div>
-  
     <div class="search-dropdown" id="searchDropdown" style="display: none;"></div>
-    <div class="search-result" id="searchResult" style="display: none;"></div>
-    
+    <div class="search-result"   id="searchResult"   style="display: none;"></div>
   </div>
 
   <!-- DASHBOARD -->
@@ -859,7 +996,13 @@
     <div class="card-title">
       <span class="card-title-icon"><i class="fas fa-list-ul"></i></span>
       Current Inventory
-      <button class="refresh-btn" id="refreshTableBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
+      <!-- toolbar: download + refresh sit together -->
+      <div class="card-toolbar">
+        <button class="download-btn" id="downloadPdfBtn" title="Download inventory as PDF">
+          <i class="fas fa-file-pdf"></i> Export PDF
+        </button>
+        <button class="refresh-btn" id="refreshTableBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
+      </div>
     </div>
     <div class="filter-row">
       <input type="text" id="searchInput" placeholder="Filter by name or ID…">
@@ -898,18 +1041,44 @@
   </div>
 </div>
 
-<!-- CUSTOM CONFIRMATION MODAL -->
+<!-- CONFIRMATION MODAL (existing) -->
 <div class="modal-overlay" id="confirmModal">
   <div class="modal-card">
     <div class="modal-icon"><i class="fas fa-exclamation-triangle"></i></div>
     <div class="modal-title">Confirm Action</div>
     <div class="modal-message" id="confirmMessage">Are you sure you want to proceed?</div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" id="modalCancelBtn">Cancel</button>
+      <button class="btn btn-ghost"  id="modalCancelBtn">Cancel</button>
       <button class="btn btn-danger" id="modalConfirmBtn">Yes, Delete</button>
     </div>
   </div>
 </div>
+
+<!-- POST-SAVE MODAL (NEW) -->
+<div class="modal-overlay" id="postSaveModal">
+  <div class="modal-card post-save-modal">
+    <div class="modal-icon success"><i class="fas fa-check-circle"></i></div>
+    <div class="modal-title">Item Saved!</div>
+    <p class="modal-sub">What would you like to do next?</p>
+    <div class="modal-message" id="postSaveMessage">
+      Choose to start a fresh inventory list or keep the current records.
+    </div>
+    <div class="modal-actions" style="flex-direction: column; gap: 10px;">
+      <button class="btn btn-new-record" id="postSaveNewBtn">
+        <i class="fas fa-trash-restore"></i> Create New Record
+      </button>
+      <button class="btn btn-keep-record" id="postSaveKeepBtn">
+        <i class="fas fa-archive"></i> Keep Record
+      </button>
+    </div>
+    <p style="font-size:0.72rem;color:var(--text-muted);margin-top:14px;line-height:1.5;">
+      <i class="fas fa-info-circle" style="margin-right:4px;"></i>
+      <strong>Create New Record</strong> will clear all current inventory data permanently.
+    </p>
+  </div>
+</div>
+
+<div id="printTarget"></div>
 
 <div id="toast" class="toast"></div>
 
@@ -975,27 +1144,22 @@
     const soldQtyGroup   = $('soldQtyGroup');
     const autoBadge      = $('autoBadge');
 
-    // Sold correction elements
-    const currentSoldDisplay = $('currentSoldDisplay');
+    const currentSoldDisplay    = $('currentSoldDisplay');
     const overrideSoldContainer = $('overrideSoldContainer');
-    const overrideSoldQty = $('overrideSoldQty');
+    const overrideSoldQty       = $('overrideSoldQty');
     const overrideSoldDecrement = $('overrideSoldDecrement');
     const overrideSoldIncrement = $('overrideSoldIncrement');
-    const showOverrideSoldBtn = $('showOverrideSoldBtn');
-    const cancelOverrideBtn = $('cancelOverrideBtn');
-    const applyOverrideBtn = $('applyOverrideBtn');
+    const showOverrideSoldBtn   = $('showOverrideSoldBtn');
+    const cancelOverrideBtn     = $('cancelOverrideBtn');
+    const applyOverrideBtn      = $('applyOverrideBtn');
+    const soldQtyDecrement      = $('soldQtyDecrement');
+    const soldQtyIncrement      = $('soldQtyIncrement');
+    const searchDropdown        = $('searchDropdown');
 
-    // Stepper buttons (add sale)
-    const soldQtyDecrement = $('soldQtyDecrement');
-    const soldQtyIncrement = $('soldQtyIncrement');
-
-    // Search dropdown
-    const searchDropdown = $('searchDropdown');
-
-    let originalTotalSold = 0;
+    let originalTotalSold   = 0;
     let lastAutoGeneratedId = '';
 
-    // ── MODAL ─────────────────────────────────────────────────
+    // ── CONFIRM MODAL ─────────────────────────────────────────
     const modalOverlay    = $('confirmModal');
     const modalMessageEl  = $('confirmMessage');
     const modalCancelBtn  = $('modalCancelBtn');
@@ -1008,18 +1172,56 @@
       modalOverlay.classList.add('visible');
       return new Promise(resolve => { modalResolve = resolve; });
     }
-
     function hideConfirmModal() {
       modalOverlay.classList.remove('visible');
       if (modalResolve) { modalResolve(false); modalResolve = null; }
     }
-
     modalCancelBtn.addEventListener('click', hideConfirmModal);
     modalConfirmBtn.addEventListener('click', () => {
       modalOverlay.classList.remove('visible');
       if (modalResolve) { modalResolve(true); modalResolve = null; }
     });
     modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) hideConfirmModal(); });
+
+    // ── POST-SAVE MODAL (NEW) ─────────────────────────────────
+    const postSaveModal   = $('postSaveModal');
+    const postSaveNewBtn  = $('postSaveNewBtn');
+    const postSaveKeepBtn = $('postSaveKeepBtn');
+
+    function showPostSaveModal() {
+      postSaveModal.classList.add('visible');
+    }
+    function hidePostSaveModal() {
+      postSaveModal.classList.remove('visible');
+    }
+
+    postSaveKeepBtn.addEventListener('click', () => {
+      hidePostSaveModal();
+      // Stay on current inventory, just refresh display
+      loadInventory();
+      showToast('Inventory kept. Ready for next entry.', 'success');
+    });
+
+    postSaveNewBtn.addEventListener('click', async () => {
+      hidePostSaveModal();
+      // Ask one more time before wiping — destructive action
+      const confirmed = await showConfirmModal(
+        'This will permanently delete ALL current inventory records and start fresh. Are you sure?',
+        'Yes, Clear All'
+      );
+      if (!confirmed) return;
+      try {
+        await callApi({ action: 'clearAll' });
+        allRecords = [];
+        applyFilter(true);
+        updateDashboard([]);
+        applyNextProductId();
+        showToast('All records cleared. Ready for a new inventory list.', 'success');
+      } catch (e) {}
+    });
+
+    // Close post-save modal on overlay click
+    postSaveModal.addEventListener('click', e => { if (e.target === postSaveModal) hidePostSaveModal(); });
 
     // ── FORM MODE ─────────────────────────────────────────────
     function setFormMode(mode) {
@@ -1041,15 +1243,13 @@
         saveBtnEl.title   = '';
         updateBtnEl.title = 'Load a record first to update';
         deleteBtnEl.title = 'Load a record first to delete';
-        
         updateAutoBadgeVisibility();
       }
     }
 
-    // ── AUTO BADGE LOGIC ─────────────────────────────────────
+    // ── AUTO BADGE ───────────────────────────────────────────
     function updateAutoBadgeVisibility() {
-      // Show badge only if in 'add' mode and current value matches the last auto-generated ID
-      const isAddMode = $('saveBtn').disabled === false;
+      const isAddMode  = $('saveBtn').disabled === false;
       const currentVal = productId.value.trim();
       if (isAddMode && currentVal === lastAutoGeneratedId && lastAutoGeneratedId !== '') {
         autoBadge.classList.remove('hidden');
@@ -1058,13 +1258,11 @@
       }
     }
 
-    // ── STATUS ───────────────────────────────────────────────
+    // ── STATUS & TOAST ───────────────────────────────────────
     function setOnlineStatus(state) {
       statusDot.className    = 'status-dot' + (state === 'offline' ? ' offline' : state === 'checking' ? ' checking' : '');
       statusText.textContent = state === 'online' ? 'Connected' : state === 'checking' ? 'Checking' : 'Offline';
     }
-
-    // ── TOAST ────────────────────────────────────────────────
     let toastTimer;
     function showToast(msg, type = 'info') {
       clearTimeout(toastTimer);
@@ -1082,7 +1280,6 @@
         clearTimeout(tid); return res;
       } catch (e) { clearTimeout(tid); throw e; }
     }
-
     async function callApi(params, retries = MAX_RETRIES) {
       const url = new URL(API_URL);
       Object.keys(params).forEach(k => url.searchParams.append(k, params[k]));
@@ -1107,27 +1304,24 @@
       }
     }
 
-    // ── AUTO-GENERATE PRODUCT ID ───────────────────────────────
+    // ── AUTO-GENERATE PRODUCT ID ─────────────────────────────
     function generateNextProductId() {
       const prefix = 'ZRC-';
       const existingNumbers = allRecords
         .map(r => r.productId)
         .filter(id => id && id.startsWith(prefix))
         .map(id => {
-          const numPart = id.substring(prefix.length);
-          const num = parseInt(numPart, 10);
+          const num = parseInt(id.substring(prefix.length), 10);
           return isNaN(num) ? 0 : num;
         });
-      
-      const maxNum = existingNumbers.length > 0 ? Math.max(...existingNumbers) : 0;
+      const maxNum  = existingNumbers.length > 0 ? Math.max(...existingNumbers) : 0;
       const nextNum = maxNum + 1;
-      const paddedNum = nextNum.toString().padStart(6, '0');
-      return prefix + paddedNum;
+      return prefix + nextNum.toString().padStart(6, '0');
     }
 
     function applyNextProductId() {
       const newId = (allRecords.length > 0) ? generateNextProductId() : 'ZRC-000001';
-      productId.value = newId;
+      productId.value     = newId;
       lastAutoGeneratedId = newId;
       updateAutoBadgeVisibility();
     }
@@ -1151,13 +1345,11 @@
       const term = $('searchInput').value.toLowerCase().trim();
       const termChanged = (term !== lastFilterTerm);
       lastFilterTerm = term;
-
       filteredRecords = term
         ? allRecords.filter(r =>
             (r.productName || '').toString().toLowerCase().includes(term) ||
             (r.productId   || '').toString().toLowerCase().startsWith(term))
         : [...allRecords];
-
       if (resetPage || termChanged) {
         currentPage = 1;
       } else {
@@ -1192,7 +1384,6 @@
             </td>
           </tr>`).join('');
       }
-
       pageInfo.innerHTML = total === 0
         ? 'No results'
         : `<strong>${start + 1}–${end}</strong> of <strong>${total}</strong>`;
@@ -1258,10 +1449,10 @@
     }
 
     function clearForm() {
-      productName.value = ''; 
-      stockQty.value    = '100'; 
+      productName.value = '';
+      stockQty.value    = '100';
       unitPrice.value   = '';
-      soldQty.value     = '0';   
+      soldQty.value     = '0';
       currentRow.value  = '';
       currentSoldDisplay.textContent = '0';
       overrideSoldContainer.style.display = 'none';
@@ -1272,12 +1463,101 @@
     }
 
     function setCurrentSoldDisplay(value) {
-      originalTotalSold = Number(value) || 0;
+      originalTotalSold              = Number(value) || 0;
       currentSoldDisplay.textContent = originalTotalSold;
-      overrideSoldQty.value = originalTotalSold;
+      overrideSoldQty.value          = originalTotalSold;
       overrideSoldContainer.style.display = 'none';
     }
-    
+
+    // ── PDF EXPORT (NEW) ─────────────────────────────────────
+    // Builds a clean print-ready DOM fragment, injects it into #printTarget,
+    // calls window.print(), then removes it — no external library needed.
+    function exportPdf() {
+      if (!allRecords.length) {
+        showToast('No inventory records to export.', 'error');
+        return;
+      }
+
+      const now    = new Date();
+      const dateStr = now.toLocaleDateString('en-PH', { year:'numeric', month:'long', day:'numeric' });
+      const timeStr = now.toLocaleTimeString('en-PH', { hour:'2-digit', minute:'2-digit' });
+
+      // Compute totals
+      let ts = 0, tSold = 0, tRev = 0;
+      allRecords.forEach(r => {
+        ts    += Number(r.stockQty) || 0;
+        tSold += Number(r.soldQty)  || 0;
+        tRev  += (Number(r.soldQty)||0) * (Number(r.unitPrice)||0);
+      });
+
+      // Build all-records table rows (not paginated — full list)
+      const rows = allRecords.map(r => `
+        <tr>
+          <td>${escapeHtml(r.productName || '')}</td>
+          <td>${escapeHtml(r.productId   || '')}</td>
+          <td style="text-align:right">${r.stockQty || 0}</td>
+          <td style="text-align:right">${r.soldQty  || 0}</td>
+          <td style="text-align:right">₱${(Number(r.unitPrice)||0).toFixed(2)}</td>
+          <td style="text-align:right">₱${((Number(r.soldQty)||0)*(Number(r.unitPrice)||0)).toLocaleString('en-PH',{minimumFractionDigits:2})}</td>
+        </tr>`).join('');
+
+      const printTarget = $('printTarget');
+      printTarget.innerHTML = `
+        <div class="print-header">
+          <div>
+            <h1>Inventory<span>FB</span></h1>
+            <div style="font-size:0.75rem;color:#7a6e5e;margin-top:4px;letter-spacing:0.08em;text-transform:uppercase;">made for Angel P. &nbsp;·&nbsp; Zarch Technology</div>
+          </div>
+          <div class="print-meta">
+            <div><strong>Export Date</strong></div>
+            <div>${dateStr}</div>
+            <div>${timeStr}</div>
+            <div style="margin-top:6px"><strong>${allRecords.length} item${allRecords.length !== 1 ? 's' : ''}</strong></div>
+          </div>
+        </div>
+
+        <div class="print-stats">
+          <div class="print-stat">
+            <div class="print-stat-label">Total Stock</div>
+            <div class="print-stat-value">${ts}</div>
+          </div>
+          <div class="print-stat">
+            <div class="print-stat-label">Total Sold</div>
+            <div class="print-stat-value">${tSold}</div>
+          </div>
+          <div class="print-stat revenue">
+            <div class="print-stat-label">Total Revenue</div>
+            <div class="print-stat-value">₱${tRev.toLocaleString('en-PH',{minimumFractionDigits:2})}</div>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Product Name</th>
+              <th>ID / SKU</th>
+              <th style="text-align:right">Stock</th>
+              <th style="text-align:right">Sold</th>
+              <th style="text-align:right">Unit Price</th>
+              <th style="text-align:right">Revenue</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+
+        <div class="print-footer">
+          <span>InventoryFB &nbsp;·&nbsp; Zarch Technology © 2026</span>
+          <span>Generated: ${dateStr} ${timeStr}</span>
+        </div>`;
+
+      // Trigger print dialog — browser Save as PDF handles the rest
+      window.print();
+
+      // Clean up after print dialog closes
+      setTimeout(() => { printTarget.innerHTML = ''; }, 1000);
+    }
+
+    // ── SEARCH CARD ──────────────────────────────────────────
     async function performSearch() {
       const query = $('skuSearchInput').value.trim();
       if (!query) {
@@ -1285,18 +1565,15 @@
         showToast('Enter a search term.', 'error');
         return;
       }
+      if (!allRecords.length) { try { await loadInventory(); } catch(e) { return; } }
 
-      if (!allRecords.length) {
-        try { await loadInventory(); } catch(e) { return; }
-      }
-
-      const term = query.toLowerCase();
-      const matches = allRecords.filter(r => 
+      const term    = query.toLowerCase();
+      const matches = allRecords.filter(r =>
         (r.productName || '').toString().toLowerCase().includes(term) ||
         (r.productId   || '').toString().toLowerCase().includes(term)
       );
 
-      if (matches.length === 0) {
+      if (!matches.length) {
         searchDropdown.innerHTML = `<div class="search-dropdown-empty">No products found for "${escapeHtml(query)}"</div>`;
         searchDropdown.style.display = 'block';
         return;
@@ -1305,15 +1582,13 @@
       const displayItems = matches.slice(0, 5);
       let html = '';
       displayItems.forEach(r => {
-        html += `
-          <div class="search-dropdown-item" onclick="selectSearchResult('${escapeAttr(r.productId)}')">
-            <span class="item-name">${escapeHtml(r.productName || '—')}</span>
-            <span class="item-sku">${escapeHtml(r.productId || '')}</span>
-          </div>
-        `;
+        html += `<div class="search-dropdown-item" onclick="selectSearchResult('${escapeAttr(r.productId)}')">
+          <span class="item-name">${escapeHtml(r.productName || '—')}</span>
+          <span class="item-sku">${escapeHtml(r.productId || '')}</span>
+        </div>`;
       });
       if (matches.length > 5) {
-        html += `<div class="search-dropdown-item" style="color: var(--text-muted); justify-content: center; cursor: default;">... and ${matches.length - 5} more (refine search)</div>`;
+        html += `<div class="search-dropdown-item" style="color:var(--text-muted);justify-content:center;cursor:default;">... and ${matches.length - 5} more (refine search)</div>`;
       }
       searchDropdown.innerHTML = html;
       searchDropdown.style.display = 'block';
@@ -1321,18 +1596,29 @@
 
     async function selectSearchResult(sku) {
       searchDropdown.style.display = 'none';
-      $('skuSearchInput').value = '';
+      $('skuSearchInput').value    = '';
       await editRecord(sku);
     }
 
     // ── CRUD ─────────────────────────────────────────────────
-    async function saveRecord() {
-      if (!productId.value || !productName.value) { showToast('Product ID and Name are required.', 'error'); return; }
+        async function saveRecord() {
+      if (!productId.value || !productName.value) {
+        showToast('Product ID and Name are required.', 'error');
+        return;
+      }
       try {
-        await callApi({ action: 'save', productName: productName.value, productId: productId.value, stockQty: stockQty.value, unitPrice: unitPrice.value });
-        showToast('Product saved successfully.', 'success');
-        clearForm(); 
-        loadInventory();
+        await callApi({
+          action: 'save',
+          productName: productName.value,
+          productId: productId.value,
+          stockQty: stockQty.value,
+          unitPrice: unitPrice.value
+        });
+    
+        await loadInventory();
+        clearForm();
+    
+        showPostSaveModal();
       } catch (e) {}
     }
 
@@ -1341,8 +1627,7 @@
       try {
         await callApi({ action: 'update', row: currentRow.value, productName: productName.value, productId: productId.value, stockQty: stockQty.value, unitPrice: unitPrice.value, soldQty: soldQty.value });
         showToast('Record updated.', 'success');
-        clearForm(); 
-        loadInventory();
+        clearForm(); loadInventory();
       } catch (e) {}
     }
 
@@ -1353,8 +1638,7 @@
       try {
         await callApi({ action: 'delete', row: currentRow.value });
         showToast('Record deleted.', 'success');
-        clearForm(); 
-        loadInventory();
+        clearForm(); loadInventory();
       } catch (e) {}
     }
 
@@ -1366,9 +1650,7 @@
         if (data.found) {
           await callApi({ action: 'delete', row: data.row });
           showToast('Deleted.', 'success');
-          clearForm(); 
-          scrollToForm(); 
-          loadInventory();
+          clearForm(); scrollToForm(); loadInventory();
         }
       } catch (e) {}
     }
@@ -1378,11 +1660,11 @@
         const data = await callApi({ action: 'search', sku });
         if (data.found) {
           const r = data.record;
-          productName.value = r.productName; 
+          productName.value = r.productName;
           productId.value   = r.productId;
-          stockQty.value    = r.stockQty;    
+          stockQty.value    = r.stockQty;
           unitPrice.value   = r.unitPrice;
-          soldQty.value     = '0';           
+          soldQty.value     = '0';
           currentRow.value  = data.row;
           setCurrentSoldDisplay(r.soldQty || 0);
           soldQtyGroup.classList.add('visible');
@@ -1409,10 +1691,7 @@
     async function applySoldCorrection() {
       if (!currentRow.value) { showToast('No record loaded.', 'error'); return; }
       const newTotalSold = parseInt(overrideSoldQty.value, 10);
-      if (isNaN(newTotalSold) || newTotalSold < 0) {
-        showToast('Invalid sold quantity.', 'error');
-        return;
-      }
+      if (isNaN(newTotalSold) || newTotalSold < 0) { showToast('Invalid sold quantity.', 'error'); return; }
       try {
         await callApi({ action: 'correctSold', row: currentRow.value, newSoldQty: newTotalSold });
         showToast('Total sold corrected.', 'success');
@@ -1432,29 +1711,22 @@
 
     // ── STEPPER CONTROLS ──────────────────────────────────────
     function adjustSoldQty(delta) {
-      let current = parseInt(soldQty.value, 10);
-      if (isNaN(current)) current = 0;
-      const newVal = Math.max(0, current + delta);
-      soldQty.value = newVal;
+      let v = parseInt(soldQty.value, 10);
+      if (isNaN(v)) v = 0;
+      soldQty.value = Math.max(0, v + delta);
     }
     soldQtyDecrement.addEventListener('click', () => adjustSoldQty(-1));
     soldQtyIncrement.addEventListener('click', () => adjustSoldQty(1));
-    soldQty.addEventListener('change', () => {
-      let val = parseInt(soldQty.value, 10);
-      if (isNaN(val) || val < 0) soldQty.value = 0;
-    });
+    soldQty.addEventListener('change', () => { let v = parseInt(soldQty.value,10); if (isNaN(v)||v<0) soldQty.value=0; });
 
     function adjustOverrideSold(delta) {
-      let val = parseInt(overrideSoldQty.value, 10);
-      if (isNaN(val)) val = 0;
-      overrideSoldQty.value = Math.max(0, val + delta);
+      let v = parseInt(overrideSoldQty.value, 10);
+      if (isNaN(v)) v = 0;
+      overrideSoldQty.value = Math.max(0, v + delta);
     }
     overrideSoldDecrement.addEventListener('click', () => adjustOverrideSold(-1));
     overrideSoldIncrement.addEventListener('click', () => adjustOverrideSold(1));
-    overrideSoldQty.addEventListener('change', () => {
-      let val = parseInt(overrideSoldQty.value, 10);
-      if (isNaN(val) || val < 0) overrideSoldQty.value = 0;
-    });
+    overrideSoldQty.addEventListener('change', () => { let v = parseInt(overrideSoldQty.value,10); if (isNaN(v)||v<0) overrideSoldQty.value=0; });
 
     showOverrideSoldBtn.addEventListener('click', () => {
       overrideSoldContainer.style.display = 'block';
@@ -1470,14 +1742,14 @@
     $('clearFormBtn').addEventListener('click', clearForm);
     $('clearAllBtn').addEventListener('click', clearAllRecords);
     $('refreshTableBtn').addEventListener('click', loadInventory);
+    $('downloadPdfBtn').addEventListener('click', exportPdf);
     $('searchTableBtn').addEventListener('click', () => applyFilter(true));
     $('searchInput').addEventListener('input', () => applyFilter(true));
     $('skuSearchBtn').addEventListener('click', performSearch);
     $('skuSearchInput').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); performSearch(); } });
     $('skuSearchInput').addEventListener('input', () => { if (!$('skuSearchInput').value.trim()) searchDropdown.style.display = 'none'; });
-    document.addEventListener('click', (e) => { if (!e.target.closest('#searchCard')) searchDropdown.style.display = 'none'; });
+    document.addEventListener('click', e => { if (!e.target.closest('#searchCard')) searchDropdown.style.display = 'none'; });
     rowsSelect.addEventListener('change', () => { rowsPerPage = parseInt(rowsSelect.value, 10); currentPage = 1; renderPage(); });
-
     productId.addEventListener('input', updateAutoBadgeVisibility);
 
     setInterval(async () => { setOnlineStatus('checking'); await loadInventory(); }, HEARTBEAT_MS);
@@ -1488,11 +1760,12 @@
       updateAutoBadgeVisibility();
     });
 
-    window.editRecord        = editRecord;
-    window.deleteRecordById  = deleteRecordById;
-    window.goToPage          = goToPage;
+    window.editRecord         = editRecord;
+    window.deleteRecordById   = deleteRecordById;
+    window.goToPage           = goToPage;
     window.selectSearchResult = selectSearchResult;
   })();
 </script>
 </body>
 </html>
+
