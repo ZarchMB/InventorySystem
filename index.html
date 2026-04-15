@@ -12,8 +12,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
     
     :root,
@@ -78,7 +76,7 @@
       --success-text:  #166534;
       --danger:        #991b1b;
       --danger-bg:     rgba(153,27,27,0.08);
-      --275:   #991b1b;
+      --danger-text:   #991b1b;
       --warning-bg:    rgba(154,110,28,0.08);
       --shadow-card:   0 2px 12px rgba(0,0,0,0.06);
       --shadow-toast:  0 8px 30px rgba(0,0,0,0.15);
@@ -631,21 +629,6 @@
     }
     .refresh-btn:hover { border-color: var(--border-hover); color: var(--gold); background: var(--gold-glow); }
 
-    .download-btn {
-      padding: 6px 14px;
-      border-radius: 20px; border: 1px solid rgba(61,153,112,0.35);
-      background: transparent; cursor: pointer;
-      font-size: 0.78rem; letter-spacing: 0.06em;
-      text-transform: uppercase;
-      font-family: 'DM Sans', sans-serif;
-      color: var(--success-text); transition: all 0.2s;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .download-btn:hover {
-      border-color: rgba(61,153,112,0.6);
-      background: var(--success-bg);
-    }
-
     .upload-btn {
       padding: 6px 14px;
       border-radius: 20px; border: 1px solid rgba(201,168,76,0.35);
@@ -659,6 +642,68 @@
     .upload-btn:hover {
       border-color: var(--border-strong);
       background: var(--gold-glow);
+    }
+
+    /* Export Dropdown */
+    .export-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .export-dropdown-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(61,153,112,0.35);
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--success-text);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .export-dropdown-btn:hover {
+      border-color: rgba(61,153,112,0.6);
+      background: var(--success-bg);
+    }
+    .export-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 6px;
+      box-shadow: var(--shadow-toast);
+      display: none;
+      z-index: 100;
+      min-width: 160px;
+    }
+    .export-dropdown-menu.show {
+      display: block;
+    }
+    .export-dropdown-item {
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .export-dropdown-item:hover {
+      background: var(--gold-glow);
+    }
+    .export-dropdown-item i {
+      width: 18px;
+      color: var(--gold-dim);
     }
 
     .card-toolbar {
@@ -1024,17 +1069,30 @@
       <span class="card-title-icon"><i class="fas fa-list-ul"></i></span>
       Current Inventory
       <div class="card-toolbar">
-        <button class="upload-btn" id="uploadPdfBtn" title="Upload and import PDF">
-          <i class="fas fa-upload"></i> Import PDF
+        <button class="upload-btn" id="importCsvBtn" title="Import from CSV">
+          <i class="fas fa-upload"></i> Import CSV
         </button>
-        <button class="download-btn" id="downloadPdfBtn" title="Download inventory as PDF">
-          <i class="fas fa-file-pdf"></i> Export PDF
-        </button>
+        
+        <!-- Export Dropdown -->
+        <div class="export-dropdown" id="exportDropdown">
+          <button class="export-dropdown-btn" id="exportDropdownBtn">
+            <i class="fas fa-download"></i> Export
+          </button>
+          <div class="export-dropdown-menu" id="exportDropdownMenu">
+            <div class="export-dropdown-item" id="exportPdfOption">
+              <i class="fas fa-file-pdf"></i> Export as PDF
+            </div>
+            <div class="export-dropdown-item" id="exportCsvOption">
+              <i class="fas fa-file-csv"></i> Export as CSV
+            </div>
+          </div>
+        </div>
+        
         <button class="refresh-btn" id="refreshTableBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
       </div>
     </div>
-    <!-- Hidden file input -->
-    <input type="file" id="pdfFileInput" accept=".pdf,application/pdf" style="display: none;">
+    <!-- Hidden file input for CSV -->
+    <input type="file" id="csvFileInput" accept=".csv,text/csv" style="display: none;">
     <div class="filter-row">
       <input type="text" id="searchInput" placeholder="Filter by name or ID…">
       <button class="btn btn-ghost" id="searchTableBtn" style="padding:13px 16px"><i class="fas fa-search"></i></button>
@@ -1085,7 +1143,7 @@
   </div>
 </div>
 
-<!-- SUCCESS MODAL -->
+<!-- SUCCESS MODAL (for import) -->
 <div class="modal-overlay" id="importSuccessModal">
   <div class="modal-card post-save-modal">
     <div class="modal-icon success"><i class="fas fa-cloud-upload-alt"></i></div>
@@ -1130,9 +1188,6 @@
     const FETCH_TIMEOUT_MS = 10000;
     const MAX_RETRIES      = 3;
     const HEARTBEAT_MS     = 30000;
-
-    // Set PDF.js worker
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
     // ── THEME ────────────────────────────────────────────────
     const html        = document.documentElement;
@@ -1200,12 +1255,18 @@
     const soldQtyIncrement      = $('soldQtyIncrement');
     const searchDropdown        = $('searchDropdown');
 
-    // PDF Upload elements
-    const uploadPdfBtn   = $('uploadPdfBtn');
-    const pdfFileInput   = $('pdfFileInput');
+    // CSV Import/Export elements
+    const importCsvBtn     = $('importCsvBtn');
+    const csvFileInput     = $('csvFileInput');
     const importSuccessModal = $('importSuccessModal');
-    const importSummary  = $('importSummary');
+    const importSummary    = $('importSummary');
     const importSuccessOkBtn = $('importSuccessOkBtn');
+
+    // Export dropdown elements
+    const exportDropdownBtn  = $('exportDropdownBtn');
+    const exportDropdownMenu = $('exportDropdownMenu');
+    const exportPdfOption    = $('exportPdfOption');
+    const exportCsvOption    = $('exportCsvOption');
 
     let originalTotalSold   = 0;
     let lastAutoGeneratedId = '';
@@ -1234,7 +1295,7 @@
     });
     modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) hideConfirmModal(); });
 
-    // ── POST-SAVE MODAL ────────────────
+    // ── POST-SAVE MODAL (PDF export follow-up) ────────────────
     const postSaveModal   = $('postSaveModal');
     const postSaveNewBtn  = $('postSaveNewBtn');
     const postSaveKeepBtn = $('postSaveKeepBtn');
@@ -1586,107 +1647,115 @@
       setTimeout(() => { showPostSaveModal(); }, 500);
     }
 
-    // ── PDF IMPORT ────────────────────────────────────────────
-    async function importPdf(file) {
-        const arrayBuffer = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-        let fullText = '';
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const textContent = await page.getTextContent();
-          const pageText = textContent.items.map(item => item.str).join(' ');
-          fullText += pageText + '\n';
-        }
-        console.log('=== Extracted PDF Text ===');
-        console.log(fullText);
-        return parseExportedData(fullText);
+    // ── CSV EXPORT ───────────────────────────────────────────
+    function exportCsv() {
+      if (!allRecords.length) {
+        showToast('No inventory records to export.', 'error');
+        return;
       }
+      const headers = ['Product Name', 'Product ID', 'Stock Quantity', 'Sold Quantity', 'Unit Price'];
+      const rows = allRecords.map(r => [
+        r.productName || '',
+        r.productId || '',
+        r.stockQty || 0,
+        r.soldQty || 0,
+        (r.unitPrice || 0).toFixed(2)
+      ]);
       
-      function parseExportedData(text) {
-        const records = [];
-        const lines = text.split('\n').map(l => l.replace(/\s+/g, ' ').trim()).filter(l => l);
-        
-        let headerIndices = null;
-        
-        for (let line of lines) {
-        
-          if (!headerIndices && line.includes('Product Name') && line.includes('ID / SKU')) {
-            const parts = line.split(/\s{2,}/);
-            headerIndices = {
-              name: parts.findIndex(p => p.includes('Product Name')),
-              id: parts.findIndex(p => p.includes('ID / SKU')),
-              stock: parts.findIndex(p => p.includes('Stock')),
-              sold: parts.findIndex(p => p.includes('Sold')),
-              price: parts.findIndex(p => p.includes('Price')),
-            };
-            continue;
+      let csvContent = headers.join(',') + '\n';
+      rows.forEach(row => {
+        const escaped = row.map(cell => {
+          if (typeof cell === 'string' && (cell.includes(',') || cell.includes('"'))) {
+            return `"${cell.replace(/"/g, '""')}"`;
           }
-          
-          if (line.includes('InventoryFB') || line.includes('Generated:')) break;
-          
-          if (headerIndices) {
-            const parts = line.split(/\s{2,}/);
-            if (parts.length >= 5) {
-              const productName = parts[headerIndices.name]?.trim() || '';
-              const productId   = parts[headerIndices.id]?.trim() || '';
-              const stockQty    = parseInt(parts[headerIndices.stock]) || 0;
-              const soldQty     = parseInt(parts[headerIndices.sold]) || 0;
-              let unitPrice     = parts[headerIndices.price]?.replace(/[₱,]/g, '').trim() || '0';
-              unitPrice         = parseFloat(unitPrice) || 0;
-              
-              if (productId && productName) {
-                records.push({ productName, productId, stockQty, soldQty, unitPrice });
-              }
-            }
-          }
-        }
-        
-        if (records.length === 0) {
-          console.warn('Column header not found, falling back to regex...');
-          for (let line of lines) {
-            const match = line.match(/^(.+?)\s+([A-Za-z0-9\-]+)\s+(\d+)\s+(\d+)\s+₱?([\d,]+\.?\d*)\s+[\d,]+\.?\d*$/);
-            if (match) {
-              const productName = match[1].trim();
-              const productId   = match[2].trim();
-              const stockQty    = parseInt(match[3], 10) || 0;
-              const soldQty     = parseInt(match[4], 10) || 0;
-              const unitPrice   = parseFloat(match[5].replace(/,/g, '')) || 0;
-              if (productId && productName) {
-                records.push({ productName, productId, stockQty, soldQty, unitPrice });
-              }
-            }
-          }
-        }
-        
-        console.log('Parsed records:', records.length);
-        return records;
-      }
+          return cell;
+        }).join(',');
+        csvContent += escaped + '\n';
+      });
       
-      async function handlePdfUpload(file) {
-        if (!file) return;
-        showToast('Parsing PDF…', 'info');
-        try {
-          const records = await importPdf(file);
-          if (!records.length) {
-            showToast('No valid records found in PDF. Check browser console (F12) for extracted text.', 'error');
-            return;
-          }
-          showToast(`Found ${records.length} records. Importing…`, 'info');
-          const response = await callApi({
-            action: 'bulkImport',
-            records: JSON.stringify(records)
-          });
-          await loadInventory();
-          if (response.imported === 0 && response.skipped > 0) {
-            importSummary.textContent = `All ${response.skipped} records already exist. Nothing imported.`;
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `inventory_export_${new Date().toISOString().slice(0,10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      showToast('CSV exported successfully!', 'success');
+    }
+
+    // ── CSV IMPORT ────────────────────────────────────────────
+    function parseCsv(text) {
+      const lines = text.split('\n').filter(l => l.trim());
+      if (lines.length < 2) return [];
+      
+      const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+      const nameIdx = headers.indexOf('product name');
+      const idIdx   = headers.indexOf('product id');
+      const stockIdx = headers.indexOf('stock quantity');
+      const soldIdx  = headers.indexOf('sold quantity');
+      const priceIdx = headers.indexOf('unit price');
+      
+      if (nameIdx === -1 || idIdx === -1) return [];
+      
+      const records = [];
+      for (let i = 1; i < lines.length; i++) {
+        const row = [];
+        let inQuote = false;
+        let cell = '';
+        for (let char of lines[i]) {
+          if (char === '"') {
+            inQuote = !inQuote;
+          } else if (char === ',' && !inQuote) {
+            row.push(cell);
+            cell = '';
           } else {
-            importSummary.textContent = `Imported: ${response.imported}, Skipped: ${response.skipped}`;
+            cell += char;
           }
-          importSuccessModal.classList.add('visible');
-        } catch (e) {
-          showToast('Import failed: ' + e.message, 'error');
+        }
+        row.push(cell);
+        
+        const productName = row[nameIdx]?.trim() || '';
+        const productId   = row[idIdx]?.trim() || '';
+        const stockQty    = parseInt(row[stockIdx]) || 0;
+        const soldQty     = parseInt(row[soldIdx]) || 0;
+        const unitPrice   = parseFloat(row[priceIdx]) || 0;
+        
+        if (productId && productName) {
+          records.push({ productName, productId, stockQty, soldQty, unitPrice });
         }
       }
+      return records;
+    }
+
+    async function handleCsvUpload(file) {
+      if (!file) return;
+      showToast('Parsing CSV…', 'info');
+      try {
+        const text = await file.text();
+        const records = parseCsv(text);
+        if (!records.length) {
+          showToast('No valid records found in CSV. Check column headers.', 'error');
+          return;
+        }
+        showToast(`Found ${records.length} records. Importing…`, 'info');
+        const response = await callApi({
+          action: 'bulkImport',
+          records: JSON.stringify(records)
+        });
+        await loadInventory();
+        if (response.imported === 0 && response.skipped > 0) {
+          importSummary.textContent = `All ${response.skipped} records already exist. Nothing imported.`;
+        } else {
+          importSummary.textContent = `Imported: ${response.imported}, Skipped: ${response.skipped}`;
+        }
+        importSuccessModal.classList.add('visible');
+      } catch (e) {
+        showToast('Import failed: ' + e.message, 'error');
+      }
+    }
 
     // ── SEARCH CARD ──────────────────────────────────────────
     async function performSearch() {
@@ -1940,6 +2009,28 @@
     cancelOverrideBtn.addEventListener('click', () => { overrideSoldContainer.style.display = 'none'; });
     applyOverrideBtn.addEventListener('click', applySoldCorrection);
 
+    // ── EXPORT DROPDOWN BEHAVIOR ───────────────────────────────
+    exportDropdownBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      exportDropdownMenu.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#exportDropdown')) {
+        exportDropdownMenu.classList.remove('show');
+      }
+    });
+
+    exportPdfOption.addEventListener('click', () => {
+      exportDropdownMenu.classList.remove('show');
+      exportPdf();
+    });
+
+    exportCsvOption.addEventListener('click', () => {
+      exportDropdownMenu.classList.remove('show');
+      exportCsv();
+    });
+
     // ── EVENTS ───────────────────────────────────────────────
     $('saveBtn').addEventListener('click', saveRecord);
     $('updateBtn').addEventListener('click', updateRecord);
@@ -1947,12 +2038,11 @@
     $('clearFormBtn').addEventListener('click', clearForm);
     $('clearAllBtn').addEventListener('click', clearAllRecords);
     $('refreshTableBtn').addEventListener('click', loadInventory);
-    $('downloadPdfBtn').addEventListener('click', exportPdf);
-    $('uploadPdfBtn').addEventListener('click', () => pdfFileInput.click());
-    pdfFileInput.addEventListener('change', (e) => {
+    $('importCsvBtn').addEventListener('click', () => csvFileInput.click());
+    csvFileInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
-      if (file) handlePdfUpload(file);
-      pdfFileInput.value = '';
+      if (file) handleCsvUpload(file);
+      csvFileInput.value = '';
     });
     $('searchTableBtn').addEventListener('click', () => applyFilter(true));
     $('searchInput').addEventListener('input', () => applyFilter(true));
@@ -1979,4 +2069,3 @@
 </script>
 </body>
 </html>
-
