@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-   
+    
     :root,
     [data-theme="dark"] {
       --bg-page:       #0d0d0f;
@@ -50,6 +50,7 @@
       --toggle-label:  'Light Mode';
       --skeleton-base: #1e1e24;
       --skeleton-shine:#2a2a32;
+      --action-bar-bg: rgba(19,19,22,0.95);
     }
 
     [data-theme="light"] {
@@ -87,6 +88,7 @@
       --toggle-label:  'Dark Mode';
       --skeleton-base: #ede8df;
       --skeleton-shine:#f5f0e8;
+      --action-bar-bg: rgba(255,255,255,0.95);
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -183,7 +185,16 @@
       display: block; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em;
       text-transform: uppercase; color: var(--text-muted); margin-bottom: 7px; transition: color 0.35s;
     }
-    .input-wrapper { position: relative; width: 100%; }
+    .input-wrapper { 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      width: 100%; 
+    }
+    .input-wrapper input {
+      flex: 1;
+      min-width: 0;
+    }
     input, select {
       width: 100%; padding: 13px 16px; font-size: 1rem;
       font-family: 'DM Sans', sans-serif; font-weight: 400;
@@ -201,16 +212,45 @@
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
 
+    /* Generate ID button */
+    .generate-id-btn {
+      padding: 10px 14px;
+      background: var(--gold-glow);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      color: var(--gold-dim);
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.15s;
+      pointer-events: auto;
+      flex-shrink: 0;
+    }
+    .generate-id-btn i { font-size: 0.7rem; color: var(--gold); }
+    .generate-id-btn:hover {
+      background: var(--gold-glow-md);
+      border-color: var(--border-strong);
+      color: var(--gold);
+    }
+    .generate-id-btn.hidden {
+      display: none;
+    }
+
     /* Auto badge */
     .auto-badge {
-      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
       display: flex; align-items: center; gap: 4px; background: var(--gold-glow);
       border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px;
       font-size: 0.7rem; font-weight: 500; letter-spacing: 0.03em; color: var(--gold-dim);
-      backdrop-filter: blur(2px); pointer-events: none; transition: opacity 0.2s ease; opacity: 1;
+      backdrop-filter: blur(2px); pointer-events: none;
+      transition: opacity 0.2s ease; opacity: 1;
+      flex-shrink: 0;
     }
     .auto-badge i { font-size: 0.65rem; color: var(--gold); }
-    .auto-badge.hidden { opacity: 0; pointer-events: none; }
+    .auto-badge.hidden { display: none; }
 
     /* Buttons */
     .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
@@ -313,6 +353,25 @@
     td:first-child { color: var(--text-primary); font-weight: 400; }
     tbody tr:hover td { background: var(--bg-row-hover); }
     tbody tr:last-child td { border-bottom: none; }
+
+    /* Checkbox styles */
+    .checkbox-cell {
+      width: 28px;
+      padding: 11px 0 11px 12px !important;
+      text-align: center;
+    }
+    .select-checkbox {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--gold);
+      cursor: pointer;
+    }
+
+    /* Selected row highlight */
+    tr.selected-row td {
+      background: var(--gold-glow) !important;
+      border-left: 3px solid var(--gold);
+    }
 
     /* Optimistic row states */
     tbody tr.row-pending td { opacity: 0.55; }
@@ -483,6 +542,43 @@
 
     .card-toolbar { display: flex; align-items: center; gap: 8px; margin-left: auto; }
 
+    /* Action Bar */
+    .action-bar {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--action-bar-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-strong);
+      border-radius: 40px;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      box-shadow: var(--shadow-toast);
+      z-index: 998;
+      transition: transform 0.3s cubic-bezier(0.2,0.9,0.4,1);
+      max-width: 90vw;
+    }
+    .action-bar.show {
+      transform: translateX(-50%) translateY(0);
+    }
+    .action-bar-count {
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+    .action-bar-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .action-bar .btn {
+      padding: 8px 16px;
+      min-height: auto;
+      font-size: 0.8rem;
+      border-radius: 30px;
+    }
+
     /* Toast */
     .toast {
       position: fixed; bottom: 24px; left: 50%;
@@ -522,7 +618,7 @@
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.5);
       backdrop-filter: blur(4px); display: none;
-      align-items: center; justify-content: center; z-index: 1000;
+      align-items: center; justify-content: center; z-index: 1001;
       animation: fadeIn 0.2s ease;
     }
     .modal-overlay.visible { display: flex; }
@@ -581,6 +677,20 @@
 
     #currentRow { display: none; }
     #printTarget { display: none; }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-input); border-radius: 10px; border: 1px solid var(--border-subtle); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; border: 1px solid transparent; background-clip: padding-box; transition: background 0.2s ease; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--border-hover); border: 1px solid var(--gold-dim); }
+    ::-webkit-scrollbar-corner { background: transparent; }
+    * { scrollbar-width: thin; scrollbar-color: var(--border) var(--bg-input); }
+
+    @media (max-width: 480px) {
+      .card-toolbar { flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+      .upload-btn, .export-dropdown-btn, .refresh-btn { padding: 5px 10px; font-size: 0.7rem; }
+      .generate-id-btn { padding: 8px 10px; font-size: 0.7rem; }
+    }
   </style>
 </head>
 <body>
@@ -618,7 +728,12 @@
       <label>Product ID / SKU</label>
       <div class="input-wrapper">
         <input type="text" id="productId" placeholder="ZRC-000001">
-        <span class="auto-badge" id="autoBadge"><i class="fas fa-magic"></i> Auto</span>
+        <!-- Generate ID button -->
+        <button class="generate-id-btn hidden" id="generateIdBtn" type="button">
+          <i class="fas fa-magic"></i> Generate ID
+        </button>
+        <!-- Auto badge -->
+        <span class="auto-badge hidden" id="autoBadge"><i class="fas fa-check-circle"></i> Auto</span>
       </div>
     </div>
     <div class="form-group">
@@ -741,13 +856,15 @@
     <div class="table-wrapper">
       <table id="inventoryTable">
         <thead>
-          <tr><th>Product</th><th>ID</th><th>Stock</th><th>Sold</th><th>Price</th><th></th></tr>
+          <tr>
+            <th style="width:28px"><input type="checkbox" class="select-checkbox" id="selectAllCheckbox" title="Select all"></th>
+            <th>Product</th><th>ID</th><th>Stock</th><th>Sold</th><th>Price</th><th></th>
+          </tr>
         </thead>
         <tbody id="tableBody">
-          <!-- skeleton shown on initial load -->
-          <tr class="skeleton-row"><td><div class="skeleton-cell" style="width:70%"></div></td><td><div class="skeleton-cell" style="width:60%"></div></td><td><div class="skeleton-cell" style="width:40%"></div></td><td><div class="skeleton-cell" style="width:40%"></div></td><td><div class="skeleton-cell" style="width:50%"></div></td><td></td></tr>
-          <tr class="skeleton-row"><td><div class="skeleton-cell" style="width:80%"></div></td><td><div class="skeleton-cell" style="width:55%"></div></td><td><div class="skeleton-cell" style="width:35%"></div></td><td><div class="skeleton-cell" style="width:35%"></div></td><td><div class="skeleton-cell" style="width:45%"></div></td><td></td></tr>
-          <tr class="skeleton-row"><td><div class="skeleton-cell" style="width:60%"></div></td><td><div class="skeleton-cell" style="width:65%"></div></td><td><div class="skeleton-cell" style="width:40%"></div></td><td><div class="skeleton-cell" style="width:40%"></div></td><td><div class="skeleton-cell" style="width:50%"></div></td><td></td></tr>
+          <tr class="skeleton-row"><td></td><td><div class="skeleton-cell" style="width:70%"></div></td><td><div class="skeleton-cell" style="width:60%"></div></td><td><div class="skeleton-cell" style="width:40%"></div></td><td><div class="skeleton-cell" style="width:40%"></div></td><td><div class="skeleton-cell" style="width:50%"></div></td><td></td></tr>
+          <tr class="skeleton-row"><td></td><td><div class="skeleton-cell" style="width:80%"></div></td><td><div class="skeleton-cell" style="width:55%"></div></td><td><div class="skeleton-cell" style="width:35%"></div></td><td><div class="skeleton-cell" style="width:35%"></div></td><td><div class="skeleton-cell" style="width:45%"></div></td><td></td></tr>
+          <tr class="skeleton-row"><td></td><td><div class="skeleton-cell" style="width:60%"></div></td><td><div class="skeleton-cell" style="width:65%"></div></td><td><div class="skeleton-cell" style="width:40%"></div></td><td><div class="skeleton-cell" style="width:40%"></div></td><td><div class="skeleton-cell" style="width:50%"></div></td><td></td></tr>
         </tbody>
       </table>
     </div>
@@ -771,6 +888,15 @@
     <p>Developed by <strong>Adriane Lorenz Racaza</strong></p>
     <p>Zarch Technology &nbsp;·&nbsp; © Copyright 2026</p>
     <span class="version-badge">v 1.0</span>
+  </div>
+</div>
+
+<!-- ACTION BAR -->
+<div class="action-bar" id="actionBar">
+  <span class="action-bar-count" id="selectedCount">0 items selected</span>
+  <div class="action-bar-buttons">
+    <button class="btn btn-ghost" id="cancelSelectionBtn">Cancel</button>
+    <button class="btn btn-danger" id="bulkDeleteBtn"><i class="fas fa-trash-alt"></i> Delete Selected</button>
   </div>
 </div>
 
@@ -866,6 +992,8 @@
     let lastFilterTerm  = '';
     let lastDataHash    = '';
     let isSyncing       = false;
+    
+    const selectedIds = new Set();
 
     // ── DOM ──────────────────────────────────────────────────
     const $ = id => document.getElementById(id);
@@ -888,6 +1016,7 @@
     const rowsSelect     = $('rowsPerPageSelect');
     const soldQtyGroup   = $('soldQtyGroup');
     const autoBadge      = $('autoBadge');
+    const generateIdBtn  = $('generateIdBtn');
     const currentSoldDisplay    = $('currentSoldDisplay');
     const overrideSoldContainer = $('overrideSoldContainer');
     const overrideSoldQty       = $('overrideSoldQty');
@@ -908,6 +1037,12 @@
     const exportDropdownMenu    = $('exportDropdownMenu');
     const exportPdfOption       = $('exportPdfOption');
     const exportCsvOption       = $('exportCsvOption');
+    
+    const selectAllCheckbox = $('selectAllCheckbox');
+    const actionBar         = $('actionBar');
+    const selectedCountEl   = $('selectedCount');
+    const cancelSelectionBtn = $('cancelSelectionBtn');
+    const bulkDeleteBtn     = $('bulkDeleteBtn');
 
     let originalTotalSold   = 0;
     let lastAutoGeneratedId = '';
@@ -974,6 +1109,8 @@
       try {
         await callApi({ action: 'clearAll' });
         allRecords = []; lastDataHash = '';
+        selectedIds.clear();
+        updateSelectionUI();
         applyFilter(true); updateDashboard([]);
         applyNextProductId();
         showToast('All records cleared. Ready for a new inventory list.', 'success');
@@ -1000,6 +1137,7 @@
         updateBtnEl.title = '';
         deleteBtnEl.title = '';
         autoBadge.classList.add('hidden');
+        generateIdBtn.classList.add('hidden');
       } else {
         saveBtnEl.disabled   = false;
         updateBtnEl.disabled = true;
@@ -1008,10 +1146,11 @@
         updateBtnEl.title = 'Load a record first to update';
         deleteBtnEl.title = 'Load a record first to delete';
         updateAutoBadgeVisibility();
+        updateGenerateButtonVisibility();
       }
     }
 
-    // ── AUTO BADGE ───────────────────────────────────────────
+    // ── AUTO BADGE & GENERATE BUTTON VISIBILITY ───────────────
     function updateAutoBadgeVisibility() {
       const isAddMode  = $('saveBtn').disabled === false;
       const currentVal = productId.value.trim();
@@ -1019,6 +1158,18 @@
         autoBadge.classList.remove('hidden');
       } else {
         autoBadge.classList.add('hidden');
+      }
+    }
+
+    function updateGenerateButtonVisibility() {
+      const isAddMode = $('saveBtn').disabled === false;
+      const isEmpty = !productId.value.trim();
+      if (isAddMode && isEmpty) {
+        generateIdBtn.classList.remove('hidden');
+        autoBadge.classList.add('hidden');
+      } else {
+        generateIdBtn.classList.add('hidden');
+        updateAutoBadgeVisibility();
       }
     }
 
@@ -1068,24 +1219,31 @@
       }
     }
 
-    // ── AUTO-GENERATE PRODUCT ID ─────────────────────────────
+    // ── AUTO-GENERATE PRODUCT ID  ──
     function generateNextProductId() {
       const prefix = 'ZRC-';
       const existingNumbers = allRecords
-        .map(r => r.productId)
+        .map(r => String(r.productId || ''))
         .filter(id => id && id.startsWith(prefix))
-        .map(id => { const n = parseInt(id.substring(prefix.length), 10); return isNaN(n) ? 0 : n; });
-      const maxNum  = existingNumbers.length > 0 ? Math.max(...existingNumbers) : 0;
+        .map(id => {
+          const n = parseInt(id.substring(prefix.length), 10);
+          return isNaN(n) ? 0 : n;
+        });
+      const maxNum = existingNumbers.length > 0 ? Math.max(...existingNumbers) : 0;
       return prefix + (maxNum + 1).toString().padStart(6, '0');
     }
+
     function applyNextProductId() {
       const newId = (allRecords.length > 0) ? generateNextProductId() : 'ZRC-000001';
-      productId.value     = newId;
+      productId.value = newId;
       lastAutoGeneratedId = newId;
       updateAutoBadgeVisibility();
+      updateGenerateButtonVisibility();
+      
+      console.log('Generated new ID:', newId);
     }
 
-    // ── LOAD INVENTORY ───────
+    // ── LOAD INVENTORY ────────────────────────────────────────
     async function loadInventory(silent = false) {
       if (!silent) {
         const rb = $('refreshTableBtn');
@@ -1097,6 +1255,8 @@
         if (newHash !== lastDataHash) {
           allRecords   = data.data || [];
           lastDataHash = newHash;
+          selectedIds.clear();
+          updateSelectionUI();
           applyFilter(false);
           updateDashboard(allRecords);
         }
@@ -1136,10 +1296,20 @@
       const pageRows = filteredRecords.slice(start, end);
 
       if (!total) {
-        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted)">No products found.</td></tr>`;
-      } else {
-        tableBody.innerHTML = pageRows.map(r => `
-          <tr data-id="${escapeAttr(r.productId)}">
+        tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-muted)">No products found.</td></tr>`;
+        updateSelectAllCheckbox();
+        return;
+      }
+      
+      tableBody.innerHTML = pageRows.map(r => {
+        const isSelected = selectedIds.has(r.productId);
+        return `
+          <tr data-id="${escapeAttr(r.productId)}" class="${isSelected ? 'selected-row' : ''}">
+            <td class="checkbox-cell">
+              <input type="checkbox" class="select-checkbox row-checkbox" 
+                     data-id="${escapeAttr(r.productId)}" 
+                     ${isSelected ? 'checked' : ''}>
+            </td>
             <td>${escapeHtml(r.productName || '')}</td>
             <td style="color:var(--text-muted)">${escapeHtml(r.productId || '')}</td>
             <td>${r.stockQty || 0}</td>
@@ -1149,11 +1319,136 @@
               <button class="action-icon" onclick="editRecord('${escapeAttr(r.productId)}')"><i class="fas fa-edit"></i></button>
               <button class="action-icon" onclick="deleteRecordById('${escapeAttr(r.productId)}')"><i class="fas fa-trash"></i></button>
             </td>
-          </tr>`).join('');
-      }
+          </tr>
+        `;
+      }).join('');
+      
+      document.querySelectorAll('.row-checkbox').forEach(cb => {
+        cb.addEventListener('change', (e) => {
+          const id = e.target.dataset.id;
+          const row = e.target.closest('tr');
+          if (e.target.checked) {
+            selectedIds.add(id);
+            row.classList.add('selected-row');
+          } else {
+            selectedIds.delete(id);
+            row.classList.remove('selected-row');
+          }
+          updateSelectionUI();
+        });
+      });
+      
+      updateSelectAllCheckbox();
       pageInfo.innerHTML = total === 0 ? 'No results' : `<strong>${start + 1}–${end}</strong> of <strong>${total}</strong>`;
       renderPageControls(totalPages);
     }
+
+    function updateSelectAllCheckbox() {
+      const visibleRows = Array.from(document.querySelectorAll('.row-checkbox'));
+      const visibleIds = visibleRows.map(cb => cb.dataset.id);
+      const selectedVisible = visibleIds.filter(id => selectedIds.has(id));
+      
+      if (visibleRows.length === 0) {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = false;
+      } else if (selectedVisible.length === visibleRows.length) {
+        selectAllCheckbox.checked = true;
+        selectAllCheckbox.indeterminate = false;
+      } else if (selectedVisible.length > 0) {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = true;
+      } else {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = false;
+      }
+    }
+
+    function updateSelectionUI() {
+      const count = selectedIds.size;
+      selectedCountEl.textContent = `${count} item${count !== 1 ? 's' : ''} selected`;
+      if (count > 0) {
+        actionBar.classList.add('show');
+      } else {
+        actionBar.classList.remove('show');
+      }
+      updateSelectAllCheckbox();
+    }
+
+    function clearAllSelections() {
+      selectedIds.clear();
+      document.querySelectorAll('.row-checkbox').forEach(cb => {
+        cb.checked = false;
+        cb.closest('tr').classList.remove('selected-row');
+      });
+      updateSelectionUI();
+      renderPage();
+    }
+
+    selectAllCheckbox.addEventListener('change', (e) => {
+      const isChecked = e.target.checked;
+      const visibleCheckboxes = document.querySelectorAll('.row-checkbox');
+      visibleCheckboxes.forEach(cb => {
+        const id = cb.dataset.id;
+        const row = cb.closest('tr');
+        cb.checked = isChecked;
+        if (isChecked) {
+          selectedIds.add(id);
+          row.classList.add('selected-row');
+        } else {
+          selectedIds.delete(id);
+          row.classList.remove('selected-row');
+        }
+      });
+      updateSelectionUI();
+    });
+
+    cancelSelectionBtn.addEventListener('click', clearAllSelections);
+
+    async function bulkDeleteSelected() {
+      if (selectedIds.size === 0) return;
+      
+      const idsArray = Array.from(selectedIds);
+      const confirmed = await showConfirmModal(
+        `Permanently delete ${idsArray.length} selected item${idsArray.length !== 1 ? 's' : ''}? This action cannot be undone.`,
+        'Delete All'
+      );
+      if (!confirmed) return;
+
+      const snapRecords = [...allRecords];
+      const deletedIds = new Set(idsArray);
+      
+      idsArray.forEach(id => {
+        const row = document.querySelector(`tr[data-id="${escapeAttr(id)}"]`);
+        if (row) row.classList.add('row-deleting');
+      });
+
+      allRecords = allRecords.filter(r => !deletedIds.has(r.productId));
+      lastDataHash = hashRecords(allRecords);
+      selectedIds.clear();
+      updateSelectionUI();
+      applyFilter(false);
+      updateDashboard(allRecords);
+
+      setBtnLoading(bulkDeleteBtn, true);
+      isSyncing = true;
+
+      try {
+        await callApi({ action: 'bulkDelete', ids: JSON.stringify(idsArray) });
+        showToast(`${idsArray.length} item(s) deleted.`, 'success');
+        loadInventory(true).finally(() => { isSyncing = false; });
+      } catch (e) {
+        allRecords = snapRecords;
+        lastDataHash = hashRecords(allRecords);
+        applyFilter(false);
+        updateDashboard(allRecords);
+        showToast('Deletion failed: ' + e.message, 'error');
+        isSyncing = false;
+      } finally {
+        setBtnLoading(bulkDeleteBtn, false);
+      }
+    }
+
+    bulkDeleteBtn.addEventListener('click', bulkDeleteSelected);
 
     function renderPageControls(totalPages) {
       const pages = getPageWindow(currentPage, totalPages);
@@ -1186,7 +1481,6 @@
       $('inventoryTable').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
-    // ── DASHBOARD ────────────────────────────────────────────
     function updateDashboard(records) {
       let ts = 0, tSold = 0, tRev = 0;
       records.forEach(r => {
@@ -1199,7 +1493,6 @@
       totalRevenueEl.textContent = `₱${tRev.toLocaleString('en-PH', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
     }
 
-    // ── HELPERS ──────────────────────────────────────────────
     function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
     function escapeAttr(t) { return String(t).replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
 
@@ -1234,7 +1527,6 @@
       overrideSoldContainer.style.display = 'none';
     }
 
-    // ── PDF EXPORT ───────────────────────────────────────────
     function exportPdf() {
       if (!allRecords.length) { showToast('No inventory records to export.', 'error'); return; }
       const now     = new Date();
@@ -1250,7 +1542,6 @@
       setTimeout(() => { showPostSaveModal(); }, 500);
     }
 
-    // ── CSV EXPORT ───────────────────────────────────────────
     function exportCsv() {
       if (!allRecords.length) { showToast('No inventory records to export.', 'error'); return; }
       const headers = ['Product Name','Product ID','Stock Quantity','Sold Quantity','Unit Price'];
@@ -1267,7 +1558,6 @@
       showPostSaveModal();
     }
 
-    // ── CSV IMPORT ────────────────────────────────────────────
     function parseCsv(text) {
       const lines = text.split('\n').filter(l => l.trim());
       if (lines.length < 2) return [];
@@ -1315,7 +1605,6 @@
       } catch (e) { showToast('Import failed: ' + e.message, 'error'); }
     }
 
-    // ── SEARCH CARD ──────────────────────────────────────────
     async function performSearch() {
       const query = $('skuSearchInput').value.trim();
       if (!query) { searchDropdown.style.display = 'none'; showToast('Enter a search term.', 'error'); return; }
@@ -1391,7 +1680,7 @@
             nextId = candidate;
           } else { nextId = generateNextProductId(); }
         } else { nextId = generateNextProductId(); }
-        productId.value = nextId; lastAutoGeneratedId = nextId; updateAutoBadgeVisibility();
+        productId.value = nextId; lastAutoGeneratedId = nextId; updateAutoBadgeVisibility(); updateGenerateButtonVisibility();
         result = await attemptSave(nextId);
         if (result.success) showToast(`ID in use. Re-assigned to: ${nextId}`, 'info');
       }
@@ -1423,7 +1712,9 @@
       overrideSoldContainer.style.display = 'none';
       soldQtyGroup.classList.remove('visible');
       searchDropdown.style.display = 'none';
-      setFormMode('add'); updateAutoBadgeVisibility();
+      setFormMode('add');
+      updateAutoBadgeVisibility();
+      updateGenerateButtonVisibility();
 
       loadInventory(true).finally(() => { isSyncing = false; });
     }
@@ -1558,6 +1849,8 @@
       try {
         await callApi({ action:'clearAll' });
         allRecords = []; lastDataHash = '';
+        selectedIds.clear();
+        updateSelectionUI();
         applyFilter(true); updateDashboard([]);
         applyNextProductId();
         showToast('All records cleared.', 'success');
@@ -1606,7 +1899,31 @@
     exportPdfOption.addEventListener('click', () => { exportDropdownMenu.classList.remove('show'); exportPdf(); });
     exportCsvOption.addEventListener('click', () => { exportDropdownMenu.classList.remove('show'); exportCsv(); });
 
-    // ── EVENTS ───────────────────────────────────────────────
+    // ── GENERATE ID BUTTON CLICK ──────────────────────────────
+    generateIdBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isAddMode = $('saveBtn').disabled === false;
+      if (isAddMode) {
+        applyNextProductId();
+        showToast('New product ID generated', 'info');
+      } else {
+        showToast('Cannot generate ID in edit mode', 'error');
+      }
+    });
+
+    // ── INPUT EVENTS ───────────────────────────────────────────
+    productId.addEventListener('input', () => {
+      updateAutoBadgeVisibility();
+      updateGenerateButtonVisibility();
+    });
+    productId.addEventListener('blur', () => {
+      const isAddMode = $('saveBtn').disabled === false;
+      if (isAddMode && !productId.value.trim()) {
+        applyNextProductId();
+      }
+    });
+
+    // ── OTHER EVENTS ──────────────────────────────────────────
     $('saveBtn').addEventListener('click', saveRecord);
     $('updateBtn').addEventListener('click', updateRecord);
     $('deleteBtn').addEventListener('click', deleteRecord);
@@ -1622,7 +1939,15 @@
     $('skuSearchInput').addEventListener('input', () => { if(!$('skuSearchInput').value.trim()) searchDropdown.style.display='none'; });
     document.addEventListener('click', e => { if(!e.target.closest('#searchCard')) searchDropdown.style.display='none'; });
     rowsSelect.addEventListener('change', () => { rowsPerPage=parseInt(rowsSelect.value,10); currentPage=1; renderPage(); });
-    productId.addEventListener('input', updateAutoBadgeVisibility);
+
+    // Override deleteRecordById to clear selection
+    const originalDeleteById = deleteRecordById;
+    deleteRecordById = async function(sku) {
+      await originalDeleteById(sku);
+      selectedIds.delete(sku);
+      updateSelectionUI();
+    };
+    window.deleteRecordById = deleteRecordById;
 
     // ── HEARTBEAT ─────────────────────────────────────────────
     setInterval(async () => {
@@ -1636,10 +1961,10 @@
     loadInventory().finally(() => {
       if (!productId.value) { productId.value = 'ZRC-000001'; lastAutoGeneratedId = 'ZRC-000001'; }
       updateAutoBadgeVisibility();
+      updateGenerateButtonVisibility();
     });
 
     window.editRecord         = editRecord;
-    window.deleteRecordById   = deleteRecordById;
     window.goToPage           = goToPage;
     window.selectSearchResult = selectSearchResult;
   })();
